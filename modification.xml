@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="www.simplemachines.org/xml/modification">
+	<id>cleantalk:antispamregister</id>
+	<version>1.0.1</version>
+	<file name="$sourcedir/Register.php">
+		<operation>
+			<search position="after"><![CDATA[// Show the user the right form.]]></search>
+			<add><![CDATA[if (!isset($_POST['regSubmit']))
+	{
+		// cleantalk set start time of registration
+		$_SESSION['cleantalk_registration_form_start_time'] = time();
+	}
+]]>
+</add>
+		</operation>
+	</file>
+
+	<file name="$themedir/Register.template.php">
+		<operation>
+			<search position="after"><![CDATA[// Are there any custom fields?]]></search>
+			<add><![CDATA[// cleantalk add hidden field for check javascript
+	echo '<input type="hidden" name="ct_checkjs" id="ct_checkjs" value="ok" /><script type="text/javascript">document.getElementById("ct_checkjs").value ="'.cleantalk_get_checkjs_code().'";</script>';
+]]></add>
+		</operation>
+	</file>
+
+</modification>

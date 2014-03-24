@@ -1,0 +1,36 @@
+<?xml version="1.0"  encoding="UTF-8" ?>
+<!-- Phing buid file -->
+<project name="cleantalk_smf" basedir="." default="build">
+	<property name="package" value="${phing.project.name}"/>
+	<property name="version" value="1.0.1" override="yes"/>
+	<property name="builddir" value="build" override="true"/>
+
+	<target name="prepare">
+		<echo msg="Making directory ${builddir}"/>
+		<mkdir dir="${builddir}"/>
+	</target>
+
+	<target name="build" depends="prepare">
+		<tar destfile="${builddir}/${package}-${version}.tar.gz" basedir="." compression="gzip" id="1">
+			<fileset dir=".">
+				<include name="package-info.xml"/>
+				<include name="CleantalkMod.php"/>
+				<include name="modification.xml"/>
+
+				<include name="languages/english.xml"/>
+				<include name="languages/english-utf8.xml"/>
+				<include name="languages/russian.xml"/>
+				<include name="languages/russian-utf8.xml"/>
+
+				<include name="cleantalk.class.php"/>
+				<include name="JSON.php"/>
+				<include name="readme.txt"/>
+				<include name="install.php"/>
+			</fileset>
+		</tar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${builddir}"/>
+	</target>
+</project>

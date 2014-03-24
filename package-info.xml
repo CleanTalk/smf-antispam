@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>cleantalk:antispam</id>
+	<name>Cleantalk Antispam</name>
+	<version>1.0.1</version>
+	<type>modification</type>
+	<install for="2.0 - 2.99.99">
+		<readme type="file" parsebbc="true">readme.txt</readme>
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+		<require-file name="CleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalk.class.php" destination="$sourcedir/cleantalk">Cleantalk API</require-file>
+		<require-file name="JSON.php" destination="$sourcedir/cleantalk">Cleantalk other classes</require-file>
+
+		<modification format="xml" type="file">modification.xml</modification>
+
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+
+		<database>install.php</database>
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</install>
+	<uninstall for="2.0 - 2.99.99">
+		<database>install.php</database>
+		<modification format="xml" type="file" reverse="true">modification.xml</modification>
+
+		<modification format="xml" type="file" reverse="true">languages/english.xml</modification>
+		<modification format="xml" type="file" reverse="true">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file" reverse="true">languages/russian.xml</modification>
+		<modification format="xml" type="file" reverse="true">languages/russian-utf8.xml</modification>
+
+		<remove-dir name="$sourcedir/cleantalk/"/>
+	</uninstall>
+</package-info>

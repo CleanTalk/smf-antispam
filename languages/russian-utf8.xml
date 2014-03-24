@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>cleantalk:antispamregister</id>
+	<name>Cleantalk Antispam Register</name>
+	<version>1.0.1</version>
+
+	<file name="$languagedir/Modifications.russian-utf8.php" error="skip">
+		<operation>
+			<search position="end"/>
+			<add><![CDATA[
+// CleanTalk messages begin
+$txt['cleantalk_settings'] = 'CleanTalk Mod настройки';
+$txt['cleantalk_api_key'] = 'CleanTalk API ключ доступа';
+$txt['cleantalk_api_key_description'] = 'Ключ доступа на сервис CleanTalk вы можете получить на сайте http://cleantalk.ru/';
+// CleanTalk messages end
+]]></add>
+		</operation>
+	</file>
+	<file name="$languagedir/EmailTemplates.russian-utf8.php" error="skip">
+		<operation>
+			<search position="replace"><![CDATA[{APPROVALLINK}]]></search>
+			<add><![CDATA[{APPROVALLINK}
+
+{USER.cleantalkmessage}]]></add>
+		</operation>
+	</file>
+
+</modification>
