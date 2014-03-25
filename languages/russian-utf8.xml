@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
-	<id>cleantalk:antispamregister</id>
-	<name>Cleantalk Antispam Register</name>
-	<version>1.0.1</version>
+	<id>cleantalk:antispam</id>
+	<name>Cleantalk Antispam</name>
+	<version>1.01</version>
 
 	<file name="$languagedir/Modifications.russian-utf8.php" error="skip">
 		<operation>
@@ -11,8 +11,8 @@
 			<add><![CDATA[
 // CleanTalk messages begin
 $txt['cleantalk_settings'] = 'CleanTalk Mod настройки';
-$txt['cleantalk_api_key'] = 'CleanTalk API ключ доступа';
-$txt['cleantalk_api_key_description'] = 'Ключ доступа на сервис CleanTalk вы можете получить на сайте http://cleantalk.ru/';
+$txt['cleantalk_api_key'] = 'Ключ доступа';
+$txt['cleantalk_api_key_description'] = 'Ключ доступа на сервис CleanTalk вы можете получить на сайте <a target="_blank" href="http://cleantalk.org">http://cleantalk.org</a>';
 // CleanTalk messages end
 ]]></add>
 		</operation>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
-	<id>cleantalk:antispamregister</id>
-	<name>Cleantalk Antispam Register</name>
-	<version>1.0.1</version>
+	<id>cleantalk:antispam</id>
+	<name>Cleantalk Antispam</name>
+	<version>1.01</version>
 	<file name="$languagedir/Modifications.english.php" error="skip">
 		<operation>
 			<search position="end"/>
 			<add><![CDATA[
 // CleanTalk messages begin
 $txt['cleantalk_settings'] = 'CleanTalk Mod settings';
-$txt['cleantalk_api_key'] = 'CleanTalk API Key';
-$txt['cleantalk_api_key_description'] = 'CleanTalk API Key you may get on http://cleantalk.ru/';
+$txt['cleantalk_api_key'] = 'Access key';
+$txt['cleantalk_api_key_description'] = 'Access key you may get on <a target="_blank" href="http://cleantalk.org">http://cleantalk.org</a>';
 // CleanTalk messages end
 ]]></add>
 		</operation>

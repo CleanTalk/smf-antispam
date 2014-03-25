@@ -1,14 +1,28 @@
 MOD [b]Cleantalk Antispam[/b]
+Version: 1.01
 
-Version: 1.0.1
+SMF Antispam mod with protection against spam bots and manual spam.
 
-[b]Features:[/b]
+[b]Features[/b]
 [list]
-	[li]Web-site protection against spam bots[/li]
-	[li]Protection from manual spam[/li]
-	[li]Applications for popular CMS [/li]
+	[li]Deny signups of spam bots[/li]
+	[li]If necessary require administrator approval for new members[/li]
 [/list]
 
-[url=http://cleantalk.ru/]CleanTalk site[/url]
+The mod is a client application for cloud anti-spam [url=http://cleantalk.org/]CleanTalk.org[/url], which are daily protects 5k web-sites from spam bots.
+Also you can use CleanTalk app for iPhone/iPad to control anti-spam service on web-site or control comments, signups, contacts and orders.
+
+[b]Admin Settings[/b]
+Mod has admin settings on page Admin - Features and options - Configuration - Modification settings
+
+[b]Compatibility Notes[/b]
+SMF 2.0 and up
+
+[b]Changelog[/b]
+v1.01 - March 25, 2014
+Initial Release of the mod
+
+
+[url=http://cleantalk.org/]CleanTalk site[/url]
 
 

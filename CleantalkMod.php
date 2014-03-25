@@ -2,7 +2,7 @@
 /**
  * CleanTalk SMF package
  *
- * @version 1.0.1
+ * @version 1.01
  * @package Cleantalk
  * @subpackage SMF
  * @author CleanTalk (welcome@cleantalk.ru)
@@ -14,6 +14,11 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
+
+// define same CleanTalk options
+define('CT_AGENT_VERSION', 'smf-101');
+define('CT_SERVER_URL', 'http://moderate.cleantalk.ru');
+
 
 /**
  * CleanTalk integrate register hook
@@ -30,20 +35,22 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 	}
 
 	$ct = new Cleantalk();
-	$ct->server_url = 'http://moderate.cleantalk.ru';
+	$ct->server_url = CT_SERVER_URL;
 
 	$ct_request = new CleantalkRequest();
 	$ct_request->auth_key = cleantalk_get_api_key();
 
 	$ct_request->response_lang = 'en'; // SMF use any charset and language
 
-	$ct_request->agent = 'php-api';
+	$ct_request->agent = CT_AGENT_VERSION;
 	$ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
 	$ct_request->sender_ip = isset($regOptions['register_vars']['member_ip']) ? $regOptions['register_vars']['member_ip'] : '';
 	$ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
+
 	if (isset($_SESSION['cleantalk_registration_form_start_time'])) {
 		$ct_request->submit_time = time() - $_SESSION['cleantalk_registration_form_start_time'];
 	}
+
 	if (isset($_POST['ct_checkjs'])) {
 		$ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
 	}

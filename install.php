@@ -2,7 +2,7 @@
 /**
  * CleanTalk SMF package installation PHP code
  *
- * @version 1.0.1
+ * @version 1.01
  * @package Cleantalk
  * @subpackage SMF
  * @author CleanTalk (welcome@cleantalk.ru)
