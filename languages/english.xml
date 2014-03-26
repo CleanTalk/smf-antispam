@@ -2,16 +2,16 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
-	<name>Cleantalk Antispam</name>
+	<name>Anti-spam by CleanTalk</name>
 	<version>1.01</version>
 	<file name="$languagedir/Modifications.english.php" error="skip">
 		<operation>
 			<search position="end"/>
 			<add><![CDATA[
 // CleanTalk messages begin
-$txt['cleantalk_settings'] = 'CleanTalk Mod settings';
+$txt['cleantalk_settings'] = 'Antispam by CleanTalk Mod settings';
 $txt['cleantalk_api_key'] = 'Access key';
-$txt['cleantalk_api_key_description'] = 'Access key you may get on <a target="_blank" href="http://cleantalk.org">http://cleantalk.org</a>';
+$txt['cleantalk_api_key_description'] = 'Access key you may get on <a target="_blank" href="https://cleantalk.org/register?platform=smf">http://cleantalk.org</a>';
 // CleanTalk messages end
 ]]></add>
 		</operation>

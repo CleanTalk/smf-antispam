@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanTalk SMF package installation PHP code
+ * CleanTalk SMF mod installation PHP code
  *
  * @version 1.01
  * @package Cleantalk
@@ -28,9 +28,10 @@ foreach ($hooks as $hook => $function) {
 }
 
 if ($isInstalling) {
-	updateSettings(array('reg_verification' => 0), true);
+	// Anti-Spam Verification captcha disable
+	updateSettings(array('reg_verification' => '0'), true);
 	updateSettings(array('cleantalk_api_key' => ''), false);
 } else {
 	// Anti-Spam Verification captcha
-	updateSettings(array('reg_verification' => 1), true);
+	updateSettings(array('reg_verification' => '1'), true);
 }

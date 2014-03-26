@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanTalk SMF package
+ * CleanTalk SMF mod
  *
  * @version 1.01
  * @package Cleantalk
@@ -61,16 +61,10 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 		'USER_AGENT' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null,
 	));
 
-	// CleanTalk API call
+	/**
+	 * @var CleantalkResponse $ct_result CleanTalk API call result
+	 */
 	$ct_result = $ct->isAllowUser($ct_request);
-
-	if ($ct_result->allow == 1) {
-		// this not error, only logging
-		log_error('CleanTalk: allow regisration for "' . $regOptions['username'] . '"', 'user');
-	} else {
-		// this is bot
-		fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
-	}
 
 	if ($ct_result->inactive == 1) {
 		// need admin approval
@@ -90,9 +84,16 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 
 		// temporarly turn on registration_method to approval_after
 		$modSettings['registration_method'] = 2;
+		return;
 	}
 
-	return;
+	if ($ct_result->allow == 0) {
+		// this is bot, stop registration
+		fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
+	} else {
+		// all ok, only logging
+		log_error('CleanTalk: allow regisration for "' . $regOptions['username'] . '"', 'user');
+	}
 }
 
 /**

@@ -1,7 +1,7 @@
-MOD [b]Cleantalk Antispam[/b]
+MOD [b]Anti-spam by CleanTalk[/b]
 Version: 1.01
 
-SMF Antispam mod with protection against spam bots and manual spam.
+Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
 
 [b]Features[/b]
 [list]
@@ -19,7 +19,7 @@ Mod has admin settings on page Admin - Features and options - Configuration - Mo
 SMF 2.0 and up
 
 [b]Changelog[/b]
-v1.01 - March 25, 2014
+v1.01 - March 27, 2014
 Initial Release of the mod
 
 

@@ -2,7 +2,7 @@
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
-	<name>Cleantalk Antispam</name>
+	<name>Anti-spam by CleanTalk</name>
 	<version>1.01</version>
 	<type>modification</type>
 	<install for="2.0 - 2.99.99">
@@ -19,13 +19,13 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 
-		<database>install.php</database>
+		<code>install.php</code>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
 	<uninstall for="2.0 - 2.99.99">
-		<database>install.php</database>
+		<code>install.php</code>
 		<modification format="xml" type="file" reverse="true">modification.xml</modification>
 
 		<modification format="xml" type="file" reverse="true">languages/english.xml</modification>
