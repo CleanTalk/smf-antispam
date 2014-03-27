@@ -1,4 +1,4 @@
-.build/
+build/*
 Thumbs.db
 .DS_Store
 .idea/
