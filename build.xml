@@ -10,7 +10,7 @@
 		<mkdir dir="${builddir}"/>
 	</target>
 
-	<target name="build" depends="prepare">
+	<target name="build" depends="clean,prepare">
 		<tar destfile="${builddir}/${package}-${version}.tar.gz" basedir="." compression="gzip" id="1">
 			<fileset dir=".">
 				<include name="package-info.xml"/>

@@ -2,6 +2,7 @@ MOD [b]Anti-spam by CleanTalk[/b]
 Version: 1.01
 
 Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
+No Captcha, no questions, no counting animals, no puzzles, no math.
 
 [b]Features[/b]
 [list]
@@ -17,6 +18,9 @@ Mod has admin settings on page Admin - Features and options - Configuration - Mo
 
 [b]Compatibility Notes[/b]
 SMF 2.0 and up
+
+[b]License[/b]
+[url=http://www.gnu.org/copyleft/gpl.html]GNU General Public License[/url]
 
 [b]Changelog[/b]
 v1.01 - March 27, 2014
