@@ -124,9 +124,7 @@ function cleantalk_get_api_key()
  */
 function cleantalk_general_mod_settings(&$config_vars)
 {
-	$config_vars += array(
-		array('title', 'cleantalk_settings'),
-		array('text', 'cleantalk_api_key'),
-		array('desc', 'cleantalk_api_key_description'),
-	);
+	$config_vars[] = array('title', 'cleantalk_settings');
+	$config_vars[] = array('text', 'cleantalk_api_key');
+	$config_vars[] = array('desc', 'cleantalk_api_key_description');
 }
