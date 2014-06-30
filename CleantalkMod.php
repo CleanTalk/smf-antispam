@@ -44,7 +44,10 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 
 	$ct_request->agent = CT_AGENT_VERSION;
 	$ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
-	$ct_request->sender_ip = isset($regOptions['register_vars']['member_ip']) ? $regOptions['register_vars']['member_ip'] : '';
+
+	$ip = isset($regOptions['register_vars']['member_ip']) ? $regOptions['register_vars']['member_ip'] : $_SERVER['REMOTE_ADDR'];
+	$ct_request->sender_ip =  $ct->ct_session_ip($ip);
+
 	$ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
 	if (isset($_SESSION['cleantalk_registration_form_start_time'])) {
