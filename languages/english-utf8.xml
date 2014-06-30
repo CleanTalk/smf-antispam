@@ -3,7 +3,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
-	<version>1.01</version>
+	<version>1.02</version>
 	<file name="$languagedir/Modifications.english-utf8.php" error="skip">
 		<operation>
 			<search position="end"/>
