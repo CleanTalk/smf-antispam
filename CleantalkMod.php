@@ -16,7 +16,7 @@ if (!defined('SMF'))
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-101');
+define('CT_AGENT_VERSION', 'smf-102');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.ru');
 
 
