@@ -30,7 +30,10 @@ foreach ($hooks as $hook => $function) {
 if ($isInstalling) {
 	// Anti-Spam Verification captcha disable
 	updateSettings(array('reg_verification' => '0'), true);
-	updateSettings(array('cleantalk_api_key' => ''), false);
+
+	$oldKey = isset($modSettings['cleantalk_api_key']) ?  $modSettings['cleantalk_api_key'] : '';
+
+	updateSettings(array('cleantalk_api_key' => $oldKey), false);
 } else {
 	// Anti-Spam Verification captcha
 	updateSettings(array('reg_verification' => '1'), true);

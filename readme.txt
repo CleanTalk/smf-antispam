@@ -26,6 +26,7 @@ SMF 2.0 and up
 v1.02 - June 30, 2014
 - Fix get remote ip when proxy used
 - Fix menu items in general_mod_settings
+- Fix bug clearing api key after mod updating
 
 v1.01 - March 27, 2014
 - Initial Release of the mod
