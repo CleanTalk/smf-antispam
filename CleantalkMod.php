@@ -2,11 +2,11 @@
 /**
  * CleanTalk SMF mod
  *
- * @version 1.01
+ * @version 1.02
  * @package Cleantalk
  * @subpackage SMF
  * @author CleanTalk (welcome@cleantalk.ru)
- * @copyright (C) 2013 Сleantalk team (http://cleantalk.org)
+ * @copyright (C) 2014 Сleantalk team (http://cleantalk.org)
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
