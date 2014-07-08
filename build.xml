@@ -35,6 +35,6 @@
 	</target>
 
 	<target name="copy">
-		<copy file="${builddir}/${package}-${version}.tar.gz" todir="/home/rustik/PhpstormProjects/smfforum/Packages" />
+		<copy file="${builddir}/${package}-${version}.tar.gz" todir="/home/rustik/PhpstormProjects/cleantalk/smfforum/Packages" />
 	</target>
 </project>

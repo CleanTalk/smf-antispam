@@ -19,9 +19,10 @@
 	<file name="$themedir/Register.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Are there any custom fields?]]></search>
-			<add><![CDATA[// cleantalk add hidden field for check javascript
-	echo '<input type="hidden" name="ct_checkjs" id="ct_checkjs" value="ok" /><script type="text/javascript">document.getElementById("ct_checkjs").value ="'.cleantalk_get_checkjs_code().'";</script>';
-]]></add>
+			<add><![CDATA[$cleantalkId = uniqid('ct_checkjs');
+echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" /><script type="text/javascript">document.getElementById("', $cleantalkId, '").value ="', cleantalk_get_checkjs_code(), '";</script>';
+]]>
+</add>
 		</operation>
 	</file>
 
