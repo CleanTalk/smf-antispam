@@ -2,7 +2,6 @@
 /**
  * CleanTalk SMF mod
  *
- * @version 1.02
  * @package Cleantalk
  * @subpackage SMF
  * @author CleanTalk (welcome@cleantalk.ru)
@@ -16,7 +15,7 @@ if (!defined('SMF'))
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-102');
+define('CT_AGENT_VERSION', 'smf-103');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.ru');
 
 

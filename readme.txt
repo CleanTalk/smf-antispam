@@ -1,5 +1,5 @@
 MOD [b]Anti-spam by CleanTalk[/b]
-Version: 1.02
+Version: 1.03
 
 Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.
@@ -23,15 +23,24 @@ SMF 2.0 and up
 [url=http://www.gnu.org/copyleft/gpl.html]GNU General Public License[/url]
 
 [b]Changelog[/b]
-v1.02 - June 30, 2014
-- Fix get remote ip when proxy used
-- Fix menu items in general_mod_settings
-- Fix bug clearing api key after mod updating
 
-v1.01 - March 27, 2014
-- Initial Release of the mod
+Version 1.03 July 15, 2014
+------------------------------
+- Fixed javascript checking in register form
+
+Version 1.02 June 30, 2014
+------------------------------
+- Fixed get remote ip when proxy used
+- Fixed menu items in general_mod_settings
+- Fixed bug clearing api key after mod updating
+
+Version 1.01 March 27, 2014
+------------------------------
+- Initial release
 
 
 [url=http://cleantalk.org/]CleanTalk site[/url]
+
+[url=https://github.com/CleanTalk/smf-antispam]Github repository[/url]
 
 
