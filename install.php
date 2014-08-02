@@ -33,6 +33,7 @@ if ($isInstalling) {
     $oldKey = isset($modSettings['cleantalk_api_key']) ? $modSettings['cleantalk_api_key'] : '';
 
     updateSettings(array('cleantalk_api_key' => $oldKey), false);
+    updateSettings(array('cleantalk_post_checking' => true), false);
 } else {
     // Anti-Spam Verification captcha
     updateSettings(array('reg_verification' => '1'), true);

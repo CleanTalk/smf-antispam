@@ -16,8 +16,8 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-103');
-define('CT_SERVER_URL', 'http://moderate.cleantalk.ru');
+define('CT_AGENT_VERSION', 'smf-120');
+define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 
 
 /**
@@ -102,6 +102,77 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 }
 
 /**
+ * Cleantalk check posts function
+ * @param array $msgOptions
+ * @param array $topicOptions
+ * @param array $posterOptions
+ */
+function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
+{
+    global $language, $user_info, $modSettings;
+
+    if (!$modSettings['cleantalk_post_checking']) {
+        // post checking off
+        return;
+    }
+
+    $ct = new Cleantalk();
+    $ct->server_url = CT_SERVER_URL;
+
+    $ct_request = new CleantalkRequest();
+    $ct_request->auth_key = cleantalk_get_api_key();
+
+    $ct_request->response_lang = 'en'; // SMF use any charset and language
+
+    $ct_request->agent = CT_AGENT_VERSION;
+    $ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
+
+    $ip = isset($user_info['ip']) ? $user_info['ip'] : $_SERVER['REMOTE_ADDR'];
+    $ct_request->sender_ip = $ct->ct_session_ip($ip);
+
+    $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
+    $ct_request->message = $msgOptions['body'];
+
+    if (isset($_SESSION['cleantalk_registration_form_start_time'])) {
+        //@todo
+        //$ct_request->submit_time = time() - $_SESSION['cleantalk_registration_form_start_time'];
+    }
+
+    if (isset($_POST['ct_checkjs'])) {
+        //@todo
+        //$ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
+    }
+
+    $ct_request->sender_info = json_encode(
+        array(
+            'REFFERRER' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null,
+            'cms_lang' => substr($language, 0, 2),
+            'USER_AGENT' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null,
+        )
+    );
+
+    /**
+     * @var CleantalkResponse $ct_result CleanTalk API call result
+     */
+    $ct_result = $ct->isAllowMessage($ct_request);
+
+    if ($ct_result->stop_queue == 1) {
+        log_error('CleanTalk: stop queue "' . $ct_result->comment . '"', 'user');
+        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
+
+    } elseif ($ct_result->inactive == 1) {
+        // @todo email notify
+        log_error('CleanTalk: inactive message "' . $ct_result->comment . '"', 'user');
+
+        $msgOptions['approved'] = false;
+    } else {
+        // all ok, only logging
+        log_error('CleanTalk: allow message for "' . $posterOptions['name'] . '"', 'user');
+    }
+}
+
+
+/**
  * Get CleanTalk hidden js code
  * @return string
  */
@@ -131,5 +202,6 @@ function cleantalk_general_mod_settings(&$config_vars)
 {
     $config_vars[] = array('title', 'cleantalk_settings');
     $config_vars[] = array('text', 'cleantalk_api_key');
+    $config_vars[] = array('check', 'cleantalk_post_checking');
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="www.simplemachines.org/xml/modification">
 	<id>cleantalk:antispam</id>
-	<version>1.03</version>
+	<version>1.20</version>
 	<file name="$sourcedir/Register.php">
 		<operation>
 			<search position="after"><![CDATA[// Show the user the right form.]]></search>
@@ -25,5 +25,13 @@ echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" 
 </add>
 		</operation>
 	</file>
+
+    <file name="$sourcedir/Post.php">
+        <operation>
+            <search position="after"><![CDATA[createPost($msgOptions, $topicOptions, $posterOptions);]]></search>
+            <add><![CDATA[cleantalk_check_message($msgOptions, $topicOptions, $posterOptions);]]>
+            </add>
+        </operation>
+    </file>
 
 </modification>

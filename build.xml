@@ -2,7 +2,7 @@
 <!-- Phing buid file -->
 <project name="Anti-spam by CleanTalk" basedir="." default="build">
 	<property name="package" value="antispam_cleantalk_smf"/>
-	<property name="version" value="1.03" override="yes"/>
+	<property name="version" value="1.20" override="yes"/>
 	<property name="builddir" value="build" override="true"/>
 
 	<target name="prepare">
