@@ -32,6 +32,20 @@ echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" 
             <add><![CDATA[cleantalk_check_message($msgOptions, $topicOptions, $posterOptions);]]>
             </add>
         </operation>
+        <operation>
+            <search position="after"><![CDATA[// Finally, load the template.]]></search>
+            <add><![CDATA[/*For CleanTalk form submit time*/ if ($context['current_action'] == 'post'){ $_SESSION['cleantalk_post_form_start_time'][$context['form_sequence_number']] = time();}]]>
+</add>
+        </operation>
+    </file>
+
+    <file name="$themedir/Post.template.php">
+        <operation>
+            <search position="after"><![CDATA[// Finally, the submit buttons.]]></search>
+            <add><![CDATA[$cleantalkId = uniqid('ct_checkjs');
+    echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" /><script type="text/javascript">document.getElementById("', $cleantalkId, '").value ="', cleantalk_get_checkjs_code(), '";</script>';]]>
+</add>
+        </operation>
     </file>
 
 </modification>

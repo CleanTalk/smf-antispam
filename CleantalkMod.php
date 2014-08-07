@@ -133,14 +133,13 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
     $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
     $ct_request->message = $msgOptions['body'];
 
-    if (isset($_SESSION['cleantalk_registration_form_start_time'])) {
-        //@todo
-        //$ct_request->submit_time = time() - $_SESSION['cleantalk_registration_form_start_time'];
+    $formSeq = $_POST['seqnum'];
+    if (isset($_SESSION['cleantalk_post_form_start_time'][$formSeq])) {
+        $ct_request->submit_time = time() - $_SESSION['cleantalk_post_form_start_time'][$formSeq];
     }
 
     if (isset($_POST['ct_checkjs'])) {
-        //@todo
-        //$ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
+        $ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
     }
 
     $ct_request->sender_info = json_encode(
@@ -161,10 +160,10 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
         fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
 
     } elseif ($ct_result->inactive == 1) {
-        // @todo email notify
+        cleantalk_send_admin_email($ct_result->comment);
         log_error('CleanTalk: inactive message "' . $ct_result->comment . '"', 'user');
 
-        $msgOptions['approved'] = false;
+        $msgOptions['approved'] = 0;
     } else {
         // all ok, only logging
         log_error('CleanTalk: allow message for "' . $posterOptions['name'] . '"', 'user');
@@ -204,4 +203,11 @@ function cleantalk_general_mod_settings(&$config_vars)
     $config_vars[] = array('text', 'cleantalk_api_key');
     $config_vars[] = array('check', 'cleantalk_post_checking');
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
+}
+
+function cleantalk_send_admin_email($message)
+{
+    global $sourcedir;
+    require_once($sourcedir . '/Subs-Admin.php');
+    return emailAdmins('send_email', array('EMAILSUBJECT' => '[CleanTalk]', 'EMAILBODY' => "CleanTalk check return inactive for post: \n$message"));
 }
