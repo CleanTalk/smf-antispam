@@ -109,7 +109,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
  */
 function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 {
-    global $language, $user_info, $modSettings;
+    global $language, $user_info, $modSettings, $smcFunc;
 
     if (!$modSettings['cleantalk_post_checking']) {
         // post checking off
@@ -149,6 +149,40 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
             'USER_AGENT' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null,
         )
     );
+
+    if (isset($topicOptions['id'])) {
+        // disable query check for UNION operator
+        $oldQueryCheck = $modSettings['disableQueryCheck'];
+        $modSettings['disableQueryCheck'] = true;
+
+        // find first and last 5 messages
+        $posts = $smcFunc['db_query'](
+            '',
+            'SELECT m.id_msg, m.body
+                   FROM {db_prefix}messages AS m
+                   JOIN {db_prefix}topics AS t ON t.id_first_msg=m.id_msg
+                   WHERE t.id_topic = {int:id_topic}
+                   UNION
+                   (SELECT m.id_msg, m.body
+                   FROM {db_prefix}messages AS m
+                   WHERE m.id_topic = {int:id_topic2} AND m.approved=1
+                   ORDER BY id_msg desc
+                   limit 5)
+                   ORDER BY id_msg',
+            array(
+                'id_topic' => $topicOptions['id'],
+                'id_topic2' => $topicOptions['id'],
+            )
+        );
+        $messages = array();
+        while ($post = $smcFunc['db_fetch_assoc']($posts)) {
+            $messages[] = $post['body'];
+        }
+        $smcFunc['db_free_result']($posts);
+        $modSettings['disableQueryCheck'] = $oldQueryCheck;
+
+        $ct_request->example = implode("\n", $messages);
+    }
 
     /**
      * @var CleantalkResponse $ct_result CleanTalk API call result
