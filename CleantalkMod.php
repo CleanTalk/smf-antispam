@@ -152,7 +152,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 
     if (isset($topicOptions['id'])) {
         // disable query check for UNION operator
-        $oldQueryCheck = $modSettings['disableQueryCheck'];
+        $oldQueryCheck = isset($modSettings['disableQueryCheck']) ? $modSettings['disableQueryCheck'] : false;
         $modSettings['disableQueryCheck'] = true;
 
         // find first and last 5 messages
