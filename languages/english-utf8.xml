@@ -11,7 +11,7 @@
 // CleanTalk messages begin
 $txt['cleantalk_settings'] = 'Antispam by CleanTalk Mod settings';
 $txt['cleantalk_api_key'] = 'Access key';
-$txt['cleantalk_post_checking'] = 'Check posts for antispam';
+$txt['cleantalk_first_post_checking'] = 'Enable antispam test for first post on board for Newly registered members';
 $txt['cleantalk_api_key_description'] = 'Access key you may get on <a target="_blank" href="https://cleantalk.org/register?platform=smf">http://cleantalk.org</a>';
 // CleanTalk messages end
 ]]></add>

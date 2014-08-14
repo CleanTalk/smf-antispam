@@ -111,8 +111,10 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 {
     global $language, $user_info, $modSettings, $smcFunc;
 
-    if (!$modSettings['cleantalk_post_checking']) {
+    if (!$modSettings['cleantalk_first_post_checking']) {
         // post checking off
+        return;
+    } elseif (isset($user_info['posts']) && $user_info['posts'] > 0) {
         return;
     }
 
@@ -235,10 +237,15 @@ function cleantalk_general_mod_settings(&$config_vars)
 {
     $config_vars[] = array('title', 'cleantalk_settings');
     $config_vars[] = array('text', 'cleantalk_api_key');
-    $config_vars[] = array('check', 'cleantalk_post_checking');
+    $config_vars[] = array('check', 'cleantalk_first_post_checking');
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
 }
 
+/**
+ * Send email to admin group
+ * @param string $message
+ * @return mixed
+ */
 function cleantalk_send_admin_email($message)
 {
     global $sourcedir;
