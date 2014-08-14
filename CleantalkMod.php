@@ -243,5 +243,5 @@ function cleantalk_send_admin_email($message)
 {
     global $sourcedir;
     require_once($sourcedir . '/Subs-Admin.php');
-    return emailAdmins('send_email', array('EMAILSUBJECT' => '[CleanTalk]', 'EMAILBODY' => "CleanTalk check return inactive for post: \n$message"));
+    return emailAdmins('send_email', array('EMAILSUBJECT' => '[Antispam for the board]', 'EMAILBODY' => "CleanTalk antispam failed: \n$message"));
 }
