@@ -2,7 +2,7 @@
 /**
  * Cleantalk base class
  *
- * @version 1.26
+ * @version 1.29
  * @package Cleantalk
  * @subpackage Base
  * @author Сleantalk team (welcome@cleantalk.ru)
@@ -397,8 +397,8 @@ class Cleantalk {
      * Use https connection to servers 
      * @var bool 
      */
-    public $ssl_on = false; 
-    
+    public $ssl_on = false;
+
     /**
      * Function checks whether it is possible to publish the message
      * @param CleantalkRequest $request
@@ -872,16 +872,57 @@ class Cleantalk {
         return $message;
     }
 
-    /*
-       Get user IP behind proxy server
+    /**
+    *   Get user IP behind proxy server
     */
     public function ct_session_ip( $data_ip ) {
-        if ($data_ip == '127.0.0.1' && isset($_SERVER['HTTP_X_FORWARDED_FOR']) && preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $data_ip = $_SERVER['HTTP_X_FORWARDED_FOR']; 
+        if (!$data_ip || !preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $data_ip)) {
+            return $data_ip;
+        }
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            
+            $forwarded_ip = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
+
+            // Looking for first value in the list, it should be sender real IP address
+            if (!preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $forwarded_ip[0])) {
+                return $data_ip;
+            }
+
+            $private_src_ip = false;
+            $private_nets = array(
+                '10.0.0.0/8',
+                '127.0.0.0/8',
+                '176.16.0.0/12',
+                '192.168.0.0/16',
+            );
+
+            foreach ($private_nets as $v) {
+
+                // Private IP found
+                if ($private_src_ip) {
+                    continue;
+                }
+                
+                if ($this->net_match($v, $data_ip)) {
+                    $private_src_ip = true;
+                }
+            }
+            if ($private_src_ip) {
+                // Taking first IP from the list HTTP_X_FORWARDED_FOR 
+                $data_ip = $forwarded_ip[0]; 
+            }
         }
 
         return $data_ip;
     }
+
+    /**
+    * From http://php.net/manual/en/function.ip2long.php#82397
+    */
+    public function net_match($CIDR,$IP) { 
+        list ($net, $mask) = explode ('/', $CIDR); 
+        return ( ip2long ($IP) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($net); 
+    } 
     
     /**
     * Function to check response time
