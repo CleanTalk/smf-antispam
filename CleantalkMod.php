@@ -196,16 +196,40 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
         fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
 
     } elseif ($ct_result->inactive == 1) {
-        cleantalk_send_admin_email($ct_result->comment);
         log_error('CleanTalk: inactive message "' . $ct_result->comment . '"', 'user');
 
-        $msgOptions['approved'] = 0;
+        if ($modSettings['postmod_active']) {
+            // If post moderation active then set message not approved
+            $msgOptions['approved'] = 0;
+        }
+        $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
+
     } else {
         // all ok, only logging
         log_error('CleanTalk: allow message for "' . $posterOptions['name'] . '"', 'user');
     }
 }
 
+/**
+ * Integrate hook after post created
+ * @param array $msgOptions
+ * @param array $topicOptions
+ * @param array $posterOptions
+ */
+function cleantalk_integrate_create_topic($msgOptions, $topicOptions, $posterOptions)
+{
+    global $sourcedir,$scripturl;
+    if (isset($msgOptions['cleantalk_check_message_result'])) {
+        require_once($sourcedir . '/Subs-Admin.php');
+
+        $link = $scripturl . '?topic=' . $topicOptions['id'] . '.msg' . $msgOptions['id'] . '#msg' . $msgOptions['id'];
+
+        $message = $msgOptions['cleantalk_check_message_result'] . "\n\n" . $link;
+
+
+        emailAdmins('send_email', array('EMAILSUBJECT' => '[Antispam for the board]', 'EMAILBODY' => "CleanTalk antispam failed: \n$message"));
+    }
+}
 
 /**
  * Get CleanTalk hidden js code
@@ -239,16 +263,4 @@ function cleantalk_general_mod_settings(&$config_vars)
     $config_vars[] = array('text', 'cleantalk_api_key');
     $config_vars[] = array('check', 'cleantalk_first_post_checking');
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
-}
-
-/**
- * Send email to admin group
- * @param string $message
- * @return mixed
- */
-function cleantalk_send_admin_email($message)
-{
-    global $sourcedir;
-    require_once($sourcedir . '/Subs-Admin.php');
-    return emailAdmins('send_email', array('EMAILSUBJECT' => '[Antispam for the board]', 'EMAILBODY' => "CleanTalk antispam failed: \n$message"));
 }
