@@ -24,6 +24,10 @@ SMF 2.0 and up
 
 [b]Changelog[/b]
 
+Version 1.20 August 19, 2014
+------------------------------
+- Added antispam test for first post on board for Newly registered members
+
 Version 1.03 July 15, 2014
 ------------------------------
 - Fixed javascript checking in register form
