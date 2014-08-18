@@ -13,7 +13,6 @@ $hooks = array(
     'integrate_pre_include' => '$sourcedir/cleantalk/CleantalkMod.php',
     'integrate_register' => 'cleantalk_check_register',
     'integrate_general_mod_settings' => 'cleantalk_general_mod_settings',
-    'integrate_create_topic' => 'cleantalk_integrate_create_topic',
 );
 
 $isInstalling = empty($context['uninstalling']);

@@ -211,12 +211,12 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 }
 
 /**
- * Integrate hook after post created
+ * After post created
  * @param array $msgOptions
  * @param array $topicOptions
  * @param array $posterOptions
  */
-function cleantalk_integrate_create_topic($msgOptions, $topicOptions, $posterOptions)
+function cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions)
 {
     global $sourcedir,$scripturl;
     if (isset($msgOptions['cleantalk_check_message_result'])) {
