@@ -8,6 +8,7 @@ No Captcha, no questions, no counting animals, no puzzles, no math.
 [list]
 	[li]Deny signups of spam bots[/li]
 	[li]If necessary require administrator approval for new members[/li]
+	[li]Antispam test for first post on board for Newly registered members[/li]
 [/list]
 
 The mod is a client application for cloud anti-spam [url=http://cleantalk.org/]CleanTalk.org[/url], which are daily protects 5k web-sites from spam bots.
