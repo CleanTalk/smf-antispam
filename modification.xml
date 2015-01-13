@@ -19,9 +19,7 @@
 	<file name="$themedir/Register.template.php">
 		<operation>
 			<search position="after"><![CDATA[// Are there any custom fields?]]></search>
-			<add><![CDATA[$cleantalkId = uniqid('ct_checkjs');
-echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" /><script type="text/javascript">document.getElementById("', $cleantalkId, '").value ="', cleantalk_get_checkjs_code(), '";</script>';
-]]>
+            <add><![CDATA[cleantalk_print_js_input();]]>
 </add>
 		</operation>
 	</file>
@@ -49,8 +47,15 @@ echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" 
     <file name="$themedir/Post.template.php">
         <operation>
             <search position="after"><![CDATA[// Finally, the submit buttons.]]></search>
-            <add><![CDATA[$cleantalkId = uniqid('ct_checkjs');
-    echo '<input type="hidden" name="ct_checkjs" id="', $cleantalkId, '" value="ok" /><script type="text/javascript">document.getElementById("', $cleantalkId, '").value ="', cleantalk_get_checkjs_code(), '";</script>';]]>
+            <add><![CDATA[cleantalk_print_js_input();]]>
+</add>
+        </operation>
+    </file>
+
+    <file name="$themedir/Display.template.php">
+        <operation>
+            <search position="after"><![CDATA[// Is visual verification enabled?]]></search>
+            <add><![CDATA[cleantalk_print_js_input();]]>
 </add>
         </operation>
     </file>
