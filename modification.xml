@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="www.simplemachines.org/xml/modification">
 	<id>cleantalk:antispam</id>
-	<version>1.20</version>
+	<version>1.21</version>
 	<file name="$sourcedir/Register.php">
 		<operation>
 			<search position="after"><![CDATA[// Show the user the right form.]]></search>

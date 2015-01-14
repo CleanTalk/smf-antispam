@@ -1,5 +1,5 @@
 MOD [b]Anti-spam by CleanTalk[/b]
-Version: 1.20
+Version: 1.21
 
 Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.
@@ -24,6 +24,10 @@ SMF 2.0 and up
 [url=http://www.gnu.org/copyleft/gpl.html]GNU General Public License[/url]
 
 [b]Changelog[/b]
+Version 1.21 January 15, 2015
+------------------------------
+- Fixed submit time checks in quick reply form
+- Fixed javascript checks in quick reply form
 
 Version 1.20 August 19, 2014
 ------------------------------

@@ -1,5 +1,6 @@
-Version Dev January 14, 2015
+Version 1.21 January 15, 2015
 ------------------------------
+- Fixed submit time checks in quick reply form
 - Fixed javascript checks in quick reply form
 
 Version 1.20 August 19, 2014
