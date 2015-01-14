@@ -50,9 +50,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 
     $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
-    if (isset($_SESSION['cleantalk_registration_form_start_time'])) {
-        $ct_request->submit_time = time() - $_SESSION['cleantalk_registration_form_start_time'];
-    }
+    $ct_request->submit_time = cleantalk_get_form_submit_time(-1);
 
     if (isset($_POST['ct_checkjs'])) {
         $ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
@@ -135,10 +133,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
     $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
     $ct_request->message = $msgOptions['body'];
 
-    $formSeq = $_POST['seqnum'];
-    if (isset($_SESSION['cleantalk_post_form_start_time'][$formSeq])) {
-        $ct_request->submit_time = time() - $_SESSION['cleantalk_post_form_start_time'][$formSeq];
-    }
+    $ct_request->submit_time = cleantalk_get_form_submit_time($_POST['seqnum']);
 
     if (isset($_POST['ct_checkjs'])) {
         $ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
@@ -272,5 +267,24 @@ function cleantalk_print_js_input()
 {
     $id = uniqid('ct_checkjs');
     echo '<input type="hidden" name="ct_checkjs" id="', $id, '" value="ok" />',
-        '<script type="text/javascript">document.getElementById("', $id, '").value ="', cleantalk_get_checkjs_code(), '</script>';
+    '<script type="text/javascript">document.getElementById("', $id, '").value ="', cleantalk_get_checkjs_code(), '"</script>';
+}
+
+/**
+ * Store form start time
+ * @param int $formSeq
+ */
+function cleantalk_store_form_start_time($formSeq)
+{
+    $_SESSION['cleantalk_form_start_time'][$formSeq] = time();
+}
+
+/**
+ * Get form submit time
+ * @param int $formSeq
+ * @return int|null
+ */
+function cleantalk_get_form_submit_time($formSeq)
+{
+    return isset($_SESSION['cleantalk_form_start_time'][$formSeq]) ? time() - $_SESSION['cleantalk_form_start_time'][$formSeq] : null;
 }

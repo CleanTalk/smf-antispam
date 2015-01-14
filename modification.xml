@@ -9,12 +9,19 @@
 			<add><![CDATA[if (!isset($_POST['regSubmit']))
 	{
 		// cleantalk set start time of registration
-		$_SESSION['cleantalk_registration_form_start_time'] = time();
+		cleantalk_store_form_start_time(-1);
 	}
 ]]>
 </add>
 		</operation>
 	</file>
+    <file name="$sourcedir/Security.php">
+        <operation>
+            <search position="before"><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);]]></search>
+            <add><![CDATA[cleantalk_store_form_start_time($context['form_sequence_number']);]]>
+</add>
+        </operation>
+    </file>
 
 	<file name="$themedir/Register.template.php">
 		<operation>
@@ -29,11 +36,6 @@
             <search position="after"><![CDATA[createPost($msgOptions, $topicOptions, $posterOptions);]]></search>
             <add><![CDATA[cleantalk_check_message($msgOptions, $topicOptions, $posterOptions);]]>
             </add>
-        </operation>
-        <operation>
-            <search position="after"><![CDATA[// Finally, load the template.]]></search>
-            <add><![CDATA[/*For CleanTalk form submit time*/ if ($context['current_action'] == 'post'){ $_SESSION['cleantalk_post_form_start_time'][$context['form_sequence_number']] = time();}]]>
-</add>
         </operation>
     </file>
     <file name="$sourcedir/Subs-Post.php">
