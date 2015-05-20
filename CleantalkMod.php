@@ -266,8 +266,13 @@ function cleantalk_general_mod_settings(&$config_vars)
 function cleantalk_print_js_input()
 {
     $id = uniqid('ct_checkjs');
-    echo '<input type="hidden" name="ct_checkjs" id="', $id, '" value="ok" />',
-    '<script type="text/javascript">document.getElementById("', $id, '").value ="', cleantalk_get_checkjs_code(), '"</script>';
+    $value = cleantalk_get_checkjs_code();
+    echo "<input type=\"hidden\" name=\"ct_checkjs\" id=\"$id\" value=\"ok\" />
+    <script type=\"text/javascript\">
+        setTimeout(function(){
+            document.getElementById('$id').value = '$value';
+            }, 1000);
+    </script>";
 }
 
 /**
