@@ -4,6 +4,8 @@ Version: 1.30
 Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.
 
+[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]
+
 [b]Features[/b]
 [list]
 	[li]Deny signups of spam bots[/li]
@@ -26,8 +28,10 @@ SMF 2.0 and up
 [b]Changelog[/b]
 Version 1.30 May 25, 2015
 ------------------------------
-- Updates Cleantalk API to v2.0.0
+- Updated Cleantalk API to v2.0.0
 - Added logging option for enable logging to SMF
+- Fixed bugs in installing/uninstalling mod
+
 
 Version 1.21 January 15, 2015
 ------------------------------
