@@ -1,5 +1,5 @@
 MOD [b]Anti-spam by CleanTalk[/b]
-Version: 1.3.0
+Version: 1.30
 
 Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.
@@ -24,7 +24,7 @@ SMF 2.0 and up
 [url=http://www.gnu.org/copyleft/gpl.html]GNU General Public License[/url]
 
 [b]Changelog[/b]
-Version 1.3.0 May 25, 2015
+Version 1.30 May 25, 2015
 ------------------------------
 - Updates Cleantalk API to v2.0.0
 - Added logging option for enable logging to SMF

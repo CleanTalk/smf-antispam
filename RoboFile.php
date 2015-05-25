@@ -8,7 +8,7 @@
 class RoboFile extends \Robo\Tasks
 {
     const PACKAGE = 'antispam_cleantalk_smf';
-    const VERSION = '1.3.0';
+    const VERSION = '1.30';
 
     /**
      * Build SMF zip-package
