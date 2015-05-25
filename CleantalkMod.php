@@ -72,7 +72,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
     if ($ct_result->inactive == 1) {
         // need admin approval
 
-        log_error('CleanTalk: need approval for "' . $regOptions['username'] . '"', 'user');
+        cleantalk_log('need approval for "' . $regOptions['username'] . '"');
 
         $regOptions['register_vars']['is_activated'] = 3; // waiting for admin approval
         $regOptions['require'] = 'approval';
@@ -92,10 +92,11 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 
     if ($ct_result->allow == 0) {
         // this is bot, stop registration
-        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
+        cleantalk_log('deny registration' . strip_tags($ct_result->comment));
+        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
     } else {
         // all ok, only logging
-        log_error('CleanTalk: allow regisration for "' . $regOptions['username'] . '"', 'user');
+        cleantalk_log('allow regisration for "' . $regOptions['username'] . '"');
     }
 }
 
@@ -187,11 +188,11 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
     $ct_result = $ct->isAllowMessage($ct_request);
 
     if ($ct_result->stop_queue == 1) {
-        log_error('CleanTalk: stop queue "' . $ct_result->comment . '"', 'user');
-        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), 'user');
+        cleantalk_log('stop queue "' . $ct_result->comment . '"');
+        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
 
     } elseif ($ct_result->inactive == 1) {
-        log_error('CleanTalk: inactive message "' . $ct_result->comment . '"', 'user');
+        cleantalk_log('inactive message "' . $ct_result->comment . '"');
 
         if ($modSettings['postmod_active']) {
             // If post moderation active then set message not approved
@@ -201,7 +202,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 
     } else {
         // all ok, only logging
-        log_error('CleanTalk: allow message for "' . $posterOptions['name'] . '"', 'user');
+        cleantalk_log('allow message for "' . $posterOptions['name'] . '"');
     }
 }
 
@@ -213,7 +214,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
  */
 function cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions)
 {
-    global $sourcedir,$scripturl;
+    global $sourcedir, $scripturl;
     if (isset($msgOptions['cleantalk_check_message_result'])) {
         require_once($sourcedir . '/Subs-Admin.php');
 
@@ -257,6 +258,7 @@ function cleantalk_general_mod_settings(&$config_vars)
     $config_vars[] = array('title', 'cleantalk_settings');
     $config_vars[] = array('text', 'cleantalk_api_key');
     $config_vars[] = array('check', 'cleantalk_first_post_checking');
+    $config_vars[] = array('check', 'cleantalk_logging');
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
 }
 
@@ -292,4 +294,16 @@ function cleantalk_store_form_start_time($formSeq)
 function cleantalk_get_form_submit_time($formSeq)
 {
     return isset($_SESSION['cleantalk_form_start_time'][$formSeq]) ? time() - $_SESSION['cleantalk_form_start_time'][$formSeq] : null;
+}
+
+/**
+ * Logging message into SMF log
+ * @param string $message
+ */
+function cleantalk_log($message)
+{
+    global $modSettings;
+    if (array_key_exists('cleantalk_logging', $modSettings) && $modSettings['cleantalk_logging']) {
+        log_error('CleanTalk: ' . $message, 'user');
+    }
 }
