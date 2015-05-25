@@ -1,64 +1,69 @@
 <?xml version="1.0"?>
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="www.simplemachines.org/xml/modification">
-	<id>cleantalk:antispam</id>
-	<version>1.21</version>
-	<file name="$sourcedir/Register.php">
-		<operation>
-			<search position="after"><![CDATA[// Show the user the right form.]]></search>
-			<add><![CDATA[if (!isset($_POST['regSubmit']))
-	{
-		// cleantalk set start time of registration
-		cleantalk_store_form_start_time(-1);
-	}
-]]>
-</add>
-		</operation>
-	</file>
+    <id>cleantalk:antispam</id>
+    <version>1.30</version>
+    <file name="$sourcedir/Register.php">
+        <operation>
+            <search position="replace"><![CDATA[// Show the user the right form.]]></search>
+            <add><![CDATA[if (!isset($_POST['regSubmit']))
+    {
+        // cleantalk set start time of registration
+        cleantalk_store_form_start_time(-1);
+    }
+    // Show the user the right form.]]>
+            </add>
+        </operation>
+    </file>
     <file name="$sourcedir/Security.php">
         <operation>
-            <search position="before"><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);]]></search>
-            <add><![CDATA[cleantalk_store_form_start_time($context['form_sequence_number']);]]>
-</add>
+            <search position="replace"><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);]]></search>
+            <add><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);
+
+        cleantalk_store_form_start_time($context['form_sequence_number']);
+]]></add>
         </operation>
     </file>
 
-	<file name="$themedir/Register.template.php">
-		<operation>
-			<search position="after"><![CDATA[// Are there any custom fields?]]></search>
-            <add><![CDATA[cleantalk_print_js_input();]]>
-</add>
-		</operation>
-	</file>
+    <file name="$themedir/Register.template.php">
+        <operation>
+            <search position="replace"><![CDATA[// Are there any custom fields?]]></search>
+            <add><![CDATA[cleantalk_print_js_input();
+
+    // Are there any custom fields]]></add>
+        </operation>
+    </file>
 
     <file name="$sourcedir/Post.php">
         <operation>
-            <search position="after"><![CDATA[createPost($msgOptions, $topicOptions, $posterOptions);]]></search>
-            <add><![CDATA[cleantalk_check_message($msgOptions, $topicOptions, $posterOptions);]]>
-            </add>
+            <search position="replace"><![CDATA[createPost($msgOptions, $topicOptions, $posterOptions);]]></search>
+            <add><![CDATA[cleantalk_check_message($msgOptions, $topicOptions, $posterOptions);
+
+        createPost($msgOptions, $topicOptions, $posterOptions);
+]]></add>
         </operation>
     </file>
     <file name="$sourcedir/Subs-Post.php">
         <operation>
-            <search position="after"><![CDATA[// Increase the number of posts and topics on the board.]]></search>
-            <add><![CDATA[cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions);]]>
-</add>
+            <search position="replace"><![CDATA[// Increase the number of posts and topics on the board.]]></search>
+            <add><![CDATA[cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions);
+    // Increase the number of posts and topics on the board.]]></add>
         </operation>
     </file>
 
     <file name="$themedir/Post.template.php">
         <operation>
-            <search position="after"><![CDATA[// Finally, the submit buttons.]]></search>
-            <add><![CDATA[cleantalk_print_js_input();]]>
-</add>
+            <search position="replace"><![CDATA[// Finally, the submit buttons.]]></search>
+            <add><![CDATA[cleantalk_print_js_input();
+    // Finally, the submit buttons.]]></add>
         </operation>
     </file>
 
     <file name="$themedir/Display.template.php">
         <operation>
-            <search position="after"><![CDATA[// Is visual verification enabled?]]></search>
-            <add><![CDATA[cleantalk_print_js_input();]]>
-</add>
+            <search position="replace"><![CDATA[// Is visual verification enabled?]]></search>
+            <add><![CDATA[cleantalk_print_js_input();
+            // Is visual verification enabled?]]></add>
         </operation>
     </file>
 
