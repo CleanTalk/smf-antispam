@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="www.simplemachines.org/xml/modification">
+    <id>cleantalk:antispam</id>
+    <version>1.0</version>
+    <file name="$languagedir/Modifications.english.php" error="skip">
+        <operation>
+            <search position="replace"><![CDATA[// CleanTalk messages end]]></search>
+            <add><![CDATA[$txt['cleantalk_logging'] = 'Enable logging';
+// CleanTalk messages end]]></add>
+        </operation>
+    </file>
+    <file name="$languagedir/Modifications.english-utf8.php" error="skip">
+        <operation>
+            <search position="replace"><![CDATA[// CleanTalk messages end]]></search>
+            <add><![CDATA[$txt['cleantalk_logging'] = 'Enable logging';
+// CleanTalk messages end]]></add>
+        </operation>
+    </file>
+    <file name="$languagedir/Modifications.russian-utf8.php" error="skip">
+        <operation>
+            <search position="replace"><![CDATA[// CleanTalk messages end]]></search>
+            <add><![CDATA[$txt['cleantalk_logging'] = 'Включить логирование ответов сервиса';
+// CleanTalk messages end]]></add>
+        </operation>
+    </file>
+</modification>

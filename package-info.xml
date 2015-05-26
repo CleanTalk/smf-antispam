@@ -35,4 +35,23 @@
 
 		<remove-dir name="$sourcedir/cleantalk/"/>
 	</uninstall>
+	<upgrade from="1.0-1.20">
+		<readme type="inline" parsebbc="true">
+			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
+		</readme>
+	</upgrade>
+	<upgrade from="1.21">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 1.21 to 1.30 version:
+			- Updated Cleantalk API to v2.0.0
+			- Added logging option for enable/disable logging to SMF
+		</readme>
+		<require-file name="CleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalk.class.php" destination="$sourcedir/cleantalk">Cleantalk API</require-file>
+		<code type="inline">updateSettings(array('cleantalk_logging' => '0'), false);</code>
+		<modification format="xml" type="file">upgrades/1.30.xml</modification>
+		<modification format="xml" type="file">upgrades/1.30_windows1251.xml</modification>
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</upgrade>
 </package-info>

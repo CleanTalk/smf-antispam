@@ -36,6 +36,7 @@ class RoboFile extends \Robo\Tasks
         $zip->addGlob('*.xml');
         $zip->addGlob('*.txt');
         $zip->addGlob('languages/*.xml');
+        $zip->addGlob('upgrades/*.xml');
         $zip->deleteName('RoboFile.php'); //self
         $zip->close();
         $this->say("Created zip $filename");
