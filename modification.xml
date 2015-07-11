@@ -3,33 +3,6 @@
 <modification xmlns="www.simplemachines.org/xml/modification">
 	<id>cleantalk:antispam</id>
 	<version>1.21</version>
-	<file name="$sourcedir/Register.php">
-		<operation>
-			<search position="after"><![CDATA[// Show the user the right form.]]></search>
-			<add><![CDATA[if (!isset($_POST['regSubmit']))
-	{
-		// cleantalk set start time of registration
-		cleantalk_store_form_start_time(-1);
-	}
-]]>
-</add>
-		</operation>
-	</file>
-    <file name="$sourcedir/Security.php">
-        <operation>
-            <search position="before"><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);]]></search>
-            <add><![CDATA[cleantalk_store_form_start_time($context['form_sequence_number']);]]>
-</add>
-        </operation>
-    </file>
-
-	<file name="$themedir/Register.template.php">
-		<operation>
-			<search position="after"><![CDATA[// Are there any custom fields?]]></search>
-            <add><![CDATA[cleantalk_print_js_input();]]>
-</add>
-		</operation>
-	</file>
 
     <file name="$sourcedir/Post.php">
         <operation>
@@ -45,21 +18,4 @@
 </add>
         </operation>
     </file>
-
-    <file name="$themedir/Post.template.php">
-        <operation>
-            <search position="after"><![CDATA[// Finally, the submit buttons.]]></search>
-            <add><![CDATA[cleantalk_print_js_input();]]>
-</add>
-        </operation>
-    </file>
-
-    <file name="$themedir/Display.template.php">
-        <operation>
-            <search position="after"><![CDATA[// Is visual verification enabled?]]></search>
-            <add><![CDATA[cleantalk_print_js_input();]]>
-</add>
-        </operation>
-    </file>
-
 </modification>
