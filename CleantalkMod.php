@@ -50,11 +50,9 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 
     $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
-    $ct_request->submit_time = cleantalk_get_form_submit_time(-1);
+    $ct_request->submit_time = cleantalk_get_form_submit_time();
 
-    if (array_key_exists('ct_checkjs', $_COOKIE)) {
-        $ct_request->js_on = $_COOKIE['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
-    }
+    $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
     $ct_request->sender_info = json_encode(
         array(
@@ -134,11 +132,9 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
     $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
     $ct_request->message = $msgOptions['body'];
 
-    $ct_request->submit_time = cleantalk_get_form_submit_time($_POST['seqnum']);
+    $ct_request->submit_time = cleantalk_get_form_submit_time();
 
-    if (array_key_exists('ct_checkjs', $_COOKIE)) {
-        $ct_request->js_on = $_COOKIE['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
-    }
+    $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
     $ct_request->sender_info = json_encode(
         array(
@@ -263,33 +259,32 @@ function cleantalk_general_mod_settings(&$config_vars)
 }
 
 /**
- * Print CleanTalk javascript verify code
+ * Return CleanTalk javascript verify code
  */
 function cleantalk_print_js_input()
 {
     $value = cleantalk_get_checkjs_code();
-    echo "<script type=\"text/javascript\">
-        document.cookie = 'ct_checkjs=' + encodeURIComponent($value) + ';path=/'
+
+    return "<script type=\"text/javascript\">
+        document.cookie = 'ct_checkjs=' + encodeURIComponent('$value') + ';path=/'
     </script>";
 }
 
 /**
  * Store form start time
- * @param int $formSeq
  */
-function cleantalk_store_form_start_time($formSeq)
+function cleantalk_store_form_start_time()
 {
-    $_SESSION['cleantalk_form_start_time'][$formSeq] = time();
+    $_SESSION['ct_form_start_time'] = time();
 }
 
 /**
  * Get form submit time
- * @param int $formSeq
  * @return int|null
  */
-function cleantalk_get_form_submit_time($formSeq)
+function cleantalk_get_form_submit_time()
 {
-    return isset($_SESSION['cleantalk_form_start_time'][$formSeq]) ? time() - $_SESSION['cleantalk_form_start_time'][$formSeq] : null;
+    return isset($_SESSION['ct_form_start_time']) ? time() - $_SESSION['ct_form_start_time'] : null;
 }
 
 /**
@@ -302,4 +297,28 @@ function cleantalk_log($message)
     if (array_key_exists('cleantalk_logging', $modSettings) && $modSettings['cleantalk_logging']) {
         log_error('CleanTalk: ' . $message, 'user');
     }
+}
+
+/**
+ * Calling by hook integrate_load_theme
+ */
+function cleantalk_load()
+{
+    global $context, $user_info;
+
+    if ($user_info['is_guest'] || $user_info['posts'] == 0) {
+        cleantalk_store_form_start_time();
+        if (!cleantalk_is_valid_js()) {
+            $context ['html_headers'] .= cleantalk_print_js_input();
+        }
+    }
+}
+
+/**
+ * Is Javascript enabled and valid
+ * @return bool
+ */
+function cleantalk_is_valid_js()
+{
+    return array_key_exists('ct_checkjs', $_COOKIE) && $_COOKIE['ct_checkjs'] == cleantalk_get_checkjs_code();
 }
