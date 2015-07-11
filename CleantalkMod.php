@@ -52,8 +52,8 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
 
     $ct_request->submit_time = cleantalk_get_form_submit_time(-1);
 
-    if (isset($_POST['ct_checkjs'])) {
-        $ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
+    if (array_key_exists('ct_checkjs', $_COOKIE)) {
+        $ct_request->js_on = $_COOKIE['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
     }
 
     $ct_request->sender_info = json_encode(
@@ -136,8 +136,8 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 
     $ct_request->submit_time = cleantalk_get_form_submit_time($_POST['seqnum']);
 
-    if (isset($_POST['ct_checkjs'])) {
-        $ct_request->js_on = $_POST['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
+    if (array_key_exists('ct_checkjs', $_COOKIE)) {
+        $ct_request->js_on = $_COOKIE['ct_checkjs'] == cleantalk_get_checkjs_code() ? 1 : 0;
     }
 
     $ct_request->sender_info = json_encode(
@@ -263,17 +263,13 @@ function cleantalk_general_mod_settings(&$config_vars)
 }
 
 /**
- * Print CleanTalk javascript verify hidden input
+ * Print CleanTalk javascript verify code
  */
 function cleantalk_print_js_input()
 {
-    $id = uniqid('ct_checkjs');
     $value = cleantalk_get_checkjs_code();
-    echo "<input type=\"hidden\" name=\"ct_checkjs\" id=\"$id\" value=\"ok\" />
-    <script type=\"text/javascript\">
-        setTimeout(function(){
-            document.getElementById('$id').value = '$value';
-            }, 1000);
+    echo "<script type=\"text/javascript\">
+        document.cookie = 'ct_checkjs=' + encodeURIComponent($value) + ';path=/'
     </script>";
 }
 
