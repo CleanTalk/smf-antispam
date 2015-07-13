@@ -1,3 +1,9 @@
+Version 1.40 July 13, 2015
+------------------------------
+- Updated browser javascript detecting algorithm
+- Added compatibility with other plugins for social networks
+- Removed unnecessary template patches
+
 Version 1.30 May 25, 2015
 ------------------------------
 - Updated Cleantalk API to v2.0.0
