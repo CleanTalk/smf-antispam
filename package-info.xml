@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
-	<version>1.30</version>
+	<version>1.40</version>
 	<type>modification</type>
 	<install for="2.0 - 2.0.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
@@ -50,6 +50,19 @@
 		<code type="inline">updateSettings(array('cleantalk_logging' => '0'), false);</code>
 		<modification format="xml" type="file">upgrades/1.30.xml</modification>
 		<modification format="xml" type="file">upgrades/1.30_windows1251.xml</modification>
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</upgrade>
+	<upgrade from="1.30">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 1.30 to 1.40 version:
+			- Updated browser javascript detecting algorithm
+			- Added compatibility with other plugins for social networks
+			- Removed unnecessary template patches
+		</readme>
+		<require-file name="CleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<code type="inline">add_integration_function('integrate_load_theme', 'cleantalk_load');</code>
+		<modification format="xml" type="file">upgrades/1.40.xml</modification>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
