@@ -11,8 +11,7 @@
 		cleantalk_store_form_start_time(-1);
 	}
 
-// Show the user the right form.
-]]></search>
+// Show the user the right form.]]></search>
             <add><![CDATA[// Show the user the right form.]]></add>
         </operation>
     </file>
@@ -46,5 +45,4 @@
             <add><![CDATA[// Is visual verification enabled?]]></add>
         </operation>
     </file>
-
 </modification>
