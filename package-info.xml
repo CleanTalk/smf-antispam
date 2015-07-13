@@ -61,8 +61,8 @@
 			- Removed unnecessary template patches
 		</readme>
 		<require-file name="CleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
-		<code type="inline">add_integration_function('integrate_load_theme', 'cleantalk_load');</code>
 		<modification format="xml" type="file">upgrades/1.40.xml</modification>
+		<code type="file">upgrades/1.40.php</code>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
