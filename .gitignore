@@ -2,3 +2,5 @@ build/*
 Thumbs.db
 .DS_Store
 .idea/
+vendor/
+composer.lock
