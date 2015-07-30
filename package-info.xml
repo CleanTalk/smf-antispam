@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
-	<version>1.40</version>
+	<version>1.41</version>
 	<type>modification</type>
 	<install for="2.0 - 2.0.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
@@ -66,5 +66,10 @@
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
+	</upgrade>
+	<upgrade from="1.40">
+		<readme type="inline" parsebbc="true">
+			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
+		</readme>
 	</upgrade>
 </package-info>
