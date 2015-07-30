@@ -18,6 +18,7 @@ require_once(dirname(__FILE__) . '/cleantalk.class.php');
 // define same CleanTalk options
 define('CT_AGENT_VERSION', 'smf-140');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
+define('CT_DEBUG', false);
 
 
 /**
@@ -61,6 +62,10 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
             'USER_AGENT' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null,
         )
     );
+
+    if (defined('CT_DEBUG') && CT_DEBUG) {
+        log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
+    }
 
     /**
      * @var CleantalkResponse $ct_result CleanTalk API call result
@@ -176,6 +181,10 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
         $modSettings['disableQueryCheck'] = $oldQueryCheck;
 
         $ct_request->example = implode("\n", $messages);
+    }
+
+    if (defined('CT_DEBUG') && CT_DEBUG) {
+        log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
     }
 
     /**
@@ -305,12 +314,28 @@ function cleantalk_log($message)
 function cleantalk_load()
 {
     global $context, $user_info;
+    if (
+        is_array($context['template_layers']) &&
+        in_array('body', $context['template_layers']) &&
+        ($user_info['is_guest'] || $user_info['posts'] == 0) &&
+        !cleantalk_is_valid_js()
+    ) {
+        $context ['html_headers'] .= cleantalk_print_js_input();
+    }
+}
 
-    if ($user_info['is_guest'] || $user_info['posts'] == 0) {
+/**
+ * Calling by hook integrate_exit
+ */
+function cleantalk_exit()
+{
+    global $context, $user_info;
+    if (
+        is_array($context['template_layers']) &&
+        in_array('body', $context['template_layers']) &&
+        ($user_info['is_guest'] || $user_info['posts'] == 0)
+    ) {
         cleantalk_store_form_start_time();
-        if (!cleantalk_is_valid_js()) {
-            $context ['html_headers'] .= cleantalk_print_js_input();
-        }
     }
 }
 
