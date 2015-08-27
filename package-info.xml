@@ -5,7 +5,7 @@
 	<name>Anti-spam by CleanTalk</name>
 	<version>1.41</version>
 	<type>modification</type>
-	<install for="2.0 - 2.0.99">
+	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="CleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
@@ -24,7 +24,7 @@
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
-	<uninstall for="2.0 - 2.0.99">
+	<uninstall for="2.0 - 2.1.99">
 		<code>install.php</code>
 		<modification format="xml" type="file" reverse="true">modification.xml</modification>
 
