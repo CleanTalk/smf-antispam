@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-150');
+define('CT_AGENT_VERSION', 'smf-151');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -315,6 +315,7 @@ function cleantalk_load()
 {
     global $context, $user_info;
     if (
+        isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
         in_array('body', $context['template_layers']) &&
         ($user_info['is_guest'] || $user_info['posts'] == 0) &&
@@ -331,6 +332,7 @@ function cleantalk_exit()
 {
     global $context, $user_info;
     if (
+        isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
         in_array('body', $context['template_layers']) &&
         ($user_info['is_guest'] || $user_info['posts'] == 0)
