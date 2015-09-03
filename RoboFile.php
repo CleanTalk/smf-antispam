@@ -10,6 +10,8 @@ class RoboFile extends \Robo\Tasks
     const PACKAGE = 'antispam_cleantalk_smf';
     const VERSION = '1.51';
 
+    const SMF_VERSION = '2.0.10'; // for forumPrepare
+
     /**
      * Build SMF zip-package
      */
@@ -23,6 +25,53 @@ class RoboFile extends \Robo\Tasks
             ->run();
 
         $this->createModArchive();
+    }
+
+    /**
+     * Prepare clean SMF forum
+     */
+    public function forumPrepare()
+    {
+        $version = $this->askDefault("SMF Core Version", self::SMF_VERSION);
+
+        // download
+        $zipFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'smf-' . $version . '.zip';
+        if (!file_exists($zipFile)) {
+            $url = 'http://download.simplemachines.org/index.php/smf_' . str_replace('.', '-', $version) . '_install.zip';
+            file_put_contents($zipFile, fopen($url, 'r'));
+        }
+        // clean dir
+        $dir = $this->askDefault("Install directory path", '/var/www/html/smf');
+        if (is_dir($dir)) {
+            $clean = $this->askDefault('Directory exists. Clean ' . $dir, 'y');
+            if ($clean == 'y') {
+                $this->taskCleanDir([$dir])->run();
+            }
+        }
+        // extract
+        $zip = new ZipArchive;
+        if ($zip->open($zipFile) === true) {
+            $zip->extractTo($dir);
+            $zip->close();
+            $this->say('Extracted ' . $zipFile);
+        }
+
+        // fix file and folder access
+        $this->taskExecStack()
+            ->stopOnFail()
+            ->exec('chown www-data:www-data -R ' . $dir)
+            ->exec('chmod og+rwx -R ' . $dir)
+            ->run();
+
+        //database
+        $dbName = $this->askDefault("MySQL DB_NAME", 'smf');
+        $rootPassword = $this->askDefault("MySQL root password", '');
+
+        $dbh = new PDO('mysql:host=localhost', 'root', $rootPassword);
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $dbh->query("DROP DATABASE IF EXISTS $dbName");
+        $dbh->query("CREATE DATABASE $dbName");
+        $this->say('Created schema ' . $dbName);
     }
 
     private function createModArchive()
