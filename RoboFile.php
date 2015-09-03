@@ -74,6 +74,41 @@ class RoboFile extends \Robo\Tasks
         $this->say('Created schema ' . $dbName);
     }
 
+    public function versionInc()
+    {
+        //@todo
+    }
+
+    /**
+     * Version checks
+     */
+    public function versionCheck()
+    {
+        do {
+            $version = $this->ask('Check for version, example 1.51');
+            $version = trim($version);
+        } while (empty($version));
+        $errors = [];
+        if (!preg_match('#\<version\>' . preg_quote($version) . '\<\/version\>#m', file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'package-info.xml'))) {
+            $errors[] = 'Not found tag <version> in package-info.xml';
+        }
+        if (!preg_match('#Version: ' . preg_quote($version) . "\n#m", file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'readme.txt'))) {
+            $errors[] = 'Not found version in readme.txt';
+        }
+        if (!preg_match('#Version ' . preg_quote($version) . " #m", file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'CHANGELOG'))) {
+            $errors[] = 'Not found version in CHANGELOG';
+        }
+        $ctVersion = str_replace('.', '', $version);
+        if (!preg_match("#'smf-" . preg_quote($ctVersion) . "'\);#m", file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'CleantalkMod.php'))) {
+            $errors[] = 'Not found CT_AGENT_VERSION in CleantalkMod.php';
+        }
+        if (count($errors)) {
+            $this->say("***ERRORS***\n" . implode("\n", $errors));
+        } else {
+            $this->say("All OK");
+        }
+    }
+
     private function createModArchive()
     {
         $zip = new ZipArchive();

@@ -24,48 +24,7 @@ SMF 2.0 and up
 [url=http://www.gnu.org/copyleft/gpl.html]GNU General Public License[/url]
 
 [b]Changelog[/b]
-Version 1.50 August 30, 2015
-------------------------------
-- Added SMF 2.1 Beta compatibility
-
-Version 1.41 July 30, 2015
-------------------------------
-- Fixed bug with fast registrations
-
-Version 1.40 July 13, 2015
-------------------------------
-- Updated browser javascript detecting algorithm
-- Added compatibility with other plugins for social networks
-- Removed unnecessary template patches
-
-Version 1.30 May 25, 2015
-------------------------------
-- Updated Cleantalk API to v2.0.0
-- Added logging option for enable/disable logging to SMF
-
-
-Version 1.21 January 15, 2015
-------------------------------
-- Fixed submit time checks in quick reply form
-- Fixed javascript checks in quick reply form
-
-Version 1.20 August 19, 2014
-------------------------------
-- Added antispam test for first post on board for Newly registered members
-
-Version 1.03 July 15, 2014
-------------------------------
-- Fixed javascript checking in register form
-
-Version 1.02 June 30, 2014
-------------------------------
-- Fixed get remote ip when proxy used
-- Fixed menu items in general_mod_settings
-- Fixed bug clearing api key after mod updating
-
-Version 1.01 March 27, 2014
-------------------------------
-- Initial release
+See on [url=https://github.com/CleanTalk/smf-antispam/blob/master/CHANGELOG]Github[/url]
 
 
 [url=http://cleantalk.org/]CleanTalk site[/url]
