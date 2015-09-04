@@ -1,6 +1,7 @@
-Version 1.51 August 31, 2015
+Version 1.51 September 4, 2015
 ------------------------------
 - Fixed notice "Undefined index: template_layers" when download attachment
+- Fixed App version for cleantalk panel
 
 Version 1.50 August 30, 2015
 ------------------------------
