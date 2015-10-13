@@ -260,10 +260,12 @@ function cleantalk_get_api_key()
  */
 function cleantalk_general_mod_settings(&$config_vars)
 {
+    global $txt;
     $config_vars[] = array('title', 'cleantalk_settings');
     $config_vars[] = array('text', 'cleantalk_api_key');
     $config_vars[] = array('check', 'cleantalk_first_post_checking');
     $config_vars[] = array('check', 'cleantalk_logging');
+    $config_vars[] = array('check', 'cleantalk_tell_others', 'postinput' => $txt['cleantalk_tell_others_postinput']);
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
 }
 
@@ -313,7 +315,7 @@ function cleantalk_log($message)
  */
 function cleantalk_load()
 {
-    global $context, $user_info;
+    global $context, $user_info, $modSettings;
     if (
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
@@ -322,6 +324,16 @@ function cleantalk_load()
         !cleantalk_is_valid_js()
     ) {
         $context ['html_headers'] .= cleantalk_print_js_input();
+    }
+
+    if (
+        isset($context['template_layers']) &&
+        $context['template_layers'] === array('html', 'body') &&
+        array_key_exists('cleantalk_tell_others', $modSettings) &&
+        $modSettings['cleantalk_tell_others']
+    ) {
+        // add "tell others" templates
+        $context['template_layers'][] = 'cleantalk';
     }
 }
 
@@ -348,4 +360,21 @@ function cleantalk_exit()
 function cleantalk_is_valid_js()
 {
     return array_key_exists('ct_checkjs', $_COOKIE) && $_COOKIE['ct_checkjs'] == cleantalk_get_checkjs_code();
+}
+
+/**
+ * Above content
+ */
+function template_cleantalk_above()
+{
+    //none
+}
+
+/**
+ * Below content
+ */
+function template_cleantalk_below()
+{
+    echo '<div class="cleantalk_tell_others" style="text-align: center;"><a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a>
+        blocked by CleanTalk</div>';
 }

@@ -15,6 +15,8 @@ $txt['cleantalk_api_key'] = 'Ключ доступа';
 $txt['cleantalk_first_post_checking'] = 'Включить проверку первого сообщения пользователя на спам';
 $txt['cleantalk_api_key_description'] = 'Ключ доступа на сервис CleanTalk вы можете получить на сайте <a target="_blank" href="https://cleantalk.org/register?platform=smf">http://cleantalk.org</a>';
 $txt['cleantalk_logging'] = 'Включить логирование ответов сервиса';
+$txt['cleantalk_tell_others'] = 'Рассказать другим про CleanTalk';
+$txt['cleantalk_tell_others_postinput'] = 'При выставлении этого флажка добавляется маленькая ссылка в футере, чтобы другие узнали об антиспаме, которым защищен ваш сайт.';
 // CleanTalk messages end
 ]]></add>
 		</operation>

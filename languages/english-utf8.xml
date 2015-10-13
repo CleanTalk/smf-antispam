@@ -14,6 +14,8 @@ $txt['cleantalk_api_key'] = 'Access key';
 $txt['cleantalk_first_post_checking'] = 'Enable antispam test for first post on board for Newly registered members';
 $txt['cleantalk_api_key_description'] = 'Access key you may get on <a target="_blank" href="https://cleantalk.org/register?platform=smf">http://cleantalk.org</a>';
 $txt['cleantalk_logging'] = 'Enable logging';
+$txt['cleantalk_tell_others'] = 'Tell others about CleanTalk';
+$txt['cleantalk_tell_others_postinput'] = 'Checking this box places a small link in the footer that lets others know what anti-spam tool protects your site.';
 // CleanTalk messages end
 ]]></add>
 		</operation>
