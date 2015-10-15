@@ -3,7 +3,7 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
-	<version>1.51</version>
+	<version>1.52</version>
 	<type>modification</type>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
@@ -78,6 +78,11 @@
 		</readme>
 	</upgrade>
 	<upgrade from="1.50">
+		<readme type="inline" parsebbc="true">
+			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
+		</readme>
+	</upgrade>
+	<upgrade from="1.51">
 		<readme type="inline" parsebbc="true">
 			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
 		</readme>
