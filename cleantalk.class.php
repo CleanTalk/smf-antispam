@@ -16,7 +16,7 @@
 * Load JSON functions if they are not exists 
 */
 if(!function_exists('json_encode')) {
-    require_once 'JSON.php';
+    require_once dirname(__FILE__) . '/JSON.php';
 
     function json_encode($data) {
         $json = new Services_JSON();
@@ -25,7 +25,7 @@ if(!function_exists('json_encode')) {
 
 }
 if(!function_exists('json_decode')) {
-    require_once 'JSON.php';
+    require_once dirname(__FILE__) . '/JSON.php';
 
     function json_decode($data) {
         $json = new Services_JSON();
