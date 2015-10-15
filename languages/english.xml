@@ -16,6 +16,7 @@ $txt['cleantalk_api_key_description'] = 'Access key you may get on <a target="_b
 $txt['cleantalk_logging'] = 'Enable logging';
 $txt['cleantalk_tell_others'] = 'Tell others about CleanTalk';
 $txt['cleantalk_tell_others_postinput'] = 'Checking this box places a small link in the footer that lets others know what anti-spam tool protects your site.';
+$txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
 // CleanTalk messages end
 ]]></add>
 		</operation>

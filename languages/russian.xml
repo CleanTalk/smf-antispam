@@ -17,6 +17,7 @@ $txt['cleantalk_api_key_description'] = 'Ключ доступа на сервис CleanTalk вы мож
 $txt['cleantalk_logging'] = 'Включить логирование ответов сервиса';
 $txt['cleantalk_tell_others'] = 'Рассказать другим про CleanTalk';
 $txt['cleantalk_tell_others_postinput'] = 'При выставлении этого флажка добавляется маленькая ссылка в футере, чтобы другие узнали об антиспаме, которым защищен ваш сайт.';
+$txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">Защита SMF от спама</a> от CleanTalk';
 // CleanTalk messages end
 ]]></add>
 		</operation>
