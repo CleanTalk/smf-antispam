@@ -199,7 +199,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
     $ct_result = $ct->isAllowMessage($ct_request);
 
     if ($ct_result->errno != 0 && !cleantalk_is_valid_js()) {
-        cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
+        cleantalk_log('deny post (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
         fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
         return;
     }
