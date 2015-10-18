@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-152');
+define('CT_AGENT_VERSION', 'smf-160');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -71,6 +71,12 @@ function cleantalk_check_register(&$regOptions, $theme_vars)
      * @var CleantalkResponse $ct_result CleanTalk API call result
      */
     $ct_result = $ct->isAllowUser($ct_request);
+
+    if ($ct_result->errno != 0 && !cleantalk_is_valid_js()) {
+        cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
+        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+        return;
+    }
 
     if ($ct_result->inactive == 1) {
         // need admin approval
@@ -191,6 +197,12 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
      * @var CleantalkResponse $ct_result CleanTalk API call result
      */
     $ct_result = $ct->isAllowMessage($ct_request);
+
+    if ($ct_result->errno != 0 && !cleantalk_is_valid_js()) {
+        cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
+        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+        return;
+    }
 
     if ($ct_result->stop_queue == 1) {
         cleantalk_log('stop queue "' . $ct_result->comment . '"');

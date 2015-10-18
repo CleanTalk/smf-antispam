@@ -1,7 +1,8 @@
-Version 1.52 October 15, 2015
+Version 1.60 October 15, 2015
 ------------------------------
 - Updated Cleantalk API to v2.1.1
 - Add tell others option
+- Denied bot registration if javascript check failed and errno != 0
 
 Version 1.51 September 4, 2015
 ------------------------------
