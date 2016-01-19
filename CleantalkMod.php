@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-160');
+define('CT_AGENT_VERSION', 'smf-170');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -347,6 +347,31 @@ function cleantalk_load()
         // add "tell others" templates
         $context['template_layers'][] = 'cleantalk';
     }
+    if(isset($_POST['cleantalk_api_key']))
+    {
+    	 $ct = new Cleantalk();
+         $ct->server_url = CT_SERVER_URL;
+     
+         $ct_request = new CleantalkRequest();
+         $ct_request->auth_key = cleantalk_get_api_key();
+     
+         $ct_request->response_lang = 'en'; // SMF use any charset and language
+     
+         $ct_request->agent = CT_AGENT_VERSION;
+         $ct_request->sender_email = 'good@cleantalk.org';
+     
+         $ip = isset($user_info['ip']) ? $user_info['ip'] : $_SERVER['REMOTE_ADDR'];
+         $ct_request->sender_ip = $ct->ct_session_ip($ip);
+     
+         $ct_request->sender_nickname = 'CleanTalk';
+         $ct_request->message = 'This message is a test to check the connection to the CleanTalk servers.';
+     
+         $ct_request->submit_time = 10;
+     
+         $ct_request->js_on = 1;
+         $ct_result = $ct->isAllowMessage($ct_request);
+         
+    }
 }
 
 /**
@@ -387,9 +412,20 @@ function template_cleantalk_above()
  */
 function template_cleantalk_below()
 {
-    global $txt;
+    /*global $txt;
     $message = isset($txt) && isset($txt['cleantalk_tell_others_footer_message']) ?
         $txt['cleantalk_tell_others_footer_message'] :
         '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
-    echo '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">', $message, '</div>';
+    echo '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">', $message, '</div>';*/
+}
+
+function cleantalk_buffer($buffer){
+	global $modSettings, $scripturl, $txt;
+	
+    $message = isset($txt) && isset($txt['cleantalk_tell_others_footer_message']) ?
+        $txt['cleantalk_tell_others_footer_message'] :
+        '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
+    $message = '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">'.$message.'</div>';
+	
+	return isset($_REQUEST['xml']) ? $buffer : $buffer.$message;
 }
