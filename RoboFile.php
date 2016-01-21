@@ -8,7 +8,7 @@
 class RoboFile extends \Robo\Tasks
 {
     const PACKAGE = 'antispam_cleantalk_smf';
-    const VERSION = '1.60';
+    const VERSION = '1.70';
 
     const SMF_VERSION = '2.0.11'; // for forumPrepare
 
