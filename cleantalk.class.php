@@ -2,7 +2,7 @@
 /**
  * Cleantalk base class
  *
- * @version 2.1.1
+ * @version 2.1.2
  * @package Cleantalk
  * @subpackage Base
  * @author Cleantalk team (welcome@cleantalk.org)
@@ -16,7 +16,7 @@
 * Load JSON functions if they are not exists 
 */
 if(!function_exists('json_encode')) {
-    require_once dirname(__FILE__) . '/JSON.php';
+    require_once 'JSON.php';
 
     function json_encode($data) {
         $json = new Services_JSON();
@@ -25,7 +25,7 @@ if(!function_exists('json_encode')) {
 
 }
 if(!function_exists('json_decode')) {
-    require_once dirname(__FILE__) . '/JSON.php';
+    require_once 'JSON.php';
 
     function json_decode($data) {
         $json = new Services_JSON();
@@ -1050,16 +1050,19 @@ class Cleantalk {
  * @return type
  */
 
-function getAutoKey($email, $host, $platform)
+if(!function_exists('getAutoKey'))
 {
-	$request=Array();
-	$request['method_name'] = 'get_api_key'; 
-	$request['email'] = $email;
-	$request['website'] = $host;
-	$request['platform'] = $platform;
-	$url='https://api.cleantalk.org';
-	$result=sendRawRequest($url,$request);
-	return $result;
+	function getAutoKey($email, $host, $platform)
+	{
+		$request=Array();
+		$request['method_name'] = 'get_api_key'; 
+		$request['email'] = $email;
+		$request['website'] = $host;
+		$request['platform'] = $platform;
+		$url='https://api.cleantalk.org';
+		$result=sendRawRequest($url,$request);
+		return $result;
+	}
 }
 
 /**
@@ -1144,6 +1147,11 @@ if( !function_exists('apache_request_headers') )
 	{
 		$arh = array();
 		$rx_http = '/\AHTTP_/';
+		if(defined('IN_PHPBB'))
+		{
+			global $request;
+			$request->enable_super_globals();
+		}
 		foreach($_SERVER as $key => $val)
 		{
 			if( preg_match($rx_http, $key) )
@@ -1159,18 +1167,29 @@ if( !function_exists('apache_request_headers') )
 				$arh[$arh_key] = $val;
 			}
 		}
+		if(defined('IN_PHPBB'))
+		{
+			global $request;
+			$request->disable_super_globals();
+		}
 		return( $arh );
 	}
 }
 
 function cleantalk_get_real_ip()
 {
+	if(defined('IN_PHPBB'))
+	{
+		global $request;
+		$request->enable_super_globals();
+	}
 	if ( function_exists( 'apache_request_headers' ) )
 	{
 		$headers = apache_request_headers();
 	}
 	else
 	{
+		
 		$headers = $_SERVER;
 	}
 	if ( array_key_exists( 'X-Forwarded-For', $headers ) )
@@ -1186,6 +1205,11 @@ function cleantalk_get_real_ip()
 	else
 	{
 		$the_ip = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
+	}
+	if(defined('IN_PHPBB'))
+	{
+		global $request;
+		$request->disable_super_globals();
 	}
 	return $the_ip;
 }
