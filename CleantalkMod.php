@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-170');
+define('CT_AGENT_VERSION', 'smf-180');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -414,13 +414,23 @@ function template_cleantalk_below()
 {
 }
 
-function cleantalk_buffer($buffer){
+function cleantalk_buffer($buffer)
+{
 	global $modSettings, $scripturl, $txt;
+
+	if (isset($_REQUEST['xml'])) return $buffer;
 	
-    $message = isset($txt) && isset($txt['cleantalk_tell_others_footer_message']) ?
-        $txt['cleantalk_tell_others_footer_message'] :
-        '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
-    $message = '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">'.$message.'</div>';
 	
-	return isset($_REQUEST['xml']) ? $buffer : $buffer.$message;
+	if(!empty($modSettings['cleantalk_tell_others']))
+	{
+		$search = '';
+		$replace = '';
+	
+		$search = '</body>';
+		$replace = '<div class="cleantalk_tell_others" style="text-align: center; padding:5px 0;">' . $txt['cleantalk_tell_others_footer_message'] . '</div></body>';
+		
+		return str_replace($search, $replace, $buffer);
+	}
+	
+	return $buffer;
 }
