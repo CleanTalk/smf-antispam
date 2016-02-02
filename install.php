@@ -15,7 +15,7 @@ $hooks = array(
     'integrate_general_mod_settings' => 'cleantalk_general_mod_settings',
     'integrate_load_theme' => 'cleantalk_load',
     'integrate_exit' => 'cleantalk_exit',
-    'integrate_buffer' => 'cleantalk_buffer',
+    //'integrate_buffer' => 'cleantalk_buffer',
 );
 
 $isInstalling = empty($context['uninstalling']);
