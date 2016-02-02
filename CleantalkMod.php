@@ -412,6 +412,12 @@ function template_cleantalk_above()
  */
 function template_cleantalk_below()
 {
+	global $modSettings;
+	if(!empty($modSettings['cleantalk_tell_others']))
+	{
+		$message = '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
+		echo '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">', $message, '</div>';
+	}
 }
 
 function cleantalk_buffer($buffer)
