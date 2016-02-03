@@ -278,6 +278,7 @@ function cleantalk_general_mod_settings(&$config_vars)
     $config_vars[] = array('check', 'cleantalk_first_post_checking');
     $config_vars[] = array('check', 'cleantalk_logging');
     $config_vars[] = array('check', 'cleantalk_tell_others', 'postinput' => $txt['cleantalk_tell_others_postinput']);
+    $config_vars[] = array('check', 'cleantalk_sfw', 'postinput' => $txt['cleantalk_sfw_postinput']);
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
 }
 
