@@ -280,6 +280,7 @@ function cleantalk_general_mod_settings(&$config_vars)
     $config_vars[] = array('check', 'cleantalk_tell_others', 'postinput' => $txt['cleantalk_tell_others_postinput']);
     $config_vars[] = array('check', 'cleantalk_sfw', 'postinput' => $txt['cleantalk_sfw_postinput']);
     $config_vars[] = array('desc', 'cleantalk_api_key_description');
+    $config_vars[] = array('desc', 'cleantalk_check_users');
 }
 
 /**
@@ -423,21 +424,147 @@ function template_cleantalk_below()
 
 function cleantalk_buffer($buffer)
 {
-	global $modSettings, $scripturl, $txt;
-
-	if (isset($_REQUEST['xml'])) return $buffer;
-	
-	
-	if(!empty($modSettings['cleantalk_tell_others']))
+	global $modSettings, $user_info, $smcFunc;
+	if($user_info['is_admin'])
 	{
-		$search = '';
-		$replace = '';
-	
-		$search = '</body>';
-		$replace = '<div class="cleantalk_tell_others" style="text-align: center; padding:5px 0;">' . $txt['cleantalk_tell_others_footer_message'] . '</div></body>';
+		$html='';
+		if(isset($_GET['ctcheckspam']))
+		{
+			$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
+			$row = $smcFunc['db_fetch_assoc'] ($result);
+			if(!isset($row['ct_marked']))
+			{
+				$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
+				$result = $smcFunc['db_query']('', $sql, Array());
+			}
+			else
+			{
+				$sql = 'ALTER TABLE  {db_prefix}members DROP COLUMN  `ct_marked`';
+				$result = $smcFunc['db_query']('', $sql, Array());
+				$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
+				$result = $smcFunc['db_query']('', $sql, Array());
+			}
+			
+			$sql = 'UPDATE {db_prefix}members set ct_marked=0';
+			$result = $smcFunc['db_query']('', $sql, Array());
+			$sql = 'SELECT * FROM {db_prefix}members where passwd<>""';
+			$result = $smcFunc['db_query']('', $sql, Array());
+			$users=Array();
+			$users[0]=Array();
+			$data=Array();
+			$data[0]=Array();
+			$cnt=0;
+			while($row = $smcFunc['db_fetch_assoc'] ($result))
+			{
+				//$html.=serialize($row);
+				$users[$cnt][] = Array('name' => $row['member_name'],
+									'id' => $row['id_member'],
+									'email' => $row['email_address'],
+									'ip' => $row['member_ip'],
+									'joined' => $row['date_registered'],
+									'visit' => $row['last_login'],
+							);
+				$data[$cnt][]=$row['email_address'];
+				$data[$cnt][]=$row['member_ip'];
+				if(sizeof($users[$cnt])>450)
+				{
+					$cnt++;
+					$users[$cnt]=Array();
+					$data[$cnt]=Array();
+				}
+			}
+			
+			$error="";
+			
+			for($i=0;$i<sizeof($users);$i++)
+			{
+				$send=implode(',',$data[$i]);
+				$req="data=$send";
+				$opts = array(
+				    'http'=>array(
+				        'method'=>"POST",
+				        'content'=>$req,
+				    )
+				);
+				$context = stream_context_create($opts);
+				$result = @file_get_contents("https://api.cleantalk.org/?method_name=spam_check&auth_key=".cleantalk_get_api_key(), 0, $context);
+				$result=json_decode($result);
+				if(isset($result->error_message))
+				{
+					$error=$result->error_message;
+				}
+				else
+				{
+					if(isset($result->data))
+					{
+						foreach($result->data as $key=>$value)
+						{
+							if($key === filter_var($key, FILTER_VALIDATE_IP))
+							{
+								if($value->appears==1)
+								{
+									$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
+									$result = $smcFunc['db_query']('', $sql, Array());
+								}
+							}
+							else
+							{
+								if($value->appears==1)
+								{
+									$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
+									$result = $smcFunc['db_query']('', $sql, Array());
+								}
+							}
+						}
+					}
+				}
+				
+			}
+			
+			if($error!='')
+			{
+				$html.='<center><div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;"><b>'.$error.'</b></div></center>';
+			}
+			else
+			{
+				//@header("Location: ".str_replace('&ctcheckspam=1', '&finishcheck=1', html_entity_decode($request->server('REQUEST_URI'))));				
+				$html.='<center><h3>Done. All users tested via blacklists database, please see result below.</h3><br /><br />';
+				$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
+				$result = $smcFunc['db_query']('', $sql, Array());
+				
+				$html.='<form method="post"><br /><table border=1>
+	<thead>
+	<tr>
+		<th>Select</th>
+		<th>Username</th>
+		<th>Joined</th>
+		<th>E-mail</th>
+		<th>IP</th>
+		<th>Last visit</th>
+	</tr>
+	</thead>
+	<tbody>';
+			$found=false;
+			while($row = $smcFunc['db_fetch_assoc'] ($result))
+			{
+				$found=true;
+				$html.="<tr>
+				<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
+				<td>".$row['member_name']."</td>
+				<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
+				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'>".$row['email_address']."</a></td>
+				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'>".$row['member_ip']."</a></td>
+				<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
+				</tr>";
+				
+			}
+			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.</form></center>";
+			}
+		}
 		
-		return str_replace($search, $replace, $buffer);
+		$html.="<button style=\"width:20%;margin-left:40%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">Check users for spam</button>";
+		$buffer = str_replace("%CLEANTALK_CHECK_USERS%", $html, $buffer);
 	}
-	
+
 	return $buffer;
 }
