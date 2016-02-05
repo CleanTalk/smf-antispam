@@ -430,9 +430,6 @@ function cleantalk_buffer($buffer)
 	
 	if(!empty($modSettings['cleantalk_tell_others']))
 	{
-		$search = '';
-		$replace = '';
-	
 		$search = '</body>';
 		$replace = '<div class="cleantalk_tell_others" style="text-align: center; padding:5px 0;">' . $txt['cleantalk_tell_others_footer_message'] . '</div></body>';
 		
