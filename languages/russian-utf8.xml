@@ -19,7 +19,7 @@ $txt['cleantalk_tell_others'] = 'Рассказать другим про CleanT
 $txt['cleantalk_tell_others_postinput'] = 'При выставлении этого флажка добавляется маленькая ссылка в футере, чтобы другие узнали об антиспаме, которым защищен ваш сайт.';
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">Защита SMF от спама</a> от CleanTalk';
 $txt['cleantalk_sfw'] = 'Включить Spam FireWall';
-$txt['cleantalk_sfw_postinput'] = 'Включение этой опции позволит Вам фильтровать ботов до того, как они зайдут на сайт. Также это снизит нагрузку на сервер.';
+$txt['cleantalk_sfw_postinput'] = 'Включение этой опции позволит Вам фильтровать ботов до того, как они зайдут на сайт. Также, это снизит нагрузку на сервер.';
 
 // CleanTalk messages end
 ]]></add>
