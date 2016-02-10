@@ -11,7 +11,10 @@
 		<require-file name="CleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
 		<require-file name="cleantalk.class.php" destination="$sourcedir/cleantalk">Cleantalk API</require-file>
 		<require-file name="JSON.php" destination="$sourcedir/cleantalk">Cleantalk other classes</require-file>
-
+		<require-file name="sfw_die_page.html" destination="$sourcedir/cleantalk">SFW die page</require-file>
+		<require-file name="cleantalk-sfw.class.php" destination="$sourcedir/cleantalk">SFW class</require-file>
+		
+		
 		<modification format="xml" type="file">modification.xml</modification>
 
 		<modification format="xml" type="file">languages/english.xml</modification>

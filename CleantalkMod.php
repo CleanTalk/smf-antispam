@@ -374,6 +374,71 @@ function cleantalk_load()
          $ct_result = $ct->isAllowMessage($ct_request);
          
     }
+    if(isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
+    {
+    	global $smcFunc;
+    	$sql="DROP TABLE IF EXISTS `cleantalk_sfw`";
+		$result = $smcFunc['db_query']('', $sql, Array());
+		$sql="CREATE TABLE IF NOT EXISTS `cleantalk_sfw` (
+`network` int(11) unsigned NOT NULL,
+`mask` int(11) unsigned NOT NULL,
+INDEX (  `network` ,  `mask` )
+) ENGINE = MYISAM ";
+		$result = $smcFunc['db_query']('', $sql, Array());
+		$data = Array(	'auth_key' => cleantalk_get_api_key(),
+				'method_name' => '2s_blacklists_db'
+			);
+			
+		$result=sendRawRequest('https://api.cleantalk.org/2.1',$data,false);
+		$result=json_decode($result, true);
+		if(isset($result['data']))
+		{
+			$result=$result['data'];
+			$query="INSERT INTO `cleantalk_sfw` VALUES ";
+			for($i=0;$i<sizeof($result);$i++)
+			{
+				if($i==sizeof($result)-1)
+				{
+					$query.="(".$result[$i][0].",".$result[$i][1].")";
+				}
+				else
+				{
+					$query.="(".$result[$i][0].",".$result[$i][1]."), ";
+				}
+			}
+			$result = $smcFunc['db_query']('', $query, Array());
+		}
+    }
+    
+    if(isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
+    {
+    	$is_sfw_check=true;
+	   	$ip=CleantalkGetIP();
+	   	$ip=array_unique($ip);
+	   	$key=cleantalk_get_api_key();
+	   	for($i=0;$i<sizeof($ip);$i++)
+		{
+	    	if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key']==md5($ip[$i].$key))
+	    	{
+	    		$is_sfw_check=false;
+	    		if(isset($_COOKIE['ct_sfw_passed']))
+	    		{
+	    			@setcookie ('ct_sfw_passed', '0', 1, "/");
+	    		}
+	    	}
+	    }
+		if($is_sfw_check)
+		{
+			include_once("cleantalk-sfw.class.php");
+			$sfw = new CleanTalkSFW();
+			$sfw->cleantalk_get_real_ip();
+			$sfw->check_ip();
+			if($sfw->result)
+			{
+				$sfw->sfw_die();
+			}
+		}
+    }
 }
 
 /**
@@ -532,7 +597,7 @@ function cleantalk_buffer($buffer)
 				$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
 				$result = $smcFunc['db_query']('', $sql, Array());
 				
-				$html.='<form method="post"><br /><table border=1>
+				$html.='<table border=1>
 	<thead>
 	<tr>
 		<th>Select</th>
@@ -558,7 +623,7 @@ function cleantalk_buffer($buffer)
 				</tr>";
 				
 			}
-			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.</form></center>";
+			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.</center>";
 			}
 		}
 		
@@ -567,4 +632,34 @@ function cleantalk_buffer($buffer)
 	}
 
 	return $buffer;
+}
+
+function CleantalkGetIP()
+{
+	$result=Array();
+	if ( function_exists( 'apache_request_headers' ) )
+	{
+		$headers = apache_request_headers();
+	}
+	else
+	{
+		$headers = $_SERVER;
+	}
+	if ( array_key_exists( 'X-Forwarded-For', $headers ) )
+	{
+		$the_ip=explode(",", trim($headers['X-Forwarded-For']));
+		$result[] = trim($the_ip[0]);
+	}
+	if ( array_key_exists( 'HTTP_X_FORWARDED_FOR', $headers ))
+	{
+		$the_ip=explode(",", trim($headers['HTTP_X_FORWARDED_FOR']));
+		$result[] = trim($the_ip[0]);
+	}
+	$result[] = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
+
+	if(isset($_GET['sfw_test_ip']))
+	{
+		$result[]=$_GET['sfw_test_ip'];
+	}
+	return $result;
 }
