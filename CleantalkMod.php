@@ -593,37 +593,45 @@ function cleantalk_buffer($buffer)
 			else
 			{
 				//@header("Location: ".str_replace('&ctcheckspam=1', '&finishcheck=1', html_entity_decode($request->server('REQUEST_URI'))));				
-				$html.='<center><h3>Done. All users tested via blacklists database, please see result below.</h3><br /><br />';
+				
 				$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
 				$result = $smcFunc['db_query']('', $sql, Array());
 				
-				$html.='<table border=1>
-	<thead>
-	<tr>
-		<th>Select</th>
-		<th>Username</th>
-		<th>Joined</th>
-		<th>E-mail</th>
-		<th>IP</th>
-		<th>Last visit</th>
-	</tr>
-	</thead>
-	<tbody>';
-			$found=false;
-			while($row = $smcFunc['db_fetch_assoc'] ($result))
-			{
-				$found=true;
-				$html.="<tr>
-				<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
-				<td>".$row['member_name']."</td>
-				<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
-				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'>".$row['email_address']."</a></td>
-				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'>".$row['member_ip']."</a></td>
-				<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
-				</tr>";
-				
-			}
-			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.</center>";
+				if($smcFunc['db_num_rows'] ($result) == 0)
+				{
+					$html.='<center><h3>No spam users found.</h3><br /><br /></center>';
+				}
+				else
+				{
+					$html.='<center><h3>Done. All users tested via blacklists database, please see result below.</h3><br /><br />';
+					$html.='<table border=1>
+			<thead>
+			<tr>
+				<th>Select</th>
+				<th>Username</th>
+				<th>Joined</th>
+				<th>E-mail</th>
+				<th>IP</th>
+				<th>Last visit</th>
+			</tr>
+			</thead>
+			<tbody>';
+					$found=false;
+					while($row = $smcFunc['db_fetch_assoc'] ($result))
+					{
+						$found=true;
+						$html.="<tr>
+						<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
+						<td>".$row['member_name']."</td>
+						<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
+						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'>".$row['email_address']."</a></td>
+						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'>".$row['member_ip']."</a></td>
+						<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
+						</tr>";
+						
+					}
+					$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.<br /><br /></center>";
+				}
 			}
 		}
 		
