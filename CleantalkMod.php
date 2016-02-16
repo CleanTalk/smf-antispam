@@ -599,7 +599,7 @@ function cleantalk_buffer($buffer)
 				
 				if($smcFunc['db_num_rows'] ($result) == 0)
 				{
-					$html.='<center><h3>No spam users found.</h3><br /><br /></center>';
+					$html.='<span style="margin-left:45%;"><b>No spam users found.</b></span><br><br>';
 				}
 				else
 				{
