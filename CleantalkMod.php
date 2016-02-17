@@ -340,16 +340,24 @@ function cleantalk_load()
         $context ['html_headers'] .= cleantalk_print_js_input();
     }
     
-    if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin' && isset($_POST['ct_del_user']))
+    if($user_info['is_admin'] && isset($_POST['ct_del_user']))
 	{
 		foreach($_POST['ct_del_user'] as $key=>$value)
 		{
 			$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array());
+			$result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array());
+			$result = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.intval($key),Array());
 		}
 	}
 	
-	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin' && isset($_POST['ct_delete_all']))
+	if($user_info['is_admin'] && isset($_POST['ct_delete_all']))
 	{
+		$result = $smcFunc['db_query']('', 'select * from {db_prefix}members where ct_marked=1',Array());
+		while($row = $smcFunc['db_fetch_assoc'] ($result))
+		{
+			$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.$row['id_member'],Array());
+			$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.$row['id_member'],Array());
+		}
 		$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where ct_marked=1',Array());
 	}
 
@@ -505,7 +513,11 @@ function cleantalk_buffer($buffer)
 	global $modSettings, $user_info, $smcFunc;
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin')
 	{
-		$html='';
+		$html='<span id="ct_anchor"></span><script>
+		document.getElementById("ct_anchor").parentElement.style.height="0px";
+		document.getElementById("ct_anchor").parentElement.style.padding="0px";
+		document.getElementById("ct_anchor").parentElement.style.border="0px";
+		</script>';
 		if(isset($_POST['ct_del_user']))
 		{
 			foreach($_POST['ct_del_user'] as $key=>$value)
@@ -608,7 +620,7 @@ function cleantalk_buffer($buffer)
 			
 			if($error!='')
 			{
-				$html.='<center><div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;"><b>'.$error.'</b></div></center>';
+				$html.='<center><div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;"><b>'.$error.'</b></div><br></center>';
 			}
 			
 		}
@@ -618,7 +630,7 @@ function cleantalk_buffer($buffer)
 		
 		if($smcFunc['db_num_rows'] ($result) == 0 && isset($_GET['ctcheckspam']))
 		{
-			$html.='<span style="margin-left:45%;"><b>No spam users found.</b></span><br><br>';
+			$html.='<center><div><b>No spam users found.</b></div><br><br></center>';
 		}
 		else if($smcFunc['db_num_rows'] ($result) > 0)
 		{
@@ -626,7 +638,7 @@ function cleantalk_buffer($buffer)
 			{
 				$html.='<center><h3>Done. All users tested via blacklists database, please see result below.</h3><br /><br /></center>';
 			}
-			$html.='<center><table border=1>
+			$html.='<center><table style="border-color:#666666;" border=1 cellspacing=0 cellpadding=3>
 	<thead>
 	<tr>
 		<th>Select</th>
@@ -655,7 +667,7 @@ function cleantalk_buffer($buffer)
 			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.<br /><br /></center>";
 		}
 		
-		$html.="<button style=\"width:20%;margin-left:40%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">Check users for spam</button>";
+		$html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">Check users for spam</button></center>";
 		$buffer = str_replace("%CLEANTALK_CHECK_USERS%", $html, $buffer);
 	}
 
