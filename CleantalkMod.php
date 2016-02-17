@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-180');
+define('CT_AGENT_VERSION', 'smf-190');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -329,7 +329,7 @@ function cleantalk_log($message)
  */
 function cleantalk_load()
 {
-    global $context, $user_info, $modSettings;
+    global $context, $user_info, $modSettings, $smcFunc;
     if (
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
@@ -339,6 +339,19 @@ function cleantalk_load()
     ) {
         $context ['html_headers'] .= cleantalk_print_js_input();
     }
+    
+    if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin' && isset($_POST['ct_del_user']))
+	{
+		foreach($_POST['ct_del_user'] as $key=>$value)
+		{
+			$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array());
+		}
+	}
+	
+	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin' && isset($_POST['ct_delete_all']))
+	{
+		$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where ct_marked=1',Array());
+	}
 
     if (
         isset($context['template_layers']) &&
@@ -490,9 +503,16 @@ function template_cleantalk_below()
 function cleantalk_buffer($buffer)
 {
 	global $modSettings, $user_info, $smcFunc;
-	if($user_info['is_admin'])
+	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin')
 	{
 		$html='';
+		if(isset($_POST['ct_del_user']))
+		{
+			foreach($_POST['ct_del_user'] as $key=>$value)
+			{
+				$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array());
+			}
+		}
 		if(isset($_GET['ctcheckspam']))
 		{
 			$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
@@ -590,49 +610,49 @@ function cleantalk_buffer($buffer)
 			{
 				$html.='<center><div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;"><b>'.$error.'</b></div></center>';
 			}
-			else
+			
+		}
+		
+		$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
+		$result = $smcFunc['db_query']('', $sql, Array());
+		
+		if($smcFunc['db_num_rows'] ($result) == 0 && isset($_GET['ctcheckspam']))
+		{
+			$html.='<span style="margin-left:45%;"><b>No spam users found.</b></span><br><br>';
+		}
+		else if($smcFunc['db_num_rows'] ($result) > 0)
+		{
+			if(isset($_GET['ctcheckspam']))
 			{
-				//@header("Location: ".str_replace('&ctcheckspam=1', '&finishcheck=1', html_entity_decode($request->server('REQUEST_URI'))));				
-				
-				$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
-				$result = $smcFunc['db_query']('', $sql, Array());
-				
-				if($smcFunc['db_num_rows'] ($result) == 0)
-				{
-					$html.='<span style="margin-left:45%;"><b>No spam users found.</b></span><br><br>';
-				}
-				else
-				{
-					$html.='<center><h3>Done. All users tested via blacklists database, please see result below.</h3><br /><br />';
-					$html.='<table border=1>
-			<thead>
-			<tr>
-				<th>Select</th>
-				<th>Username</th>
-				<th>Joined</th>
-				<th>E-mail</th>
-				<th>IP</th>
-				<th>Last visit</th>
-			</tr>
-			</thead>
-			<tbody>';
-					$found=false;
-					while($row = $smcFunc['db_fetch_assoc'] ($result))
-					{
-						$found=true;
-						$html.="<tr>
-						<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
-						<td>".$row['member_name']."</td>
-						<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
-						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'>".$row['email_address']."</a></td>
-						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'>".$row['member_ip']."</a></td>
-						<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
-						</tr>";
-						
-					}
-					$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.<br /><br /></center>";
-				}
+				$html.='<center><h3>Done. All users tested via blacklists database, please see result below.</h3><br /><br /></center>';
 			}
+			$html.='<center><table border=1>
+	<thead>
+	<tr>
+		<th>Select</th>
+		<th>Username</th>
+		<th>Joined</th>
+		<th>E-mail</th>
+		<th>IP</th>
+		<th>Last visit</th>
+	</tr>
+	</thead>
+	<tbody>';
+			$found=false;
+			while($row = $smcFunc['db_fetch_assoc'] ($result))
+			{
+				$found=true;
+				$html.="<tr>
+				<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
+				<td>".$row['member_name']."</td>
+				<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
+				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'>".$row['email_address']."</a></td>
+				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'>".$row['member_ip']."</a></td>
+				<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
+				</tr>";
+				
+			}
+			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='Delete selected'> <input type=submit name='ct_delete_all' value='Delete all'><br />All posts of deleted users will be deleted, too.<br /><br /></center>";
 		}
 		
 		$html.="<button style=\"width:20%;margin-left:40%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">Check users for spam</button>";
