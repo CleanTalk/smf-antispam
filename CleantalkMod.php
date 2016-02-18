@@ -527,21 +527,6 @@ function cleantalk_buffer($buffer)
 		}
 		if(isset($_GET['ctcheckspam']))
 		{
-			$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
-			$row = $smcFunc['db_fetch_assoc'] ($result);
-			if(!isset($row['ct_marked']))
-			{
-				$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
-				$result = $smcFunc['db_query']('', $sql, Array());
-			}
-			else
-			{
-				$sql = 'ALTER TABLE  {db_prefix}members DROP COLUMN  `ct_marked`';
-				$result = $smcFunc['db_query']('', $sql, Array());
-				$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
-				$result = $smcFunc['db_query']('', $sql, Array());
-			}
-			
 			$sql = 'UPDATE {db_prefix}members set ct_marked=0';
 			$result = $smcFunc['db_query']('', $sql, Array());
 			$sql = 'SELECT * FROM {db_prefix}members where passwd<>""';
@@ -623,6 +608,14 @@ function cleantalk_buffer($buffer)
 				$html.='<center><div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;"><b>'.$error.'</b></div><br></center>';
 			}
 			
+		}
+		
+		$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
+		$row = $smcFunc['db_fetch_assoc'] ($result);
+		if(!isset($row['ct_marked']))
+		{
+			$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
+			$result = $smcFunc['db_query']('', $sql, Array());
 		}
 		
 		$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
