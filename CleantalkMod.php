@@ -513,11 +513,19 @@ function cleantalk_buffer($buffer)
 	global $modSettings, $user_info, $smcFunc;
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin')
 	{
-		$html='<span id="ct_anchor"></span><script>
-		document.getElementById("ct_anchor").parentElement.style.height="0px";
-		document.getElementById("ct_anchor").parentElement.style.padding="0px";
-		document.getElementById("ct_anchor").parentElement.style.border="0px";
-		</script>';
+		global $forum_version;
+		if(strpos($forum_version, 'SMF 2.0')===false)
+		{
+			$html='';
+		}
+		else
+		{
+			$html='<span id="ct_anchor"></span><script>
+			document.getElementById("ct_anchor").parentElement.style.height="0px";
+			document.getElementById("ct_anchor").parentElement.style.padding="0px";
+			document.getElementById("ct_anchor").parentElement.style.border="0px";
+			</script>';
+		}
 		if(isset($_POST['ct_del_user']))
 		{
 			foreach($_POST['ct_del_user'] as $key=>$value)
