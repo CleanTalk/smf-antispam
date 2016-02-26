@@ -658,16 +658,16 @@ function cleantalk_buffer($buffer)
 				<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
 				<td>".$row['member_name']."</td>
 				<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
-				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'>".$row['email_address']."</a></td>
-				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'>".$row['member_ip']."</a></td>
+				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['email_address']."</a></td>
+				<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['member_ip']."</a></td>
 				<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
 				</tr>";
 				
 			}
-			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='".$txt['cleantalk_check_users_tbl_delselect']."'> <input type=submit name='ct_delete_all' value='".$txt['cleantalk_check_users_tbl_delall']."'><br /><b>".$txt['cleantalk_check_users_tbl_delnotice']."</b><br /><br /></center>";
+			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='".$txt['cleantalk_check_users_tbl_delselect']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'> <input type=submit name='ct_delete_all' value='".$txt['cleantalk_check_users_tbl_delall']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'><br />".$txt['cleantalk_check_users_tbl_delnotice']."<br /><br /></center>";
 		}
 		
-		$html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button></center>";
+		$html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br /><b>".$txt['cleantalk_check_users_button_after']."</b></center>";
 		$buffer = str_replace("%CLEANTALK_CHECK_USERS%", $html, $buffer);
 	}
 
