@@ -22,6 +22,7 @@ $txt['cleantalk_sfw'] = 'Включить Spam FireWall';
 $txt['cleantalk_sfw_postinput'] = 'Включение этой опции позволит Вам фильтровать ботов до того, как они зайдут на сайт. Также это снизит нагрузку на сервер.';
 $txt['cleantalk_check_users'] = '%CLEANTALK_CHECK_USERS%';
 $txt['cleantalk_check_users_button'] = 'Проверить пользователей на спам';
+$txt['cleantalk_check_users_button_after'] = 'Антиспам от CleanTalk проверит всех пользователей по черным спискам и покажет Вам отправителей, которые проявляли спам-активность на других сайтах.';
 $txt['cleantalk_check_users_nofound'] = 'Спамеров не найдено';
 $txt['cleantalk_check_users_tbl_select'] = 'Выбрать';
 $txt['cleantalk_check_users_tbl_username'] = 'Пользователь';
@@ -31,6 +32,7 @@ $txt['cleantalk_check_users_done'] = 'Готово. Все пользователи проверены по черн
 $txt['cleantalk_check_users_tbl_delselect'] = 'Удалить выбранных';
 $txt['cleantalk_check_users_tbl_delall'] = 'Удалить всех';
 $txt['cleantalk_check_users_tbl_delnotice'] = 'Все темы и сообщения выбранных пользователей будут удалены';
+$txt['cleantalk_check_users_confirm'] = 'Удалить пользователей со всеми темами и сообщениями?';
 // CleanTalk messages end
 ]]></add>
 		</operation>

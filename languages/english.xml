@@ -21,6 +21,7 @@ $txt['cleantalk_sfw'] = 'Enable SpamFireWall';
 $txt['cleantalk_sfw_postinput'] = 'This option allows to filter spam bots before they access website. Also reduces CPU usage on hosting server and accelerates pages load time.';
 $txt['cleantalk_check_users'] = '%CLEANTALK_CHECK_USERS%';
 $txt['cleantalk_check_users_button'] = 'Check users for spam';
+$txt['cleantalk_check_users_button_after'] = 'Anti-spam by CleanTalk will check all users against blacklists database and show you senders that have spam activity on other websites.';
 $txt['cleantalk_check_users_nofound'] = 'No spam users found';
 $txt['cleantalk_check_users_tbl_select'] = 'Select';
 $txt['cleantalk_check_users_tbl_username'] = 'Username';
@@ -30,6 +31,7 @@ $txt['cleantalk_check_users_done'] = 'Done. All users checked vie blacklists dat
 $txt['cleantalk_check_users_tbl_delselect'] = 'Delete selected';
 $txt['cleantalk_check_users_tbl_delall'] = 'Delete all';
 $txt['cleantalk_check_users_tbl_delnotice'] = 'All topics and posts of selected users will be deleted, too.';
+$txt['cleantalk_check_users_confirm'] = 'Delete account(s) with their posts and topics?';
 // CleanTalk messages end
 ]]></add>
 		</operation>
