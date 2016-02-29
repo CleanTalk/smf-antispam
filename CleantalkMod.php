@@ -513,11 +513,19 @@ function cleantalk_buffer($buffer)
 	global $modSettings, $user_info, $smcFunc, $txt;
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin')
 	{
-		$html='<span id="ct_anchor"></span><script>
-		document.getElementById("ct_anchor").parentElement.style.height="0px";
-		document.getElementById("ct_anchor").parentElement.style.padding="0px";
-		document.getElementById("ct_anchor").parentElement.style.border="0px";
-		</script>';
+		global $forum_version;
+		if(strpos($forum_version, 'SMF 2.0')===false)
+		{
+			$html='';
+		}
+		else
+		{
+			$html='<span id="ct_anchor"></span><script>
+			document.getElementById("ct_anchor").parentElement.style.height="0px";
+			document.getElementById("ct_anchor").parentElement.style.padding="0px";
+			document.getElementById("ct_anchor").parentElement.style.border="0px";
+			</script>';
+		}
 		if(isset($_POST['ct_del_user']))
 		{
 			foreach($_POST['ct_del_user'] as $key=>$value)
@@ -625,6 +633,14 @@ function cleantalk_buffer($buffer)
 			
 		}
 		
+		$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
+		$row = $smcFunc['db_fetch_assoc'] ($result);
+		if(!isset($row['ct_marked']))
+		{
+			$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
+			$result = $smcFunc['db_query']('', $sql, Array());
+		}
+			
 		$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
 		$result = $smcFunc['db_query']('', $sql, Array());
 		
@@ -667,7 +683,7 @@ function cleantalk_buffer($buffer)
 			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='".$txt['cleantalk_check_users_tbl_delselect']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'> <input type=submit name='ct_delete_all' value='".$txt['cleantalk_check_users_tbl_delall']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'><br />".$txt['cleantalk_check_users_tbl_delnotice']."<br /><br /></center>";
 		}
 		
-		$html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br /><b>".$txt['cleantalk_check_users_button_after']."</b></center>";
+		$html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br />".$txt['cleantalk_check_users_button_after']."</center>";
 		$buffer = str_replace("%CLEANTALK_CHECK_USERS%", $html, $buffer);
 	}
 
