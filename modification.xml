@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="www.simplemachines.org/xml/modification">
 	<id>cleantalk:antispam</id>
-	<version>1.91</version>
+	<version>1.93</version>
 
     <file name="$sourcedir/Post.php">
         <operation error="fatal">

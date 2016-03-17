@@ -395,17 +395,8 @@ function cleantalk_load()
          $ct_result = $ct->isAllowMessage($ct_request);
          
     }
-    if(isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
+    if(isset($_POST['cleantalk_sfw']) && (int)$_POST['cleantalk_sfw'] == 1)
     {
-    	global $smcFunc;
-    	$sql="DROP TABLE IF EXISTS `cleantalk_sfw`";
-		$result = $smcFunc['db_query']('', $sql, Array());
-		$sql="CREATE TABLE IF NOT EXISTS `cleantalk_sfw` (
-`network` int(11) unsigned NOT NULL,
-`mask` int(11) unsigned NOT NULL,
-INDEX (  `network` ,  `mask` )
-) ENGINE = MYISAM ";
-		$result = $smcFunc['db_query']('', $sql, Array());
 		$data = Array(	'auth_key' => cleantalk_get_api_key(),
 				'method_name' => '2s_blacklists_db'
 			);
@@ -415,7 +406,7 @@ INDEX (  `network` ,  `mask` )
 		if(isset($result['data']))
 		{
 			$result=$result['data'];
-			$query="INSERT INTO `cleantalk_sfw` VALUES ";
+			$query='INSERT INTO {db_prefix}cleantalk_sfw VALUES ';
 			for($i=0;$i<sizeof($result);$i++)
 			{
 				if($i==sizeof($result)-1)

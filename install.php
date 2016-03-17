@@ -9,6 +9,8 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
+global $db_connection;
+
 $hooks = array(
     'integrate_pre_include' => '$sourcedir/cleantalk/CleantalkMod.php',
     'integrate_register' => 'cleantalk_check_register',
@@ -39,7 +41,33 @@ if ($isInstalling) {
     updateSettings(array('cleantalk_api_key' => $oldKey), false);
     updateSettings(array('cleantalk_first_post_checking' => '1'), false);
     updateSettings(array('cleantalk_logging' => '0'), false);
+    //xdebug_break();
+    if (!isset($db_connection) || $db_connection === false) {
+	loadDatabase();
+    }
+    if (!isset($db_connection) || $db_connection === false) {
+	trigger_error('CleanTalk install: you need to be connected to the database, please verify connection', E_USER_NOTICE);
+    } else {
+    	$sql='DROP TABLE IF EXISTS {db_prefix}cleantalk_sfw';
+	$result = $smcFunc['db_query']('', $sql, Array());
+	$sql='CREATE TABLE IF NOT EXISTS {db_prefix}cleantalk_sfw (
+network int(11) unsigned NOT NULL,
+mask int(11) unsigned NOT NULL,
+INDEX (network, mask)
+)';
+	$result = $smcFunc['db_query']('', $sql, Array());
+    }
 } else {
     // Anti-Spam Verification captcha
     updateSettings(array('reg_verification' => '1'), true);
+    //xdebug_break();
+    if (!isset($db_connection) || $db_connection === false) {
+	loadDatabase();
+    }
+    if (!isset($db_connection) || $db_connection === false) {
+	trigger_error('CleanTalk uninstall: you need to be connected to the database, please verify connection', E_USER_NOTICE);
+    } else {
+    	$sql='DROP TABLE IF EXISTS {db_prefix}cleantalk_sfw';
+	$result = $smcFunc['db_query']('', $sql, Array());
+    }
 }

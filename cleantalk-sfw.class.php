@@ -52,14 +52,27 @@ class CleanTalkSFW
 	public function check_ip()
 	{
 		$passed_ip='';
-		global $smcFunc;
+		global $smcFunc, $db_connection;
+		if (!isset($db_connection) || $db_connection === false) {
+		    loadDatabase();
+		}
+                $table_exists = false;
+		if (isset($db_connection) && $db_connection != false) {
+			$sql="SHOW TABLES LIKE '{db_prefix}cleantalk_sfw'";
+			$result = $smcFunc['db_query']('', $sql, Array());
+                        $row = $smcFunc['db_fetch_assoc'] ($result);
+                        if (isset($row) && is_array($row)) {
+                            $table_exists = true;
+                        }
+		}
+
 		for($i=0;$i<sizeof($this->ip_array);$i++)
 		{
-			$sql="select count(network) as cnt from `cleantalk_sfw` where network = ".$this->ip_array[$i]." & mask";
+		    if (isset($db_connection) && $db_connection != false && $table_exists === true) {
+			$sql='SELECT count(network) as cnt FROM {db_prefix}cleantalk_sfw WHERE network = '.$this->ip_array[$i].' & mask';
 			$result = $smcFunc['db_query']('', $sql, Array());
 			$row = $smcFunc['db_fetch_assoc'] ($result);
-    		$cnt = intval($row['cnt']);
-			
+    			$cnt = intval($row['cnt']);
 
 			if($cnt>0)
 			{
@@ -70,6 +83,11 @@ class CleanTalkSFW
 			{
 				$passed_ip = $this->ip_str_array[$i];
 			}
+		    }
+		    else
+		    {
+			$passed_ip = $this->ip_str_array[$i];
+		    }
 		}
 		if($passed_ip!='')
 		{
@@ -86,7 +104,7 @@ class CleanTalkSFW
 		$sfw_die_page=str_replace("{REQUEST_URI}",$_SERVER['REQUEST_URI'],$sfw_die_page);
 		$sfw_die_page=str_replace("{SFW_COOKIE}",md5($this->blocked_ip.$key),$sfw_die_page);
 		@header('HTTP/1.0 403 Forbidden');
-		print $sfw_die_page;
+		echo $sfw_die_page;
 		die();
 	}
 }

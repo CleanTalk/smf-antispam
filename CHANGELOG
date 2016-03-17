@@ -1,8 +1,11 @@
+Version 1.93 March 17, 2016
+------------------------------
+- Fixed SQL error with Spam FileWall feature
+
 Version 1.90 February 24, 2016
 ------------------------------
 - Fixed translation of bulk users checking
 - Added warning notice about users deletion
-
 
 Version 1.90 February 17, 2016
 ------------------------------
