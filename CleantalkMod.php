@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-193');
+define('CT_AGENT_VERSION', 'smf-191');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -430,7 +430,7 @@ function cleantalk_load()
 	   	$key=cleantalk_get_api_key();
 	   	for($i=0;$i<sizeof($ip);$i++)
 		{
-	    	if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key']==md5($ip[$i].$key))
+	    	if(isset($_COOKIE['ct_sfw_pass_key']) && isset($ip[$i]) && $_COOKIE['ct_sfw_pass_key']==md5($ip[$i].$key))
 	    	{
 	    		$is_sfw_check=false;
 	    		if(isset($_COOKIE['ct_sfw_passed']))
