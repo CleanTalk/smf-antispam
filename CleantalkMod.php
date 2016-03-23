@@ -430,7 +430,7 @@ function cleantalk_load()
 	   	$key=cleantalk_get_api_key();
 	   	for($i=0;$i<sizeof($ip);$i++)
 		{
-	    	if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key']==md5($ip[$i].$key))
+	    	if(isset($_COOKIE['ct_sfw_pass_key']) && isset($ip[$i]) && $_COOKIE['ct_sfw_pass_key']==md5($ip[$i].$key))
 	    	{
 	    		$is_sfw_check=false;
 	    		if(isset($_COOKIE['ct_sfw_passed']))
