@@ -424,32 +424,38 @@ function cleantalk_load()
     
     if(isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
     {
+//$log_str = 'CT_DEBUG sfw=1';
+	include_once("cleantalk-sfw.class.php");
+	$sfw = new CleanTalkSFW();
+	$sfw->cleantalk_get_real_ip();
+
     	$is_sfw_check=true;
-	   	$ip=CleantalkGetIP();
-	   	$ip=array_unique($ip);
-	   	$key=cleantalk_get_api_key();
-	   	for($i=0;$i<sizeof($ip);$i++)
-		{
-	    	if(isset($_COOKIE['ct_sfw_pass_key']) && isset($ip[$i]) && $_COOKIE['ct_sfw_pass_key']==md5($ip[$i].$key))
+	$key=cleantalk_get_api_key();
+	for($i=0;$i<sizeof($sfw->ip_array);$i++)
+	{
+              if(isset($_COOKIE['ct_sfw_pass_key']) && isset($sfw->ip_array[$i]) && $_COOKIE['ct_sfw_pass_key']==md5($sfw->ip_array[$i].$key))
 	    	{
 	    		$is_sfw_check=false;
+//$log_str .= ' _key ' . $sfw->ip_array[$i];
 	    		if(isset($_COOKIE['ct_sfw_passed']))
 	    		{
 	    			@setcookie ('ct_sfw_passed', '0', 1, "/");
+//$log_str .= ' _passed ' . $sfw->ip_array[$i];
 	    		}
 	    	}
-	    }
-		if($is_sfw_check)
-		{
-			include_once("cleantalk-sfw.class.php");
-			$sfw = new CleanTalkSFW();
-			$sfw->cleantalk_get_real_ip();
+	}
+	if($is_sfw_check)
+	{
+//$log_str .= ' check';
 			$sfw->check_ip();
 			if($sfw->result)
 			{
+//$log_str .= ' die ' . $sfw->blocked_ip;
+//log_error($log_str);
 				$sfw->sfw_die();
 			}
-		}
+	}
+//log_error($log_str);
     }
 }
 
@@ -679,34 +685,4 @@ function cleantalk_buffer($buffer)
 	}
 
 	return $buffer;
-}
-
-function CleantalkGetIP()
-{
-	$result=Array();
-	if ( function_exists( 'apache_request_headers' ) )
-	{
-		$headers = apache_request_headers();
-	}
-	else
-	{
-		$headers = $_SERVER;
-	}
-	if ( array_key_exists( 'X-Forwarded-For', $headers ) )
-	{
-		$the_ip=explode(",", trim($headers['X-Forwarded-For']));
-		$result[] = trim($the_ip[0]);
-	}
-	if ( array_key_exists( 'HTTP_X_FORWARDED_FOR', $headers ))
-	{
-		$the_ip=explode(",", trim($headers['HTTP_X_FORWARDED_FOR']));
-		$result[] = trim($the_ip[0]);
-	}
-	$result[] = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
-
-	if(isset($_GET['sfw_test_ip']))
-	{
-		$result[]=$_GET['sfw_test_ip'];
-	}
-	return $result;
 }
