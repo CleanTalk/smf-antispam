@@ -197,30 +197,34 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
      * @var CleantalkResponse $ct_result CleanTalk API call result
      */
     $ct_result = $ct->isAllowMessage($ct_request);
+    $ct_answer_text = 'CleanTalk: ' . strip_tags($ct_result->comment);
 
     if ($ct_result->errno != 0 && !cleantalk_is_valid_js()) {
         cleantalk_log('deny post (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
-        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+        fatal_error($ct_answer_text, false);
         return;
     }
 
-    if ($ct_result->stop_queue == 1) {
-        cleantalk_log('stop queue "' . $ct_result->comment . '"');
-        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
-
-    } elseif ($ct_result->inactive == 1) {
-        cleantalk_log('inactive message "' . $ct_result->comment . '"');
-
-        if ($modSettings['postmod_active']) {
-            // If post moderation active then set message not approved
-            $msgOptions['approved'] = 0;
+    if ($ct_result->allow == 0) {
+       $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
+       if ($modSettings['postmod_active'] || true) {
+            if ($ct_result->stop_queue == 1) {
+                cleantalk_log('spam message "' . $ct_result->comment . '"');
+                fatal_error($ct_answer_text, false);
+            } else {
+                // If post moderation active then set message not approved
+                cleantalk_log('to postmoderation "' . $ct_result->comment . '"');
+                $msgOptions['approved'] = 0;
+            }
+        } else {
+            cleantalk_log('spam message "' . $ct_result->comment . '"');
+            fatal_error($ct_answer_text, false);
         }
-        $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
-
     } else {
         // all ok, only logging
         cleantalk_log('allow message for "' . $posterOptions['name'] . '"');
     }
+    
 }
 
 /**
