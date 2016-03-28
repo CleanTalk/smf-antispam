@@ -207,7 +207,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions)
 
     if ($ct_result->allow == 0) {
        $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
-       if ($modSettings['postmod_active'] || true) {
+       if ($modSettings['postmod_active']) {
             if ($ct_result->stop_queue == 1) {
                 cleantalk_log('spam message "' . $ct_result->comment . '"');
                 fatal_error($ct_answer_text, false);
