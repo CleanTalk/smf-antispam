@@ -9,7 +9,7 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
-global $db_connection;
+global $db_connection, $smcFunc;
 
 $hooks = array(
     'integrate_pre_include' => '$sourcedir/cleantalk/CleantalkMod.php',
@@ -48,14 +48,40 @@ if ($isInstalling) {
     if (!isset($db_connection) || $db_connection === false) {
 	trigger_error('CleanTalk install: you need to be connected to the database, please verify connection', E_USER_NOTICE);
     } else {
-    	$sql='DROP TABLE IF EXISTS {db_prefix}cleantalk_sfw';
-	$result = $smcFunc['db_query']('', $sql, Array());
-	$sql='CREATE TABLE IF NOT EXISTS {db_prefix}cleantalk_sfw (
-network int(11) unsigned NOT NULL,
-mask int(11) unsigned NOT NULL,
-INDEX (network, mask)
-)';
-	$result = $smcFunc['db_query']('', $sql, Array());
+	db_extend('packages');
+
+	$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
+
+	$columns = array(
+	    array(
+	    'name' => 'network',
+	    'type' => 'int',
+	    'size' => 11,
+	    'unsigned' => true,
+	    ),
+	    array(
+	    'name' => 'mask',
+	    'type' => 'int',
+	    'size' => 11,
+	    'unsigned' => true,
+	    ),
+	);
+	$indexes = array(
+	    array(
+	    'type' => 'primary',
+	    'columns' => array('network', 'mask')
+	    ),
+	);
+	$smcFunc['db_create_table']('{db_prefix}cleantalk_sfw', $columns, $indexes, array(), 'update_remove');
+
+	$smcFunc['db_add_column'](
+	    '{db_prefix}members',
+	    array(
+		'name' => 'ct_marked',
+		'type' => 'int',
+		'default' => 0
+	    )
+	);
     }
 } else {
     // Anti-Spam Verification captcha
@@ -67,7 +93,8 @@ INDEX (network, mask)
     if (!isset($db_connection) || $db_connection === false) {
 	trigger_error('CleanTalk uninstall: you need to be connected to the database, please verify connection', E_USER_NOTICE);
     } else {
-    	$sql='DROP TABLE IF EXISTS {db_prefix}cleantalk_sfw';
-	$result = $smcFunc['db_query']('', $sql, Array());
+	db_extend('packages');
+    	$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
+	$smcFunc['db_remove_column']('{db_prefix}members', 'ct_marked', array(), '');
     }
 }

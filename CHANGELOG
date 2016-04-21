@@ -1,3 +1,7 @@
+Version 1.94 April 18, 2016
+------------------------------
+- Fixed SQL error of Spam FileWall feature in SQLite
+
 Version 1.93 March 17, 2016
 ------------------------------
 - Fixed SQL error with Spam FileWall feature

@@ -16,7 +16,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/cleantalk.class.php');
 
 // define same CleanTalk options
-define('CT_AGENT_VERSION', 'smf-193');
+define('CT_AGENT_VERSION', 'smf-194');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -348,9 +348,9 @@ function cleantalk_load()
 	{
 		foreach($_POST['ct_del_user'] as $key=>$value)
 		{
-			$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array());
-			$result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array());
-			$result = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.intval($key),Array());
+			$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array('db_error_skip' => true));
+			$result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array('db_error_skip' => true));
+			$result = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.intval($key),Array('db_error_skip' => true));
 		}
 	}
 	
@@ -359,10 +359,10 @@ function cleantalk_load()
 		$result = $smcFunc['db_query']('', 'select * from {db_prefix}members where ct_marked=1',Array());
 		while($row = $smcFunc['db_fetch_assoc'] ($result))
 		{
-			$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.$row['id_member'],Array());
-			$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.$row['id_member'],Array());
+			$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.$row['id_member'],Array('db_error_skip' => true));
+			$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.$row['id_member'],Array('db_error_skip' => true));
 		}
-		$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where ct_marked=1',Array());
+		$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where ct_marked=1',Array('db_error_skip' => true));
 	}
 
     if (
@@ -409,6 +409,8 @@ function cleantalk_load()
 		$result=json_decode($result, true);
 		if(isset($result['data']))
 		{
+			$query='DELETE FROM {db_prefix}cleantalk_sfw';
+			$tmp = $smcFunc['db_query']('', $query, Array());
 			$result=$result['data'];
 			$query='INSERT INTO {db_prefix}cleantalk_sfw VALUES ';
 			for($i=0;$i<sizeof($result);$i++)
@@ -428,7 +430,6 @@ function cleantalk_load()
     
     if(isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
     {
-//$log_str = 'CT_DEBUG sfw=1';
 	include_once("cleantalk-sfw.class.php");
 	$sfw = new CleanTalkSFW();
 	$sfw->cleantalk_get_real_ip();
@@ -440,26 +441,20 @@ function cleantalk_load()
               if(isset($_COOKIE['ct_sfw_pass_key']) && isset($sfw->ip_array[$i]) && $_COOKIE['ct_sfw_pass_key']==md5($sfw->ip_array[$i].$key))
 	    	{
 	    		$is_sfw_check=false;
-//$log_str .= ' _key ' . $sfw->ip_array[$i];
 	    		if(isset($_COOKIE['ct_sfw_passed']))
 	    		{
 	    			@setcookie ('ct_sfw_passed', '0', 1, "/");
-//$log_str .= ' _passed ' . $sfw->ip_array[$i];
 	    		}
 	    	}
 	}
 	if($is_sfw_check)
 	{
-//$log_str .= ' check';
 			$sfw->check_ip();
 			if($sfw->result)
 			{
-//$log_str .= ' die ' . $sfw->blocked_ip;
-//log_error($log_str);
 				$sfw->sfw_die();
 			}
 	}
-//log_error($log_str);
     }
 }
 
@@ -534,34 +529,23 @@ function cleantalk_buffer($buffer)
 				$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array());
 			}
 		}
-		if(isset($_GET['ctcheckspam']))
+                db_extend('packages');
+		$cols = $smcFunc['db_list_columns'] ('{db_prefix}members', 0);
+		if(in_array('ct_marked', $cols))
 		{
-			$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
-			$row = $smcFunc['db_fetch_assoc'] ($result);
-			if(!isset($row['ct_marked']))
-			{
-				$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
-				$result = $smcFunc['db_query']('', $sql, Array());
-			}
-			else
-			{
-				$sql = 'ALTER TABLE  {db_prefix}members DROP COLUMN  `ct_marked`';
-				$result = $smcFunc['db_query']('', $sql, Array());
-				$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
-				$result = $smcFunc['db_query']('', $sql, Array());
-			}
-			
-			$sql = 'UPDATE {db_prefix}members set ct_marked=0';
-			$result = $smcFunc['db_query']('', $sql, Array());
-			$sql = 'SELECT * FROM {db_prefix}members where passwd<>""';
-			$result = $smcFunc['db_query']('', $sql, Array());
-			$users=Array();
-			$users[0]=Array();
-			$data=Array();
-			$data[0]=Array();
-			$cnt=0;
-			while($row = $smcFunc['db_fetch_assoc'] ($result))
-			{
+		    if(isset($_GET['ctcheckspam']))
+		    {
+			    $sql = 'UPDATE {db_prefix}members set ct_marked=0';
+			    $result = $smcFunc['db_query']('', $sql, Array());
+			    $sql = 'SELECT * FROM {db_prefix}members where passwd<>""';
+			    $result = $smcFunc['db_query']('', $sql, Array());
+			    $users=Array();
+			    $users[0]=Array();
+			    $data=Array();
+			    $data[0]=Array();
+			    $cnt=0;
+			    while($row = $smcFunc['db_fetch_assoc'] ($result))
+			    {
 				//$html.=serialize($row);
 				$users[$cnt][] = Array('name' => $row['member_name'],
 									'id' => $row['id_member'],
@@ -578,12 +562,12 @@ function cleantalk_buffer($buffer)
 					$users[$cnt]=Array();
 					$data[$cnt]=Array();
 				}
-			}
+			    }
 			
-			$error="";
+			    $error="";
 			
-			for($i=0;$i<sizeof($users);$i++)
-			{
+			    for($i=0;$i<sizeof($users);$i++)
+			    {
 				$send=implode(',',$data[$i]);
 				$req="data=$send";
 				$opts = array(
@@ -610,7 +594,7 @@ function cleantalk_buffer($buffer)
 								if($value->appears==1)
 								{
 									$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
-									$result = $smcFunc['db_query']('', $sql, Array());
+									$result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
 								}
 							}
 							else
@@ -618,7 +602,7 @@ function cleantalk_buffer($buffer)
 								if($value->appears==1)
 								{
 									$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
-									$result = $smcFunc['db_query']('', $sql, Array());
+									$result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
 								}
 							}
 						}
@@ -632,25 +616,17 @@ function cleantalk_buffer($buffer)
 				$html.='<center><div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;"><b>'.$error.'</b></div><br></center>';
 			}
 			
-		}
+		    }
 		
-		$result = $smcFunc['db_query']('', 'select * from {db_prefix}members limit 1',Array());
-		$row = $smcFunc['db_fetch_assoc'] ($result);
-		if(!isset($row['ct_marked']))
-		{
-			$sql = 'ALTER TABLE  {db_prefix}members ADD  `ct_marked` INT DEFAULT 0 ';
-			$result = $smcFunc['db_query']('', $sql, Array());
-		}
-			
-		$sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
-		$result = $smcFunc['db_query']('', $sql, Array());
+		    $sql = 'SELECT * FROM {db_prefix}members where ct_marked=1';
+		    $result = $smcFunc['db_query']('', $sql, Array());
 		
-		if($smcFunc['db_num_rows'] ($result) == 0 && isset($_GET['ctcheckspam']))
-		{
+		    if($smcFunc['db_num_rows'] ($result) == 0 && isset($_GET['ctcheckspam']))
+		    {
 			$html.='<center><div><b>'.$txt['cleantalk_check_users_nofound'].'</b></div><br><br></center>';
-		}
-		else if($smcFunc['db_num_rows'] ($result) > 0)
-		{
+		    }
+		    else if($smcFunc['db_num_rows'] ($result) > 0)
+		    {
 			if(isset($_GET['ctcheckspam']))
 			{
 				$html.='<center><h3>'.$txt['cleantalk_check_users_done'].'</h3><br /><br /></center>';
@@ -682,6 +658,7 @@ function cleantalk_buffer($buffer)
 				
 			}
 			$html.="</tbody></table><br /><input type=submit name='ct_delete_checked' value='".$txt['cleantalk_check_users_tbl_delselect']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'> <input type=submit name='ct_delete_all' value='".$txt['cleantalk_check_users_tbl_delall']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'><br />".$txt['cleantalk_check_users_tbl_delnotice']."<br /><br /></center>";
+		    }
 		}
 		
 		$html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br />".$txt['cleantalk_check_users_button_after']."</center>";
