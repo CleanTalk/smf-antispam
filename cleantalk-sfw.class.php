@@ -53,7 +53,11 @@ class CleanTalkSFW
 		}
                 $table_exists = false;
 		if (isset($db_connection) && $db_connection != false) {
-			$sql="SHOW TABLES LIKE '{db_prefix}cleantalk_sfw'";
+                        if(strpos('sqlite', strtolower($smcFunc['db_title'])) === FALSE) {
+                            $sql="SHOW TABLES LIKE '{db_prefix}cleantalk_sfw'";
+                        } else {
+                            $sql="SELECT name FROM sqlite_master WHERE type='table' AND name='{db_prefix}cleantalk_sfw'";
+                        }
 			$result = $smcFunc['db_query']('', $sql, Array());
                         $row = $smcFunc['db_fetch_assoc'] ($result);
                         if (isset($row) && is_array($row)) {
