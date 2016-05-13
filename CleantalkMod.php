@@ -334,6 +334,7 @@ function cleantalk_log($message)
 function cleantalk_load()
 {
     global $context, $user_info, $modSettings, $smcFunc;
+
     if (
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
@@ -346,6 +347,7 @@ function cleantalk_load()
     
     if($user_info['is_admin'] && isset($_POST['ct_del_user']))
 	{
+		checkSession('request');
 		foreach($_POST['ct_del_user'] as $key=>$value)
 		{
 			$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array('db_error_skip' => true));
@@ -356,6 +358,7 @@ function cleantalk_load()
 	
 	if($user_info['is_admin'] && isset($_POST['ct_delete_all']))
 	{
+		checkSession('request');
 		$result = $smcFunc['db_query']('', 'select * from {db_prefix}members where ct_marked=1',Array());
 		while($row = $smcFunc['db_fetch_assoc'] ($result))
 		{
@@ -374,8 +377,10 @@ function cleantalk_load()
         // add "tell others" templates
         $context['template_layers'][] = 'cleantalk';
     }
-    if(isset($_POST['cleantalk_api_key']))
+    if($user_info['is_admin'] && isset($_POST['cleantalk_api_key']))
     {
+	checkSession('request');
+
     	 $ct = new Cleantalk();
          $ct->server_url = CT_SERVER_URL;
      
@@ -399,8 +404,9 @@ function cleantalk_load()
          $ct_result = $ct->isAllowMessage($ct_request);
          
     }
-    if(isset($_POST['cleantalk_sfw']) && (int)$_POST['cleantalk_sfw'] == 1)
+    if($user_info['is_admin'] && isset($_POST['cleantalk_sfw']) && (int)$_POST['cleantalk_sfw'] == 1)
     {
+		checkSession('request');
 		$data = Array(	'auth_key' => cleantalk_get_api_key(),
 				'method_name' => '2s_blacklists_db'
 			);
@@ -456,6 +462,7 @@ function cleantalk_load()
 			}
 	}
     }
+
 }
 
 /**
@@ -522,13 +529,6 @@ function cleantalk_buffer($buffer)
 			document.getElementById("ct_anchor").parentElement.style.border="0px";
 			</script>';
 		}
-		if(isset($_POST['ct_del_user']))
-		{
-			foreach($_POST['ct_del_user'] as $key=>$value)
-			{
-				$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array());
-			}
-		}
                 db_extend('packages');
 		$cols = $smcFunc['db_list_columns'] ('{db_prefix}members', 0);
 		if(in_array('ct_marked', $cols))
@@ -546,7 +546,6 @@ function cleantalk_buffer($buffer)
 			    $cnt=0;
 			    while($row = $smcFunc['db_fetch_assoc'] ($result))
 			    {
-				//$html.=serialize($row);
 				$users[$cnt][] = Array('name' => $row['member_name'],
 									'id' => $row['id_member'],
 									'email' => $row['email_address'],
