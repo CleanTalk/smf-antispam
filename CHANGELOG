@@ -1,3 +1,8 @@
+Version 1.95 May 18, 2016
+------------------------------
+- Added session checking
+- Added SSI compatibility
+
 Version 1.94 April 18, 2016
 ------------------------------
 - Fixed SQL error of Spam FileWall feature in SQLite
