@@ -1012,7 +1012,7 @@ function cleantalk_buffer($buffer)
 						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['email_address']."</a></td>
 						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['member_ip']."</a></td>
 						<td>".date("Y-m-d H:i:s", $row['last_login'])."</td>
-						<td>".$row['posts']."</td>
+						<td>".$row['posts']."&nbsp;<sup><a href='index.php?action=profile;area=showposts;u={$row['id_member']}' target='_blank'>Show all</a></sup></td>
 						</tr>";
 						
 					}
