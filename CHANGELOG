@@ -1,3 +1,33 @@
+Version 2.10 June 12, 2017
+------------------------------
+- Major improvments.
+- Performance improved.
+- SFW logs added.
+- Stability improvment.
+- Spam protection improved.
+- Many small bug fixes.
+
+Version 2.0 December 29, 2016
+------------------------------
+- Minor bug fixes
+
+Version 1.99 December 22, 2016
+------------------------------
+- Minor fixes
+
+Version 1.98 December 12, 2016
+------------------------------
+- Improved filtration
+
+Version 1.97 November 13, 2016
+------------------------------
+- Changed method for users check.
+- Deleted test request with "good@cleantalk.org"
+
+Version 1.96 July 19, 2016
+------------------------------
+- Fixed empty buffer in SSI compatibility
+
 Version 1.95 May 18, 2016
 ------------------------------
 - Added session checking
