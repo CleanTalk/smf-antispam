@@ -1007,12 +1007,12 @@ function cleantalk_buffer($buffer)
 						$found=true;
 						$html.="<tr>
 						<td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
-						<td>{$row['member_name']}<sup><a href='index.php?action=profile;u={$row['id_member']}' target='_blank'>Details</a></sup></td>
+						<td>{$row['member_name']}&nbsp;<sup><a href='index.php?action=profile;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_username_details']}</a></sup></td>
 						<td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
 						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['email_address']."</a></td>
 						<td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['member_ip']."</a></td>
-						<td>".date("Y-m-d H:i:s", $row['last_login'])."</td>
-						<td>".$row['posts']."&nbsp;<sup><a href='index.php?action=profile;area=showposts;u={$row['id_member']}' target='_blank'>Show all</a></sup></td>
+						<td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
+						<td style='text-align: center;'>{$row['posts']}&nbsp;<sup><a href='index.php?action=profile;area=showposts;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_posts_show']}</a></sup></td>
 						</tr>";
 						
 					}
