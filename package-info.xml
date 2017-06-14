@@ -3,8 +3,8 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
-	<version>2.10</version>
 	<type>modification</type>
+	<version>2.10</version>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>

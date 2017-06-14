@@ -35,7 +35,7 @@ function cleantalk_sfw_check()
 	global $modSettings, $user_info;
 		
 	if(!empty($modSettings['cleantalk_sfw']) && !$user_info['is_admin']){
-				
+		
 		$sfw = new cleantalk\antispam\CleantalkSFW();
 		$key = $modSettings['cleantalk_api_key'];
 		
@@ -531,6 +531,7 @@ function cleantalk_load()
 		return;
     }
 	
+	// Output JS for users
     if (
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
@@ -540,136 +541,123 @@ function cleantalk_load()
     ) {
         $context ['html_headers'] .= cleantalk_print_js_input();
     }
-
-	// Getting key automatically
-	if(isset($_GET['ctgetautokey'])){
+	
+	// Only for admin
+	if(!empty($user_info['is_admin'])){
 		
-		$result = cleantalk\antispam\CleantalkHelper::getAutoKey($user_info['email'], $_SERVER['SERVER_NAME'], 'smf', 'antispam');
-		
-		if (empty($result['error'])){
+		// Getting key automatically
+		if(!empty($_GET['ctgetautokey'])){
 			
-			updateSettings(array('cleantalk_api_key_is_ok' => '1'), false);
-			updateSettings(array('cleantalk_api_key' => $result['auth_key']), false);
+			$result = cleantalk\antispam\CleantalkHelper::getAutoKey($user_info['email'], $_SERVER['SERVER_NAME'], 'smf', 'antispam');
 			
-			// Doing noticePaidTill(), sfw update and sfw send logs via cron
-			$modSettings['cleantalk_api_key'] = $result['auth_key'];
-			$modSettings['cleantalk_api_key_is_ok'] = 1;
-			$modSettings['cleantalk_last_account_check'] = time()-10;
-			$modSettings['cleantalk_sfw_last_update'] = time()-10;
-			$modSettings['cleantalk_sfw_last_update'] = time()-10;
+			if (empty($result['error'])){
+				
+				$settings_array = array(
+					'cleantalk_api_key_is_ok'   => '1',
+					'cleantalk_api_key'   => $result['auth_key']
+				);
+								
+				// Doing noticePaidTill(), sfw update and sfw send logs via cron				
+				$doing_cron = true;
 
-			// User token is empty, request it via noticePaidTill()
-			if (empty($result['user_token'])){
-				$result = cleantalk\antispam\CleantalkHelper::noticePaidTill($result['auth_key']);
-				if (empty($result['error']))
-					updateSettings(array('cleantalk_user_token' => $result['user_token']), false);
+				// User token is empty, request it via noticePaidTill()
+				if (empty($result['user_token'])){
+					$result = cleantalk\antispam\CleantalkHelper::noticePaidTill($result['auth_key']);
+					if (empty($result['error']))
+						$settings_array += array('cleantalk_user_token' => $result['user_token']);
+				}
+				
+				updateSettings($settings_array, false);
+				
+			}
+		}
+		
+		// Settings saved
+		if(isset($_POST['cleantalk_api_key'])){
+			
+			checkSession('request');
+			
+			// Send feedback about version
+			$ct = new cleantalk\antispam\Cleantalk();
+			$ct->server_url = CT_SERVER_URL;
+			$ct_request = new cleantalk\antispam\CleantalkRequest();
+			$ct_request->auth_key = cleantalk_get_api_key();
+			$ct_request->feedback = '0:'.CT_AGENT_VERSION;
+			$ct_result = $ct->sendFeedback($ct_request);
+			// unset($ct, $ct_request);
+			
+			// Check if key is valid
+			if($_POST['cleantalk_api_key'] != $modSettings['cleantalk_api_key']){
+				
+				$key_to_validate = strval($_POST['cleantalk_api_key']);
+				$result = cleantalk\antispam\CleantalkHelper::noticeValidateKey($key_to_validate);
+				
+				if(empty($result['error'])){
+					
+					if(!empty($result['valid'])){
+						
+						updateSettings(
+							array(
+								'cleantalk_api_key_is_ok' => '1',
+								'cleantalk_api_key' => $key_to_validate								
+							),
+							false
+						);
+						
+					}
+					else
+						updateSettings(array('cleantalk_api_key_is_ok' => '0', false));
+				}
 			}
 			
-		}
-	}
-	
-	// Check if key is valid
-	if(isset($_POST['cleantalk_api_key']) && $_POST['cleantalk_api_key'] != $modSettings['cleantalk_api_key']){
-		
-		$key_to_validate = strval($_POST['cleantalk_api_key']);
-		
-		$result = cleantalk\antispam\CleantalkHelper::noticeValidateKey($key_to_validate);
-		
-		if(empty($result['error'])){
+			// If key is valid doing noticePaidTill(), sfw update and sfw send logs via cron
+			if(!empty($modSettings['cleantalk_api_key_is_ok']))
+				$doing_cron = true;
 			
-			if($result && isset($result['valid']) && intval($result['valid']) == 1){
-				updateSettings(array('cleantalk_api_key_is_ok' => '1', false));
-				
-				// If key is valid doing noticePaidTill(), sfw update and sfw send logs via cron
-				$modSettings['cleantalk_api_key'] = $key_to_validate;
-				$modSettings['cleantalk_api_key_is_ok'] = 1;
-				$modSettings['cleantalk_last_account_check'] = time()-10;
-				$modSettings['cleantalk_sfw_last_update'] = time()-10;
-				$modSettings['cleantalk_sfw_last_update'] = time()-10;
+		}
+		
+		// Deleting selected users
+		if(isset($_POST['ct_del_user']))
+		{			
+			checkSession('request');
+			
+			if (!isset($db_connection) || $db_connection === false)
+				loadDatabase();
+			
+			if (isset($db_connection) && $db_connection != false)
+			{
+				foreach($_POST['ct_del_user'] as $key=>$value)
+				{
+					$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array('db_error_skip' => true));
+					$result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array('db_error_skip' => true));
+					$result = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.intval($key),Array('db_error_skip' => true));
+				}
 			}
-			else
-				updateSettings(array('cleantalk_api_key_is_ok' => '0', false));
-			
 		}
 		
-		
+		// Deleting all users
+		if(isset($_POST['ct_delete_all']))
+		{
+			checkSession('request');
+			
+			if (!isset($db_connection) || $db_connection === false)
+				loadDatabase();
+			
+			if (isset($db_connection) && $db_connection != false)
+			{
+				$result = $smcFunc['db_query']('', 'select * from {db_prefix}members where ct_marked=1',Array());
+				while($row = $smcFunc['db_fetch_assoc'] ($result))
+				{
+					$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.$row['id_member'],Array('db_error_skip' => true));
+					$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.$row['id_member'],Array('db_error_skip' => true));
+				}
+				$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where ct_marked=1',Array('db_error_skip' => true));
+			}
+		}
 	}
-	
-    if($user_info['is_admin'] && isset($_POST['ct_del_user'])){	
-		
-		checkSession('request');
-		
-		if (!isset($db_connection) || $db_connection === false)
-		    loadDatabase();
-		
-		if (isset($db_connection) && $db_connection != false){
-		    foreach($_POST['ct_del_user'] as $key=>$value){
-				
-				$result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array('db_error_skip' => true));
-				$result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array('db_error_skip' => true));
-				$result = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.intval($key),Array('db_error_skip' => true));
-				
-		    }
-		}
-    }
-
-    if($user_info['is_admin'] && isset($_POST['ct_delete_all'])){
-		
-		checkSession('request');
-		
-		if (!isset($db_connection) || $db_connection === false)
-		    loadDatabase();
-		
-		if (isset($db_connection) && $db_connection != false){
-			
-		    $result = $smcFunc['db_query']('', 'select * from {db_prefix}members where ct_marked=1',Array());
-			
-		    while($row = $smcFunc['db_fetch_assoc'] ($result)){
-				$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.$row['id_member'],Array('db_error_skip' => true));
-				$tmp = $smcFunc['db_query']('', 'delete from {db_prefix}messages where id_member='.$row['id_member'],Array('db_error_skip' => true));
-		    }
-			
-		    $result = $smcFunc['db_query']('', 'delete from {db_prefix}members where ct_marked=1',Array('db_error_skip' => true));
-		}
-    }
-
-	// add "tell others" templates
-    if (isset($context['template_layers'])
-        && $context['template_layers'] === array('html', 'body')
-        && array_key_exists('cleantalk_tell_others', $modSettings)
-        && $modSettings['cleantalk_tell_others']
-    ){
-        $context['template_layers'][] = 'cleantalk';
-	}
-	
-    if($user_info['is_admin'] && isset($_POST['cleantalk_api_key'])){
-
-		checkSession('request');
-
-    	$ct = new cleantalk\antispam\Cleantalk();
-        $ct->server_url = CT_SERVER_URL;
-     
-        $ct_request = new cleantalk\antispam\CleantalkRequest();
-        $ct_request->auth_key = cleantalk_get_api_key();
-		$ct_request->feedback = '0:'.CT_AGENT_VERSION;
-		
-		$ct_result = $ct->sendFeedback($ct_request);		
-    }
-	
-	/* Update SFW and send logs if settings seved */
-    if($user_info['is_admin'] && isset($_POST['cleantalk_sfw']) && (int)$_POST['cleantalk_sfw'] == 1){
-
-		$sfw = new cleantalk\antispam\CleantalkSFW;
-		$sfw->sfw_update($modSettings['cleantalk_api_key']);
-		$sfw->send_logs($modSettings['cleantalk_api_key']);
-		unset($sfw);
-		updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);
-		updateSettings(array('cleantalk_sfw_last_logs_sent' => time()+3600), false);
-		
-    }
 	
 	/* Cron for update SFW */
-	if(!empty($modSettings['cleantalk_api_key_is_ok']) && !empty($modSettings['cleantalk_sfw']) && isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time()){
+	if(!empty($modSettings['cleantalk_api_key_is_ok']) && !empty($modSettings['cleantalk_sfw']) && isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time() || !empty($doing_cron)){
 
 		$sfw = new cleantalk\antispam\CleantalkSFW;
 		$sfw->sfw_update($modSettings['cleantalk_api_key']);
@@ -679,7 +667,7 @@ function cleantalk_load()
 	}
 	
 	/* Cron for send SFW logs */
-	if(!empty($modSettings['cleantalk_api_key_is_ok']) && !empty($modSettings['cleantalk_sfw']) && isset($modSettings['cleantalk_sfw_last_logs_sent']) && $modSettings['cleantalk_sfw_last_logs_sent'] < time()){
+	if(!empty($modSettings['cleantalk_api_key_is_ok']) && !empty($modSettings['cleantalk_sfw']) && isset($modSettings['cleantalk_sfw_last_logs_sent']) && $modSettings['cleantalk_sfw_last_logs_sent'] < time() || !empty($doing_cron)){
 		
 		$sfw = new cleantalk\antispam\CleantalkSFW;
 		$sfw->send_logs($modSettings['cleantalk_api_key']);
@@ -689,30 +677,39 @@ function cleantalk_load()
 	}
 	
 	/* Cron for account status */
-	if(!empty($modSettings['cleantalk_api_key_is_ok']) && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time()){
+	if(!empty($modSettings['cleantalk_api_key_is_ok']) && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time() || !empty($doing_cron)){
 		
 		$result = cleantalk\antispam\CleantalkHelper::noticePaidTill($modSettings['cleantalk_api_key']);
 		
 		if(empty($result['error'])){
 			$settings_array = array(
-				'cleantalk_show_notice' => $result['show_notice'],
-				'cleantalk_renew'       => $result['renew'],      
-				'cleantalk_trial'       => $result['trial'],      
-				'cleantalk_user_token'  => $result['user_token'], 
-				'cleantalk_spam_count'  => $result['spam_count'], 
-				'cleantalk_moderate_ip' => $result['moderate_ip'],
-				'cleantalk_show_review' => $result['show_review'],
-				'cleantalk_ip_license'  => $result['ip_license'],
-				'cleantalk_last_account_check'   => time()+86400
+				'cleantalk_show_notice'        => (int)    $result['show_notice'],
+				'cleantalk_renew'              => (int)    $result['renew'],      
+				'cleantalk_trial'              => (int)    $result['trial'],      
+				'cleantalk_user_token'         => (string) $result['user_token'], 
+				'cleantalk_spam_count'         => (int)    $result['spam_count'], 
+				'cleantalk_moderate_ip'        => (int)    $result['moderate_ip'],
+				'cleantalk_show_review'        => (int)    $result['show_review'],
+				'cleantalk_ip_license'         => (int)    $result['ip_license'],
+				'cleantalk_last_account_check' => time()+86400
 			);
 		}else{
 			$settings_array = array(
-				'cleantalk_last_account_check'   => time()+3600
+				'cleantalk_last_account_check' => time()+3600
 			);
 		}
 		
 		updateSettings($settings_array, false);
 		
+	}
+	
+	// Add "tell others" templates
+    if (isset($context['template_layers'])
+        && $context['template_layers'] === array('html', 'body')
+        && array_key_exists('cleantalk_tell_others', $modSettings)
+        && $modSettings['cleantalk_tell_others']
+    ){
+        $context['template_layers'][] = 'cleantalk';
 	}
 }
 
@@ -838,7 +835,7 @@ function cleantalk_buffer($buffer)
 	if (SMF == 'SSI')
 	    return $buffer;
 
-	if($user_info['is_admin'] && isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
+	if($user_info['is_admin'] && isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){// && false){
 		
 		if(strpos($forum_version, 'SMF 2.0')===false){
 			
