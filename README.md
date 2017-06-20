@@ -6,7 +6,7 @@
 * **Github repository:** https://github.com/CleanTalk/smf-antispam  
 * **Changelog:** https://github.com/CleanTalk/smf-antispam/blob/master/CHANGELOG  
 
-###Description
+### Description
 Anti-Spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.
 
