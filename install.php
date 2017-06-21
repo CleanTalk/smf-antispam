@@ -12,7 +12,7 @@
 global $db_connection, $smcFunc, $modSettings;
 
 $hooks = array(
-    'integrate_pre_include'          => '$sourcedir/cleantalk/cleantalkMod.php',
+    'integrate_pre_include'          => '$sourcedir/cleantalk/CleantalkMod.php',
 	'integrate_pre_load'             => 'cleantalk_sfw_check',
     'integrate_register'             => 'cleantalk_check_register',
     'integrate_general_mod_settings' => 'cleantalk_general_mod_settings',
