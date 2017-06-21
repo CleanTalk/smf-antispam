@@ -26,8 +26,6 @@ define('CT_DEBUG', false);
 
 /**
  * CleanTalk SFW check
- * @param array $regOptions
- * @param array $theme_vars
  * @return void
  */
 function cleantalk_sfw_check()
