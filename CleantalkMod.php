@@ -26,8 +26,6 @@ define('CT_DEBUG', false);
 
 /**
  * CleanTalk SFW check
- * @param array $regOptions
- * @param array $theme_vars
  * @return void
  */
 function cleantalk_sfw_check()
@@ -392,8 +390,8 @@ function cleantalk_general_mod_settings(&$config_vars){
     $config_vars[] = array('text',  'cleantalk_api_key');
     $config_vars[] = array('check', 'cleantalk_first_post_checking');
     $config_vars[] = array('check', 'cleantalk_logging');
-    $config_vars[] = array('check', 'cleantalk_tell_others', 'postinput' => $txt['cleantalk_tell_others_postinput']);
-    $config_vars[] = array('check', 'cleantalk_sfw', 'postinput' => $txt['cleantalk_sfw_postinput']);
+    $config_vars[] = array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']);
+    $config_vars[] = array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']);
 	$config_vars[] = array('desc',  'cleantalk_api_key_description');
     $config_vars[] = array('desc',  'cleantalk_check_users');
 }
@@ -761,11 +759,11 @@ function cleantalk_is_valid_js()
  */
 function template_cleantalk_above()
 {
-	global $user_info, $modSettings, $txt;
+	global $user_info, $modSettings, $txt, $boardurl;
 	
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin'){
 		
-		$source_dir = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'] . '/Sources/Cleantalk/';
+		$source_dir = $boardurl . '/Sources/cleantalk/';
 		
 		echo "<div class='notice_wrapper'>";
 		
@@ -1047,7 +1045,7 @@ function cleantalk_buffer($buffer)
 		$cleantalk_key_html = '';
 		
 		if(!isset($modSettings['cleantalk_api_key']))
-			$modSettings['cleantalk_api_key'] == '';
+			$modSettings['cleantalk_api_key'] = '';
 		
 		$cleantalk_key_html .= '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text">';
 		
