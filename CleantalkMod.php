@@ -759,11 +759,11 @@ function cleantalk_is_valid_js()
  */
 function template_cleantalk_above()
 {
-	global $user_info, $modSettings, $txt;
+	global $user_info, $modSettings, $txt, $boardurl;
 	
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin'){
 		
-		$source_dir = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['HTTP_HOST'] . '/Sources/Cleantalk/';
+		$source_dir = $boardurl . '/Sources/cleantalk/';
 		
 		echo "<div class='notice_wrapper'>";
 		
