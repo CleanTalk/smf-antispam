@@ -1045,7 +1045,7 @@ function cleantalk_buffer($buffer)
 		$cleantalk_key_html = '';
 		
 		if(!isset($modSettings['cleantalk_api_key']))
-			$modSettings['cleantalk_api_key'] == '';
+			$modSettings['cleantalk_api_key'] = '';
 		
 		$cleantalk_key_html .= '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text">';
 		
