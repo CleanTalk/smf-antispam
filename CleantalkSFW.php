@@ -305,8 +305,6 @@ class CleantalkSFW
 	*/	
 	public function sfw_die($api_key, $cookie_prefix = '', $cookie_domain = ''){
 		
-		global $txt; error_log('txt '.count($txt));
-		
 		if(defined("IN_PHPBB")){
 			global $request, $user;
 			$user->add_lang_ext('cleantalk/antispam', 'common');

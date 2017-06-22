@@ -45,15 +45,15 @@ $txt['cleantalk_check_users_tbl_delall'] = 'Удалить всех';
 $txt['cleantalk_check_users_tbl_delnotice'] = 'Все темы и сообщения выбранных пользователей будут удалены';
 $txt['cleantalk_check_users_confirm'] = 'Удалить пользователей со всеми темами и сообщениями?';
 $txt['cleantalk_sfw_die_notice_ip'] = 'SpamFireWall включен для вашего IP ';
-$txt['cleantalk_sfw_die_make_sure_js_enabled'] = 'Что бы продолжить работу с сайтом, убедитесь что у вас включен JavaScript.';
-$txt['cleantalk_sfw_die_click_to_pass'] = 'Нажмите ниже что снять блокировку,';
-$txt['cleantalk_sfw_die_you_will_be_redirected'] = 'Вы будете автоматически переадресовны на запрошенную вами страницу через 3 секунды.';
+$txt['cleantalk_sfw_die_make_sure_js_enabled'] = 'Чтобы продолжить работу с сайтом, убедитесь что у вас включен JavaScript.';
+$txt['cleantalk_sfw_die_click_to_pass'] = 'Нажмите ниже чтобы снять блокировку,';
+$txt['cleantalk_sfw_die_you_will_be_redirected'] = 'Вы будете автоматически переадресованы на запрошенную вами страницу через 3 секунды.';
 $txt['cleantalk_sfw_die_no_file'] = 'Ваш IP похож на спамерский.';
 $txt['cleantalk_banner_renew_1'] = 'Пожалуйста, обновите вашу анти-спам лицензию на %s.';
 $txt['cleantalk_banner_renew_2'] = 'следующий год';
 $txt['cleantalk_banner_trial_1'] = 'Пробная подписка анти-спама Cleantalk заканчивается, пожалуйста обновитесь до %s!';
 $txt['cleantalk_banner_trial_2'] = 'премиум версии';
-$txt['cleantalk_banner_bad_key_1'] = 'Пожалуйста, введите ключ доступа в настройках %s что бы включить анти-спам защиту!';
+$txt['cleantalk_banner_bad_key_1'] = 'Пожалуйста, введите ключ доступа в настройках %s чтобы включить анти-спам защиту!';
 $txt['cleantalk_banner_bad_key_2'] = 'мода CleanTalk';
 // CleanTalk messages end
 ]]></add>

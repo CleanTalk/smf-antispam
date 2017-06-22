@@ -155,7 +155,7 @@ class CleantalkHelper
 			$result = array('error' => true);
 			return $result;
 		}
-		if($result && isset($result['errstr'])){
+		if($result && (isset($result['error_no']) || isset($result['error_message']))){
 			$result['error'] = true;
 			return $result;
 		}
