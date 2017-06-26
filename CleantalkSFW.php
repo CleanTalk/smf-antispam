@@ -325,17 +325,16 @@ class CleantalkSFW
 			$sfw_die_page = str_replace('{SFW_DIE_CLICK_TO_PASS}',          $user->lang('SFW_DIE_CLICK_TO_PASS'),          $sfw_die_page);
 			$sfw_die_page = str_replace('{SFW_DIE_YOU_WILL_BE_REDIRECTED}', $user->lang('SFW_DIE_YOU_WILL_BE_REDIRECTED'), $sfw_die_page);
 			$sfw_die_page = str_replace('{CLEANTALK_TITLE}',                $user->lang('ACP_CLEANTALK_TITLE'),            $sfw_die_page);
-		}elseif(defined("SMF")){
-			global $txt;
-			$request_uri = $_SERVER['REQUEST_URI'];
-			$sfw_die_page = str_replace('{SFW_DIE_NOTICE_IP}',              $txt['cleantalk_sfw_die_notice_ip'],              $sfw_die_page);
-			$sfw_die_page = str_replace('{SFW_DIE_MAKE_SURE_JS_ENABLED}',   $txt['cleantalk_sfw_die_make_sure_js_enabled'],   $sfw_die_page);
-			$sfw_die_page = str_replace('{SFW_DIE_CLICK_TO_PASS}',          $txt['cleantalk_sfw_die_click_to_pass'],          $sfw_die_page);
-			$sfw_die_page = str_replace('{SFW_DIE_YOU_WILL_BE_REDIRECTED}', $txt['cleantalk_sfw_die_you_will_be_redirected'], $sfw_die_page);
-			$sfw_die_page = str_replace('{CLEANTALK_TITLE}',                $txt['cleantalk_name'],                           $sfw_die_page);
 		}else{
 			$request_uri = $_SERVER['REQUEST_URI'];
+			$sfw_die_page = str_replace('{SFW_DIE_NOTICE_IP}',              'SpamFireWall is activated for your IP ', $sfw_die_page);
+			$sfw_die_page = str_replace('{SFW_DIE_MAKE_SURE_JS_ENABLED}',   'To continue working with web site, please make sure that you have enabled JavaScript.', $sfw_die_page);
+			$sfw_die_page = str_replace('{SFW_DIE_CLICK_TO_PASS}',          'Please click bellow to pass protection,', $sfw_die_page);
+			$sfw_die_page = str_replace('{SFW_DIE_YOU_WILL_BE_REDIRECTED}', 'Or you will be automatically redirected to the requested page after 3 seconds.', $sfw_die_page);
+			$sfw_die_page = str_replace('{CLEANTALK_TITLE}',                'Antispam by CleanTalk', $sfw_die_page);
+			$request_uri = $_SERVER['REQUEST_URI'];
 		}
+		
 		// Service info
 		$sfw_die_page = str_replace('{REMOTE_ADDRESS}', $this->blocked_ip, $sfw_die_page);
 		$sfw_die_page = str_replace('{REQUEST_URI}', $request_uri, $sfw_die_page);
