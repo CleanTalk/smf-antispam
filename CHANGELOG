@@ -1,4 +1,13 @@
-Version 2.10 June 12, 2017
+Version 2.13 June 20 July, 2017
+------------------------------
+- Compatibility for PHP versions lower 5.2, servers without Apache.
+- Error fixes.
+
+Version 2.12 June 26, 2017
+------------------------------
+- Error fixes.
+
+Version 2.10 June 20, 2017
 ------------------------------
 - Major improvments.
 - Performance improved.

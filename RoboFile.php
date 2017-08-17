@@ -8,9 +8,9 @@
 class RoboFile extends \Robo\Tasks
 {
     const PACKAGE = 'antispam_cleantalk_smf';
-    const VERSION = '2.10';
+    const VERSION = '2.13';
 
-    const SMF_VERSION = '2.0.11'; // for forumPrepare
+    const SMF_VERSION = '2.0.14'; // for forumPrepare
 
     /**
      * Build SMF zip-package
@@ -99,8 +99,8 @@ class RoboFile extends \Robo\Tasks
             $errors[] = 'Not found version in CHANGELOG';
         }
         $ctVersion = str_replace('.', '', $version);
-        if (!preg_match("#'smf-" . preg_quote($ctVersion) . "'\);#m", file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'CleantalkMod.php'))) {
-            $errors[] = 'Not found CT_AGENT_VERSION in CleantalkMod.php';
+        if (!preg_match("#'smf-" . preg_quote($ctVersion) . "'\);#m", file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'cleantalkMod.php'))) {
+            $errors[] = 'Not found CT_AGENT_VERSION in cleantalkMod.php';
         }
         if (count($errors)) {
             $this->say("***ERRORS***\n" . implode("\n", $errors));
