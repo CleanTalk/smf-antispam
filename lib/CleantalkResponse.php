@@ -1,8 +1,8 @@
 <?php
 /**
- * Cleantalk base class
+ * Cleantalk Response class
  *
- * @version 2.2
+ * @version 2.3
  * @package Cleantalk
  * @subpackage Response
  * @author Cleantalk team (welcome@cleantalk.org)
@@ -12,11 +12,6 @@
  *
  */
 
-namespace cleantalk\antispam;
-
-/**
- * Response class
- */
 class CleantalkResponse
 {
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * Cleantalk base class
+ * Cleantalk Request class
  *
- * @version 2.2
+ * @version 2.3
  * @package Cleantalk
  * @subpackage Request
  * @author Cleantalk team (welcome@cleantalk.org)
@@ -12,12 +12,8 @@
  *
  */
 
-namespace cleantalk\antispam;
-
-/**
- * Request class
- */
-class CleantalkRequest {
+class CleantalkRequest
+{
 
      /**
      *  All http request headers
