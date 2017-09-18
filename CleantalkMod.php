@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-213');
+define('CT_AGENT_VERSION', 'smf-214');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -36,7 +36,7 @@ function cleantalk_sfw_check()
 {	
 	global $modSettings, $user_info;
 		
-	if(!empty($modSettings['cleantalk_sfw']) && !$user_info['is_admin']){
+	if(!empty($modSettings['cleantalk_sfw']) && !empty($modSettings['cleantalk_api_key_is_ok']) && !$user_info['is_admin']){
 		
 		$sfw = new CleantalkSFW();
 		$key = $modSettings['cleantalk_api_key'];
@@ -49,6 +49,7 @@ function cleantalk_sfw_check()
 			if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($curr_ip.$key)){
 				
 				$is_sfw_check=false;
+				
 				if(!empty($_COOKIE['ct_sfw_passed'])){
 					$sfw->sfw_update_logs($curr_ip, 'passed');
 					setcookie ('ct_sfw_passed', '0', 1, "/");
@@ -412,10 +413,10 @@ function cleantalk_print_js_input()
     $value = cleantalk_get_checkjs_code();
 	
 	return '<script type="text/javascript">
-		var d = new Date(), 
+		var ct_date = new Date(), 
 			ctTimeMs = new Date().getTime(),
 			ctMouseEventTimerFlag = true, //Reading interval flag
-			ctMouseData = "[",
+			ctMouseData = [],
 			ctMouseDataCounter = 0;
 
 		function ctSetCookie(c_name, value) {
@@ -429,7 +430,7 @@ function cleantalk_print_js_input()
 
 		setTimeout(function(){
 			ctSetCookie("ct_checkjs", "'.$value.'");
-			ctSetCookie("ct_timezone", d.getTimezoneOffset()/60*(-1));
+			ctSetCookie("ct_timezone", ct_date.getTimezoneOffset()/60*(-1));
 		},1000);
 
 		//Writing first key press timestamp
@@ -441,20 +442,24 @@ function cleantalk_print_js_input()
 
 		//Reading interval
 		var ctMouseReadInterval = setInterval(function(){
-				ctMouseEventTimerFlag = true;
-			}, 150);
+			ctMouseEventTimerFlag = true;
+		}, 150);
 			
 		//Writting interval
 		var ctMouseWriteDataInterval = setInterval(function(){
-				var ctMouseDataToSend = ctMouseData.slice(0,-1).concat("]");
-				ctSetCookie("ct_pointer_data", ctMouseDataToSend);
-			}, 1200);
+			ctSetCookie("ct_pointer_data", JSON.stringify(ctMouseData));
+		}, 1200);
 
-		//Logging mouse position each 300 ms
+		//Logging mouse position each 150 ms
 		var ctFunctionMouseMove = function output(event){
 			if(ctMouseEventTimerFlag == true){
-				var mouseDate = new Date();
-				ctMouseData += "[" + Math.round(event.pageY) + "," + Math.round(event.pageX) + "," + Math.round(mouseDate.getTime() - ctTimeMs) + "],";
+				
+				ctMouseData.push([
+					Math.round(event.pageY),
+					Math.round(event.pageX),
+					Math.round(new Date().getTime() - ctTimeMs)
+				]);
+				
 				ctMouseDataCounter++;
 				ctMouseEventTimerFlag = false;
 				if(ctMouseDataCounter >= 100){
@@ -465,10 +470,11 @@ function cleantalk_print_js_input()
 
 		//Stop mouse observing function
 		function ctMouseStopData(){
-			if(typeof window.addEventListener == "function")
+			if(typeof window.addEventListener == "function"){
 				window.removeEventListener("mousemove", ctFunctionMouseMove);
-			else
+			}else{
 				window.detachEvent("onmousemove", ctFunctionMouseMove);
+			}
 			clearInterval(ctMouseReadInterval);
 			clearInterval(ctMouseWriteDataInterval);				
 		}
@@ -584,7 +590,7 @@ function cleantalk_load()
 			$ct_request->auth_key = cleantalk_get_api_key();
 			$ct_request->feedback = '0:'.CT_AGENT_VERSION;
 			$ct_result = $ct->sendFeedback($ct_request);
-			// unset($ct, $ct_request);
+			unset($ct, $ct_request);
 			
 			// Check if key is valid
 			if($_POST['cleantalk_api_key'] != $modSettings['cleantalk_api_key']){
@@ -604,9 +610,35 @@ function cleantalk_load()
 							false
 						);
 						
+					}else{
+						updateSettings(
+							array(
+								'cleantalk_api_key_is_ok' => 0,
+								'cleantalk_show_notice'   => 0,
+								'cleantalk_renew'         => 0,
+								'cleantalk_trial'         => 0,
+								'cleantalk_user_token'    => '', 
+								'cleantalk_spam_count'    => 0,
+								'cleantalk_moderate_ip'   => 0,
+								'cleantalk_show_review'   => 0,
+								'cleantalk_ip_license'    => 0,
+							)
+						);
 					}
-					else
-						updateSettings(array('cleantalk_api_key_is_ok' => '0', false));
+				}else{
+					updateSettings(
+							array(
+								'cleantalk_api_key_is_ok' => 0,
+								'cleantalk_show_notice'   => 0,
+								'cleantalk_renew'         => 0,
+								'cleantalk_trial'         => 0,
+								'cleantalk_user_token'    => '', 
+								'cleantalk_spam_count'    => 0,
+								'cleantalk_moderate_ip'   => 0,
+								'cleantalk_show_review'   => 0,
+								'cleantalk_ip_license'    => 0,
+							)
+						);
 				}
 			}
 			
@@ -618,7 +650,7 @@ function cleantalk_load()
 		
 		// Deleting selected users
 		if(isset($_POST['ct_del_user']))
-		{			
+		{
 			checkSession('request');
 			
 			if (!isset($db_connection) || $db_connection === false)
@@ -657,7 +689,7 @@ function cleantalk_load()
 	}
 	
 	/* Cron for update SFW */
-	if(!empty($modSettings['cleantalk_api_key_is_ok']) && !empty($modSettings['cleantalk_sfw']) && isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time() || !empty($doing_cron)){
+	if(!empty($modSettings['cleantalk_sfw']) && (!empty($doing_cron) || (!empty($modSettings['cleantalk_api_key_is_ok']) && ((isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time()) || !isset($modSettings['cleantalk_sfw_last_update']) ) ))){
 
 		$sfw = new CleantalkSFW;
 		$sfw->sfw_update($modSettings['cleantalk_api_key']);
@@ -667,7 +699,7 @@ function cleantalk_load()
 	}
 	
 	/* Cron for send SFW logs */
-	if(!empty($modSettings['cleantalk_api_key_is_ok']) && !empty($modSettings['cleantalk_sfw']) && isset($modSettings['cleantalk_sfw_last_logs_sent']) && $modSettings['cleantalk_sfw_last_logs_sent'] < time() || !empty($doing_cron)){
+	if(!empty($modSettings['cleantalk_sfw']) && (!empty($doing_cron) || (!empty($modSettings['cleantalk_api_key_is_ok']) &&  ((isset($modSettings['cleantalk_sfw_last_logs_sent']) && $modSettings['cleantalk_sfw_last_logs_sent'] < time()) || !isset($modSettings['cleantalk_sfw_last_logs_sent']) ) ))){
 		
 		$sfw = new CleantalkSFW;
 		$sfw->send_logs($modSettings['cleantalk_api_key']);
@@ -797,7 +829,7 @@ function template_cleantalk_above()
 			// }
 			
 			// Bad key banner
-			if(empty($modSettings['cleantalk_api_key_is_ok']) && (empty($_GET['area'])  || (isset($_GET['area'])&& $_GET['area'] != 'modsettings'))){
+			if(empty($modSettings['cleantalk_api_key_is_ok']) && (empty($_GET['area'])  || (isset($_GET['area']) && $_GET['area'] != 'modsettings'))){
 				
 				echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
 					."<h1>"
@@ -836,7 +868,7 @@ function cleantalk_buffer($buffer)
 	if (SMF == 'SSI')
 	    return $buffer;
 
-	if($user_info['is_admin'] && isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){// && false){
+	if($user_info['is_admin'] && isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
 		
 		if(strpos($forum_version, 'SMF 2.0')===false){
 			
@@ -863,91 +895,76 @@ function cleantalk_buffer($buffer)
 					
 					db_extend('packages');
 					
-					$cols = $smcFunc['db_list_columns'] ('{db_prefix}members', 0);
+					// Unmark all users
+					$sql = 'UPDATE {db_prefix}members SET ct_marked = 0';
+					$result = $smcFunc['db_query']('', $sql, Array());
+					$smcFunc['db_free_result']($result);
 					
-					if(in_array('ct_marked', $cols)){
+					// Cicle params
+					$offset = 0;
+					$per_request = 500;
 					
-						$sql = 'UPDATE {db_prefix}members set ct_marked=0';
+					// Getting users to check
+					// Making at least one DB query
+					do{
+						
+						$sql = "SELECT id_member, member_name, date_registered, last_login, email_address, member_ip FROM {db_prefix}members where passwd <> '' LIMIT $offset,$per_request";
 						$result = $smcFunc['db_query']('', $sql, Array());
-						$sql = 'SELECT * FROM {db_prefix}members where passwd<>""';
-						$result = $smcFunc['db_query']('', $sql, Array());
-						$users=Array();
-						$users[0]=Array();
-						$data=Array();
-						$data[0]=Array();
-						$cnt=0;
-						while($row = $smcFunc['db_fetch_assoc'] ($result)){
-								
-							$users[$cnt][] = array(
-								'name' => $row['member_name'],
-								'id' => $row['id_member'],
-								'email' => $row['email_address'],
-								'ip' => $row['member_ip'],
-								'joined' => $row['date_registered'],
-								'visit' => $row['last_login'],
-							);
-							
-							$data[$cnt][]=$row['email_address'];
-							$data[$cnt][]=$row['member_ip'];
-							
-							if(sizeof($users[$cnt])>450){
-								$cnt++;
-								$users[$cnt]=Array();
-								$data[$cnt]=Array();
-							}
-						}
-					
-						$error="";
-					
-						for($i=0;$i<sizeof($users);$i++){
-							$send=implode(',',$data[$i]);
-							$req="data=$send";
-							$opts = array(
-								'http'=>array(
-									'method'=>"POST",
-									'content'=>$req,
-								)
-							);
-							
-							$context = stream_context_create($opts);
-							$result = @file_get_contents("https://api.cleantalk.org/?method_name=spam_check_cms&auth_key=".cleantalk_get_api_key(), 0, $context);
-							$result=json_decode($result);
-							if(isset($result->error_message)){
-								$error=$result->error_message;
-							}else{
-								
-								if(isset($result->data)){
-									
-									foreach($result->data as $key=>$value){
-										
-										if($key === filter_var($key, FILTER_VALIDATE_IP)){
-											
-											if($value->appears==1){
 												
-												$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
-												$result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-											}
-											
-										}else{
-											
-											if($value->appears==1){
-												$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
-												$result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-											}
-										}
+						// Break if result is empty.
+						if($smcFunc['db_num_rows'] ($result) == 0)
+							break;
+						
+						// Setting data
+						$data = array();
+						while($row = $smcFunc['db_fetch_assoc'] ($result)){
+							$data[] = $row['email_address'];
+							$data[] = $row['member_ip'];
+						}
+						
+						// Request
+						$api_result = CleantalkHelper::spamCheckCms(cleantalk_get_api_key(), $data);
+						
+						// Error handling
+						if(!empty($api_result['error'])){
+							break;
+						}else{
+								
+							foreach($api_result as $key => $value){
+								
+								// Mark spam users
+								if($key === filter_var($key, FILTER_VALIDATE_IP)){
+									if($value['appears'] == 1){
+										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
+										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
+										$smcFunc['db_free_result']($sub_result);
+									}
+								}else{
+									if($value['appears'] == 1){
+										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
+										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
+										$smcFunc['db_free_result']($sub_result);
 									}
 								}
 							}
+							unset($key, $value);
 						}
+						
+						$offset += $per_request;
+						
+					} while( true );
 					
-						if($error!='')
-							$html.='<center>'
-										.'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
-											.'<b>'.$error.'</b>'
-										.'</div>'
-										.'<br>'
-									.'</center>';
-									
+					// Free result when it's all done
+					$smcFunc['db_free_result']($result);
+					
+					// Error output
+					if(!empty($api_result['error'])){
+						$html.='<center>'
+								.'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
+									.'<b>'.$error.'</b>'
+								.'</div>'
+								.'<br>'
+							.'</center>';
 					}
 					
 					$sql = "SELECT * FROM {db_prefix}members WHERE ct_marked=1";
@@ -972,7 +989,7 @@ function cleantalk_buffer($buffer)
 						$sql = "SELECT * FROM {db_prefix}members WHERE ct_marked=1 LIMIT $offset, $on_page";
 						$result = $smcFunc['db_query']('', $sql, Array());
 						
-						if($pages && $pages != 1){
+						if($pages > 1){
 							$html.= "<div style='margin: 10px;'>"
 									."<b>".$txt['cleantalk_check_users_pages'].":</b>"
 									."<ul style='display: inline-block; margin: 0; padding: 0;'>";
@@ -1020,7 +1037,7 @@ function cleantalk_buffer($buffer)
 						
 						$html.="</tbody></table></center>";
 						
-						if($pages && $pages != 1){
+						if($pages > 1){
 							$html.= "<div style='margin: 10px;'>"
 									."<b>".$txt['cleantalk_check_users_pages'].":</b>"
 									."<ul style='display: inline-block; margin: 0; padding: 0;'>";

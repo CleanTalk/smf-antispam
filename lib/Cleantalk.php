@@ -473,7 +473,8 @@ class Cleantalk
 		
         $response = new CleantalkResponse(null, $result);
 		
-        if (!empty($this->data_codepage) && $this->data_codepage !== 'UTF-8') {
+        if (!empty($this->data_codepage) && $this->data_codepage !== 'UTF-8') 
+		{
             if (!empty($response->comment))
             $response->comment = $this->stringFromUTF8($response->comment, $this->data_codepage);
             if (!empty($response->errstr))
@@ -490,7 +491,8 @@ class Cleantalk
      * @param $host
      * @return array
      */
-    public function get_servers_ip($host) {
+    public function get_servers_ip($host)
+	{
         $response = null;
         if (!isset($host))
             return $response;

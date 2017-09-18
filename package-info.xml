@@ -4,7 +4,7 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.13</version>
+	<version>2.14</version>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
