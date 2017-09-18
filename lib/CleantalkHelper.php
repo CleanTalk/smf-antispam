@@ -110,7 +110,7 @@ class CleantalkHelper
 	 * Function gets information about renew notice
 	 *
 	 * @param string api_key
-	 * @param string data "ip1,ip2,ip3..."
+	 * @param array  ips and emails to check
 	 * @param string perform check flag
 	 * @return mixed (STRING || array('error' => true, 'error_string' => STRING))
 	 */
@@ -119,11 +119,11 @@ class CleantalkHelper
 		$request = array(
 			'method_name' => 'spam_check_cms',
 			'auth_key' => $api_key,
-			'data' => $data
+			'data' => implode(',',$data),
 		);
 		
 		$result = self::sendRawRequest(self::URL, $request);
-		$result = $do_check ? $result = self::checkRequestResult($result, 'spam_check_cms') : $result;
+		$result = $do_check ? self::checkRequestResult($result, 'spam_check_cms') : $result;
 		
 		return $result;
 	}
@@ -145,7 +145,7 @@ class CleantalkHelper
 		);
 		
 		$result = self::sendRawRequest(self::URL, $request);
-		$result = $do_check ? $result = self::checkRequestResult($result, 'send_feedback') : $result;
+		$result = $do_check ? self::checkRequestResult($result, 'send_feedback') : $result;
 		
 		return $result;
 	}
@@ -168,7 +168,7 @@ class CleantalkHelper
 		);
 		
 		$result = self::sendRawRequest(self::URL, $request);
-		$result = $do_check ? $result = self::checkRequestResult($result, 'get_antispam_report') : $result;
+		$result = $do_check ? self::checkRequestResult($result, 'get_antispam_report') : $result;
 		
 		return $result;
 	}
@@ -179,7 +179,7 @@ class CleantalkHelper
 	 * @param string api key
 	 * @return array
 	 */
-	function getAntispamReportBreif($api_key, $do_check = true)
+	static function getAntispamReportBreif($api_key, $do_check = true)
 	{
 		$request=Array(
 			'auth_key' => $api_key,
@@ -275,7 +275,7 @@ class CleantalkHelper
 		}
 		
 		$curl_exec=false;
-
+		
 		if (function_exists('curl_init') && function_exists('json_decode')){
 		
 			$ch = curl_init();
@@ -291,8 +291,9 @@ class CleantalkHelper
 			
 			$result = curl_exec($ch);
 			
-			if($result!==false)
+			if($result !== false){
 				$curl_exec=true;
+			}
 			
 			curl_close($ch);
 		}
