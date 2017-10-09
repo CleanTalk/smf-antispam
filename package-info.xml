@@ -4,8 +4,8 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.15</version>
-	<install for="2.0 - 2.0.99">
+	<version>2.16</version>
+	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
@@ -27,7 +27,7 @@
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
-	<uninstall for="2.0 - 2.0.99">
+	<uninstall for="2.0 - 2.1.99">
 		<database>install.php</database>
 		<modification format="xml" type="file" reverse="true">modification.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/english.xml</modification>
@@ -36,7 +36,7 @@
 		<modification format="xml" type="file" reverse="true">languages/russian-utf8.xml</modification>
 		<remove-dir name="$sourcedir/cleantalk/"/>
 	</uninstall>
-	<upgrade from="2.0 - 2.0.99">
+	<upgrade from="1.80 - 2.15">
 		<readme type="inline" parsebbc="true">
 			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
 		</readme>
