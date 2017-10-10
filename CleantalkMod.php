@@ -898,7 +898,8 @@ function cleantalk_buffer($buffer)
 					// Unmark all users
 					$sql = 'UPDATE {db_prefix}members SET ct_marked = 0';
 					$result = $smcFunc['db_query']('', $sql, Array());
-					$smcFunc['db_free_result']($result);
+					if((isset($result) && is_resource($result))
+						$smcFunc['db_free_result']($result);
 					
 					// Cicle params
 					$offset = 0;
@@ -937,13 +938,15 @@ function cleantalk_buffer($buffer)
 									if($value['appears'] == 1){
 										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
 										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-										$smcFunc['db_free_result']($sub_result);
+										if((isset($result) && is_resource($result))
+											$smcFunc['db_free_result']($sub_result);
 									}
 								}else{
 									if($value['appears'] == 1){
 										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
 										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-										$smcFunc['db_free_result']($sub_result);
+										if((isset($result) && is_resource($result))
+											$smcFunc['db_free_result']($sub_result);
 									}
 								}
 							}
@@ -955,7 +958,8 @@ function cleantalk_buffer($buffer)
 					} while( true );
 					
 					// Free result when it's all done
-					$smcFunc['db_free_result']($result);
+					if((isset($result) && is_resource($result))
+						$smcFunc['db_free_result']($result);
 					
 					// Error output
 					if(!empty($api_result['error'])){
