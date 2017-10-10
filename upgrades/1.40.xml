@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="www.simplemachines.org/xml/modification">
+    <id>cleantalk:antispam</id>
+    <version>1.0</version>
+    <file name="$sourcedir/Register.php">
+        <operation error="fatal">
+            <search position="replace"><![CDATA[if (!isset($_POST['regSubmit']))
+	{
+		// cleantalk set start time of registration
+		cleantalk_store_form_start_time(-1);
+	}
+
+// Show the user the right form.]]></search>
+            <add><![CDATA[// Show the user the right form.]]></add>
+        </operation>
+    </file>
+    <file name="$sourcedir/Security.php">
+        <operation error="fatal">
+            <search position="replace"><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);cleantalk_store_form_start_time($context['form_sequence_number']);]]></search>
+            <add><![CDATA[$context['form_sequence_number'] = mt_rand(1, 16000000);]]></add>
+        </operation>
+    </file>
+
+    <file name="$themedir/Register.template.php">
+        <operation error="fatal">
+            <search position="replace"><![CDATA[cleantalk_print_js_input();
+// Are there any custom fields?]]></search>
+            <add><![CDATA[// Are there any custom fields?]]></add>
+        </operation>
+    </file>
+
+    <file name="$themedir/Post.template.php">
+        <operation error="fatal">
+            <search position="replace"><![CDATA[cleantalk_print_js_input();
+// Finally, the submit buttons.]]></search>
+            <add><![CDATA[// Finally, the submit buttons.]]></add>
+        </operation>
+    </file>
+
+    <file name="$themedir/Display.template.php">
+        <operation error="fatal">
+            <search position="replace"><![CDATA[cleantalk_print_js_input();
+// Is visual verification enabled?]]></search>
+            <add><![CDATA[// Is visual verification enabled?]]></add>
+        </operation>
+    </file>
+</modification>

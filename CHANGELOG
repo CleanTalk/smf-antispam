@@ -1,0 +1,134 @@
+Version 2.16 Septebmer 14, 2017
+------------------------------
+- Update fix.
+
+Version 2.14 Septebmer 14, 2017
+------------------------------
+- Support for large bases in users check.
+- Error fixes.
+
+Version 2.13 June 20, 2017
+------------------------------
+- Compatibility for PHP versions lower 5.2, servers without Apache.
+- Error fixes.
+
+Version 2.12 June 26, 2017
+------------------------------
+- Error fixes.
+
+Version 2.10 June 20, 2017
+------------------------------
+- Major improvments.
+- Performance improved.
+- SFW logs added.
+- Stability improvment.
+- Spam protection improved.
+- Many small bug fixes.
+
+Version 2.0 December 29, 2016
+------------------------------
+- Minor bug fixes
+
+Version 1.99 December 22, 2016
+------------------------------
+- Minor fixes
+
+Version 1.98 December 12, 2016
+------------------------------
+- Improved filtration
+
+Version 1.97 November 13, 2016
+------------------------------
+- Changed method for users check.
+- Deleted test request with "good@cleantalk.org"
+
+Version 1.96 July 19, 2016
+------------------------------
+- Fixed empty buffer in SSI compatibility
+
+Version 1.95 May 18, 2016
+------------------------------
+- Added session checking
+- Added SSI compatibility
+
+Version 1.94 April 18, 2016
+------------------------------
+- Fixed SQL error of Spam FileWall feature in SQLite
+
+Version 1.93 March 17, 2016
+------------------------------
+- Fixed SQL error with Spam FileWall feature
+
+Version 1.90 February 24, 2016
+------------------------------
+- Fixed translation of bulk users checking
+- Added warning notice about users deletion
+
+Version 1.90 February 17, 2016
+------------------------------
+- Added bulk users checking
+
+Version 1.80 January 27, 2016
+------------------------------
+- Fixed "tell others" link output
+
+Version 1.70 January 21, 2016
+------------------------------
+- Updated base class
+- Fixed "tell others" link output
+- Added test query for settings updating
+
+Version 1.60 October 15, 2015
+------------------------------
+- Updated Cleantalk API to v2.1.1
+- Add tell others option
+- Denied bot registration if javascript check failed and errno != 0
+
+Version 1.51 September 4, 2015
+------------------------------
+- Fixed notice "Undefined index: template_layers" when download attachment
+- Fixed App version for cleantalk panel
+
+Version 1.50 August 30, 2015
+------------------------------
+- Added SMF 2.1 Beta compatibility
+
+Version 1.41 July 30, 2015
+------------------------------
+- Fixed bug with fast registrations
+
+Version 1.40 July 13, 2015
+------------------------------
+- Updated browser javascript detecting algorithm
+- Added compatibility with other plugins for social networks
+- Removed unnecessary template patches
+
+Version 1.30 May 25, 2015
+------------------------------
+- Updated Cleantalk API to v2.0.0
+- Added logging option for enable/disable logging to SMF
+- Fixed install and upgrades
+- Added javascript timeout for JS checks
+
+Version 1.21 January 15, 2015
+------------------------------
+- Fixed submit time checks in quick reply form
+- Fixed javascript checks in quick reply form
+
+Version 1.20 August 19, 2014
+------------------------------
+- Added antispam test for first post on board for Newly registered members
+
+Version 1.03 July 15, 2014
+------------------------------
+- Fixed javascript checking in register form
+
+Version 1.02 June 30, 2014
+------------------------------
+- Fixed get remote ip when proxy used
+- Fixed menu items in general_mod_settings
+- Fixed bug clearing api key after mod updating
+
+Version 1.01 March 27, 2014
+------------------------------
+- Initial release
