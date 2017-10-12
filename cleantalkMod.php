@@ -609,6 +609,15 @@ function cleantalk_load()
 							),
 							false
 						);
+						if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
+						{
+							$sfw = new CleantalkSFW;
+							$sfw->sfw_update($modSettings['cleantalk_api_key']);	
+							$sfw->send_logs($modSettings['cleantalk_api_key']);	
+							unset($sfw);
+							updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);	
+							updateSettings(array('cleantalk_sfw_last_logs_sent' => time()+3600), false);					
+						}
 						
 					}else{
 						updateSettings(
@@ -690,7 +699,6 @@ function cleantalk_load()
 	
 	/* Cron for update SFW */
 	if(!empty($modSettings['cleantalk_sfw']) && (!empty($doing_cron) || (!empty($modSettings['cleantalk_api_key_is_ok']) && ((isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time()) || !isset($modSettings['cleantalk_sfw_last_update']) ) ))){
-
 		$sfw = new CleantalkSFW;
 		$sfw->sfw_update($modSettings['cleantalk_api_key']);
 		unset($sfw);

@@ -77,23 +77,7 @@ if ($isInstalling) {
 		
 	/* SFW data table */
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
-		$columns = array(
-			array(
-				'name' => 'network',
-				'type' => 'int',
-				'size' => 11,
-				'unsigned' => true
-			),
-			array(
-				'name' => 'mask',
-				'type' => 'int',
-				'size' => 11,
-				'unsigned' => true
-			),
-		);
-		$indexes = array();
-		$parameters = array();
-		$smcFunc['db_create_table']('{db_prefix}cleantalk_sfw', $columns, $indexes, $parameters, 'update_remove');
+		$smcFunc['db_query']('','CREATE TABLE {db_prefix}cleantalk_sfw (network int(11) unsigned not null, mask int(11) unsigned not null)',array());
 		
 	/* SFW logs table */
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw_logs');
@@ -157,5 +141,6 @@ if ($isInstalling) {
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw_logs');
 		$smcFunc['db_remove_column']('{db_prefix}members', 'ct_marked', array(), '');
+		$smcFunc['db_query']('',"DELETE FROM {db_prefix}settings WHERE variable LIKE '%cleantalk%'",array());
     }
 }
