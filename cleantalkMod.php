@@ -608,17 +608,7 @@ function cleantalk_load()
 								'cleantalk_api_key' => $key_to_validate								
 							),
 							false
-						);
-						if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
-						{
-							$sfw = new CleantalkSFW;
-							$sfw->sfw_update($modSettings['cleantalk_api_key']);	
-							$sfw->send_logs($modSettings['cleantalk_api_key']);	
-							unset($sfw);
-							updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);	
-							updateSettings(array('cleantalk_sfw_last_logs_sent' => time()+3600), false);					
-						}
-						
+						);						
 					}else{
 						updateSettings(
 							array(
@@ -653,7 +643,11 @@ function cleantalk_load()
 			
 			// If key is valid doing noticePaidTill(), sfw update and sfw send logs via cron
 			if(!empty($modSettings['cleantalk_api_key_is_ok']))
+			{
+				if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
+					updateSettings(array('cleantalk_sfw' => '1'), false);										
 				$doing_cron = true;
+			}
 			
 		}
 		
