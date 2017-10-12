@@ -16,15 +16,25 @@
   <script src='http://html5shiv.googlecode.com/svn/trunk/html5.js'></script>
   <![endif]-->
 <style>
-    html{font-size: 14pt;}
+    html{font-size: 10pt;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;background: #f1f1f1;}
     h1{text-align:center}
+    a:hover,
+    a:active {
+            color: #00a0d2;
+    }
     h1.main{margin-top: 1em;margin-bottom: 3em;}
-    div.container {text-align:center;}
-    div.container p.js_notice{width: 60%; display: inline-block;}
-    div.footer {color: #666; position: absolute; bottom: 1em; text-align: center; width: 100%;}
+    div.container {text-align:center;
+                background: #fff;
+            color: #444;
+            margin: 2em auto;
+            padding: 1em 2em;
+            max-width: 700px;
+            -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.13);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.13);}
+    div.container p.js_notice{width: 100%%; display: inline-block;}
+    div.footer {color: #666; position: fixed; bottom: 1em; text-align: center; width: 100%%;}
     div.footer a {color: #666; vertical-align:bottom; text-align: center;}
     div#js_passed {display:none;}
-
     @media (max-width: 600px) {
     }
 </style>
