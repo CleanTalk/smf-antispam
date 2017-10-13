@@ -201,7 +201,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 		$ct_request->sender_ip = $ct->ct_session_ip($ip);
 
 		$ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
-		$ct_request->message = $msgOptions['body'];
+		$ct_request->message = preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
 
 		$ct_request->submit_time = cleantalk_get_form_submit_time();
 

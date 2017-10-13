@@ -36,7 +36,12 @@
 		<modification format="xml" type="file" reverse="true">languages/russian-utf8.xml</modification>
 		<remove-dir name="$sourcedir/cleantalk/"/>
 	</uninstall>
-	<upgrade from="1.80 - 2.15">
+	<upgrade from="1.80 - 2.11">
+		<readme type="inline" parsebbc="true">
+			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
+		</readme>
+	</upgrade>
+	<upgrade from="2.12 - 2.15">
 		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.16 version:
 			- Fix SFW update on save settings
 			- Change SFW template
