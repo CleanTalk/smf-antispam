@@ -591,9 +591,9 @@ function cleantalk_load()
 			$ct_request->feedback = '0:'.CT_AGENT_VERSION;
 			$ct_result = $ct->sendFeedback($ct_request);
 			unset($ct, $ct_request);
-			
+			$curr_key = isset($modSettings['cleantalk_api_key'])?$modSettings['cleantalk_api_key']:'';
 			// Check if key is valid
-			if($_POST['cleantalk_api_key'] != $modSettings['cleantalk_api_key']){
+			if($_POST['cleantalk_api_key'] != $curr_key){
 				
 				$key_to_validate = strval($_POST['cleantalk_api_key']);
 				$result = CleantalkHelper::noticeValidateKey($key_to_validate);
@@ -893,14 +893,13 @@ function cleantalk_buffer($buffer)
 			
 			if(isset($_GET['ctcheckspam'])){
 				
-				if($modSettings['cleantalk_api_key_is_ok'] == '1' && $modSettings['cleantalk_api_key'] != ''){
+				if(isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && $modSettings['cleantalk_api_key'] != ''){
 					
 					db_extend('packages');
 					
 					// Unmark all users
-					$sql = 'UPDATE {db_prefix}members SET ct_marked = 0';
-					$result = $smcFunc['db_query']('', $sql, Array());
-					$smcFunc['db_free_result']($result);
+					$sql = 'UPDATE {db_prefix}members SET ct_marked = {int:default_value}';
+					$result = $smcFunc['db_query']('', $sql, array('default_value' => 0));
 					
 					// Cicle params
 					$offset = 0;
@@ -939,13 +938,11 @@ function cleantalk_buffer($buffer)
 									if($value['appears'] == 1){
 										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
 										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-										$smcFunc['db_free_result']($sub_result);
 									}
 								}else{
 									if($value['appears'] == 1){
 										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
 										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-										$smcFunc['db_free_result']($sub_result);
 									}
 								}
 							}
