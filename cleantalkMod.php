@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-215');
+define('CT_AGENT_VERSION', 'smf-216');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -201,7 +201,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 		$ct_request->sender_ip = $ct->ct_session_ip($ip);
 
 		$ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
-		$ct_request->message = $msgOptions['body'];
+		$ct_request->message = preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
 
 		$ct_request->submit_time = cleantalk_get_form_submit_time();
 
@@ -591,9 +591,9 @@ function cleantalk_load()
 			$ct_request->feedback = '0:'.CT_AGENT_VERSION;
 			$ct_result = $ct->sendFeedback($ct_request);
 			unset($ct, $ct_request);
-			
+			$curr_key = isset($modSettings['cleantalk_api_key'])?$modSettings['cleantalk_api_key']:'';
 			// Check if key is valid
-			if($_POST['cleantalk_api_key'] != $modSettings['cleantalk_api_key']){
+			if($_POST['cleantalk_api_key'] != $curr_key){
 				
 				$key_to_validate = strval($_POST['cleantalk_api_key']);
 				$result = CleantalkHelper::noticeValidateKey($key_to_validate);
@@ -608,8 +608,7 @@ function cleantalk_load()
 								'cleantalk_api_key' => $key_to_validate								
 							),
 							false
-						);
-						
+						);						
 					}else{
 						updateSettings(
 							array(
@@ -644,7 +643,11 @@ function cleantalk_load()
 			
 			// If key is valid doing noticePaidTill(), sfw update and sfw send logs via cron
 			if(!empty($modSettings['cleantalk_api_key_is_ok']))
+			{
+				if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
+					updateSettings(array('cleantalk_sfw' => '1'), false);										
 				$doing_cron = true;
+			}
 			
 		}
 		
@@ -690,7 +693,6 @@ function cleantalk_load()
 	
 	/* Cron for update SFW */
 	if(!empty($modSettings['cleantalk_sfw']) && (!empty($doing_cron) || (!empty($modSettings['cleantalk_api_key_is_ok']) && ((isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time()) || !isset($modSettings['cleantalk_sfw_last_update']) ) ))){
-
 		$sfw = new CleantalkSFW;
 		$sfw->sfw_update($modSettings['cleantalk_api_key']);
 		unset($sfw);
@@ -891,14 +893,13 @@ function cleantalk_buffer($buffer)
 			
 			if(isset($_GET['ctcheckspam'])){
 				
-				if($modSettings['cleantalk_api_key_is_ok'] == '1' && $modSettings['cleantalk_api_key'] != ''){
+				if(isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && $modSettings['cleantalk_api_key'] != ''){
 					
 					db_extend('packages');
 					
 					// Unmark all users
-					$sql = 'UPDATE {db_prefix}members SET ct_marked = 0';
-					$result = $smcFunc['db_query']('', $sql, Array());
-					$smcFunc['db_free_result']($result);
+					$sql = 'UPDATE {db_prefix}members SET ct_marked = {int:default_value}';
+					$result = $smcFunc['db_query']('', $sql, array('default_value' => 0));
 					
 					// Cicle params
 					$offset = 0;
@@ -937,13 +938,11 @@ function cleantalk_buffer($buffer)
 									if($value['appears'] == 1){
 										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
 										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-										$smcFunc['db_free_result']($sub_result);
 									}
 								}else{
 									if($value['appears'] == 1){
 										$sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
 										$sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-										$smcFunc['db_free_result']($sub_result);
 									}
 								}
 							}
