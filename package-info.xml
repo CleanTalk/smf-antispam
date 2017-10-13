@@ -37,8 +37,11 @@
 		<remove-dir name="$sourcedir/cleantalk/"/>
 	</uninstall>
 	<upgrade from="1.80 - 2.15">
-		<readme type="inline" parsebbc="true">
-			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.16 version:
+			- Fix SFW update on save settings
+			- Change SFW template
+			- Remove plugin settings on uninstall
+			- Fix sfw_create_table query
 		</readme>
 	</upgrade>
 </package-info>
