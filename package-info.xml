@@ -68,4 +68,19 @@
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
+	<upgrade from="2.16">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.17 version:
+			- Fix create_table for sql_lite
+			- IPv6 support
+			- Bug fixes and other minor improvements
+		</readme>
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<modification format="xml" type="file">modification.xml</modification>
+		<database>install.php</database>
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>			
+	</upgrade>
 </package-info>

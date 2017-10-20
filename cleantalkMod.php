@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-216');
+define('CT_AGENT_VERSION', 'smf-217');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -96,8 +96,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     $ct_request->agent = CT_AGENT_VERSION;
     $ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
 
-    $ip = isset($regOptions['register_vars']['member_ip']) ? $regOptions['register_vars']['member_ip'] : $_SERVER['REMOTE_ADDR'];
-    $ct_request->sender_ip = $ct->ct_session_ip($ip);
+    $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
 
     $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
@@ -197,8 +196,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 		$ct_request->agent = CT_AGENT_VERSION;
 		$ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
 
-		$ip = isset($user_info['ip']) ? $user_info['ip'] : $_SERVER['REMOTE_ADDR'];
-		$ct_request->sender_ip = $ct->ct_session_ip($ip);
+		$ct_request->sender_ip = $ct->cleantalk_get_real_ip();
 
 		$ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
 		$ct_request->message = preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
@@ -796,7 +794,7 @@ function template_cleantalk_above()
 	
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin'){
 		
-		$source_dir = $boardurl . '/Sources/Cleantalk/';
+		$source_dir = $boardurl . '/Sources/cleantalk/';
 		
 		echo "<div class='notice_wrapper'>";
 		

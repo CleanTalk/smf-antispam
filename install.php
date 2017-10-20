@@ -77,7 +77,7 @@ if ($isInstalling) {
 		
 	/* SFW data table */
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
-		$smcFunc['db_query']('','CREATE TABLE {db_prefix}cleantalk_sfw (network int(11) unsigned not null, mask int(11) unsigned not null)',array());
+		$smcFunc['db_query']('','CREATE TABLE {db_prefix}cleantalk_sfw (network INTEGER(11) UNSIGNED NOT NULL, mask INTEGER(11) UNSIGNED NOT NULL)',array());
 		
 	/* SFW logs table */
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw_logs');
