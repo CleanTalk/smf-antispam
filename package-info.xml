@@ -42,7 +42,7 @@
 		</readme>
 	</upgrade>
 	<upgrade from="2.12 - 2.15">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.16 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.17 version:
 			- Fix SFW update on save settings
 			- Change SFW template
 			- Remove plugin settings on uninstall
