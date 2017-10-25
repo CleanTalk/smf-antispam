@@ -181,7 +181,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 	
 		if(!$modSettings['cleantalk_first_post_checking']){
 			return;
-		}elseif (isset($user_info['posts']) && $user_info['posts'] > 0){
+		}elseif (isset($user_info['groups']) && $user_info['groups'][1] !== 4){
 			return;
 		}
 
@@ -394,7 +394,7 @@ function cleantalk_general_mod_settings(&$config_vars){
 	
     $config_vars[] = array('title', 'cleantalk_settings');
     $config_vars[] = array('text',  'cleantalk_api_key');
-    $config_vars[] = array('check', 'cleantalk_first_post_checking');
+    $config_vars[] = array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']);
     $config_vars[] = array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl));
     $config_vars[] = array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']);
     $config_vars[] = array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']);
