@@ -77,7 +77,7 @@ if ($isInstalling) {
 		
 	/* SFW data table */
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
-		$smcFunc['db_query']('','CREATE TABLE {db_prefix}cleantalk_sfw (network int(11) unsigned not null, mask int(11) unsigned not null)',array());
+		$smcFunc['db_query']('','CREATE TABLE {db_prefix}cleantalk_sfw (network INTEGER(11) UNSIGNED NOT NULL, mask INTEGER(11) UNSIGNED NOT NULL)',array());
 		
 	/* SFW logs table */
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw_logs');
@@ -124,6 +124,13 @@ if ($isInstalling) {
 				'default' => 0
 			)
 		);
+		if (isset($modSettings['cleantalk_api_key']) && $modSettings['cleantalk_api_key'] != '' && isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
+		{
+			$sfw = new CleantalkSFW;
+			$sfw->sfw_update($modSettings['cleantalk_api_key']);
+			unset($sfw);
+			updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);			
+		}	
     }
 } else {
     // Anti-Spam Verification captcha

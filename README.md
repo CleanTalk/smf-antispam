@@ -1,4 +1,5 @@
 # SMF Antispam mod
+* **Version:** 2.17
 * **License:** GNU General Public License  
 * **Compatible with:** SMF 2.0 and up  
 * **Languages:** English, Russian  

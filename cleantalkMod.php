@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-216');
+define('CT_AGENT_VERSION', 'smf-217');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -96,8 +96,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     $ct_request->agent = CT_AGENT_VERSION;
     $ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
 
-    $ip = isset($regOptions['register_vars']['member_ip']) ? $regOptions['register_vars']['member_ip'] : $_SERVER['REMOTE_ADDR'];
-    $ct_request->sender_ip = $ct->ct_session_ip($ip);
+    $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
 
     $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
@@ -182,7 +181,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 	
 		if(!$modSettings['cleantalk_first_post_checking']){
 			return;
-		}elseif (isset($user_info['posts']) && $user_info['posts'] > 0){
+		}elseif (isset($user_info['groups']) && $user_info['groups'][1] !== 4){
 			return;
 		}
 
@@ -197,8 +196,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 		$ct_request->agent = CT_AGENT_VERSION;
 		$ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
 
-		$ip = isset($user_info['ip']) ? $user_info['ip'] : $_SERVER['REMOTE_ADDR'];
-		$ct_request->sender_ip = $ct->ct_session_ip($ip);
+		$ct_request->sender_ip = $ct->cleantalk_get_real_ip();
 
 		$ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
 		$ct_request->message = preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
@@ -396,7 +394,7 @@ function cleantalk_general_mod_settings(&$config_vars){
 	
     $config_vars[] = array('title', 'cleantalk_settings');
     $config_vars[] = array('text',  'cleantalk_api_key');
-    $config_vars[] = array('check', 'cleantalk_first_post_checking');
+    $config_vars[] = array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']);
     $config_vars[] = array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl));
     $config_vars[] = array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']);
     $config_vars[] = array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']);
@@ -796,7 +794,7 @@ function template_cleantalk_above()
 	
 	if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin'){
 		
-		$source_dir = $boardurl . '/Sources/Cleantalk/';
+		$source_dir = $boardurl . '/Sources/cleantalk/';
 		
 		echo "<div class='notice_wrapper'>";
 		
