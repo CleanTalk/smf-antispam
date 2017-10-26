@@ -1,8 +1,10 @@
-Version 2.17 Septebmer 14, 2017
+Version 2.17 October 26, 2017
 ------------------------------
-- Fix create_table method for sql_lite.
-- IPv6 support.
-- Bug fixes and other minor improvements.
+- Fix create_table for sql_lite
+- IPv6 support
+- Update sfw_networks on plugin install
+- First post checking now checking all messages from users with newbie group 			
+- Bug fixes and other minor improvements
 
 Version 2.16 Septebmer 14, 2017
 ------------------------------

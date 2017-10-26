@@ -124,6 +124,13 @@ if ($isInstalling) {
 				'default' => 0
 			)
 		);
+		if (isset($modSettings['cleantalk_api_key']) && $modSettings['cleantalk_api_key'] != '' && isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
+		{
+			$sfw = new CleantalkSFW;
+			$sfw->sfw_update($modSettings['cleantalk_api_key']);
+			unset($sfw);
+			updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);			
+		}	
     }
 } else {
     // Anti-Spam Verification captcha
