@@ -181,7 +181,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 	
 		if(!$modSettings['cleantalk_first_post_checking']){
 			return;
-		}elseif (isset($user_info['groups']) && $user_info['groups'][1] !== 4){
+		}elseif (isset($user_info['groups'][1]) && $user_info['groups'][1] !== 4){
 			return;
 		}
 
