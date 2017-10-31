@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-217');
+define('CT_AGENT_VERSION', 'smf-218');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -181,7 +181,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 	
 		if(!$modSettings['cleantalk_first_post_checking']){
 			return;
-		}elseif (isset($user_info['groups']) && $user_info['groups'][1] !== 4){
+		}elseif (isset($user_info['groups'][1]) && $user_info['groups'][1] !== 4){
 			return;
 		}
 

@@ -4,9 +4,10 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.17</version>
+	<version>2.18</version>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
+		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
@@ -42,7 +43,7 @@
 		</readme>
 	</upgrade>
 	<upgrade from="2.12 - 2.15">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.17 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.18 version:
 			- Fix SFW update on save settings
 			- Change SFW template
 			- Remove plugin settings on uninstall
@@ -51,6 +52,18 @@
 			- IPv6 support
 			- Update sfw_networks on plugin install
 			- First post checking now checking all messages from users with newbie group 
+			- Bug fixes and other minor improvements
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk до версии 2.18:
+			- Исправлено обновление базы SpamFireWall при сохранении настроек
+			- Изменен шаблон для SpamFireWall
+			- Удаление настроек из БД при удалении плагина
+			- Исправлен скрипт создания таблиц для SpamFireWall
+			- Исправлен скрипт создания таблиц для sql_lite
+			- Поддержка IPV6
+			- Обновление баз SpamFireWall при установке плагина
+			- Опция "Проверки первого сообщения" изменена на проверку всех сообщений от новых пользователей  
+			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
@@ -73,12 +86,19 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.16">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.17 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.18 version:
 			- Fix create_table for sql_lite
 			- IPv6 support
 			- Update sfw_networks on plugin install
 			- First post checking now checking all messages from users with newbie group 			
 			- Bug fixes and other minor improvements
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.16 до 2.18:
+			- Исправлен скрипт создания таблиц для sql_lite
+			- Поддержка IPV6
+			- Обновление баз SpamFireWall при установке плагина
+			- Опция "Проверки первого сообщения" изменена на проверку всех сообщений от новых пользователей  
+			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
@@ -88,6 +108,25 @@
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<database>install.php</database>
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>			
+	</upgrade>
+	<upgrade from="2.17">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.17 to 2.18 version:	
+			- Bug fixes and other minor improvements
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.17 до 2.18:	
+			- Устранение багов и остальные незначительные улучшения
+		</readme>
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<modification format="xml" type="file">modification.xml</modification>
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>	
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
