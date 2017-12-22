@@ -26,7 +26,22 @@ class CleantalkSFW
 	private $query;
 	private $db_result;
 	private $db_result_data = array();
-	
+	private $cdn_cf = array(
+		'103.21.244.0/22',
+		'103.22.200.0/22',
+		'103.31.4.0/22',
+		'104.16.0.0/12',
+		'108.162.192.0/18',
+		'131.0.72.0/22',
+		'141.101.64.0/18',
+		'162.158.0.0/15',
+		'172.64.0.0/13',
+		'173.245.48.0/20',
+		'188.114.96.0/20',
+		'190.93.240.0/20',
+		'197.234.240.0/22',
+		'198.41.128.0/17',
+	);	
 	public function __construct()
 	{
 		global $db_connection, $db_prefix;
@@ -68,24 +83,29 @@ class CleantalkSFW
 	public function get_ip(){
 		
 		$result=Array();
-		
+		$cdn = $this->cdn_cf;
+
 		// Getting IP
 		$the_ip = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
-		$result[] = $the_ip;
+		$result['remote_addr'] = $the_ip;
 		$this->ip_str_array[]=$the_ip;
 		$this->ip_array[]=sprintf("%u", ip2long($the_ip));
 
-		// Getting proxy IP
+		// Getting Cloudflare IP
 		$headers = function_exists('apache_request_headers')
 			? apache_request_headers()
 			: self::apache_request_headers();
 		
-		if( isset($headers['X-Forwarded-For']) ){
-			$the_ip = explode(",", trim($headers['X-Forwarded-For']));
-			$the_ip = trim($the_ip[0]);
-			$result[] = filter_var( $the_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
-			$this->ip_str_array[]=$the_ip;
-			$this->ip_array[]=sprintf("%u", ip2long($the_ip));
+		if(isset($headers['Cf_Connecting_Ip'])){
+			foreach ($cdn as $cidr)
+			{
+				if ($this->ip_mask_match($result['remote_addr'],$cidr)){
+					$result['cf_connecting_ip'] = filter_var( $_SERVER['Cf_Connecting_Ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
+					$this->ip_array[] = sprintf("%u", ip2long($result['cf_connecting_ip']));
+					unset($result['remote_addr']);
+					break;
+				}
+			}
 		}
 		
 		// Getting test IP
@@ -98,7 +118,14 @@ class CleantalkSFW
 		
 		return array_unique($result);
 	}
-	
+
+	public function ip_mask_match($ip, $cidr){
+		$exploded = explode ('/', $cidr);
+		$net = $exploded[0];
+		$mask = 4294967295 << (32 - $exploded[1]);
+		return (ip2long($ip) & $mask) == (ip2long($net) & $mask);
+	}
+
 	/*
 	*	Checks IP via Database
 	*/
