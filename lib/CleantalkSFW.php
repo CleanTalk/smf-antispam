@@ -111,7 +111,7 @@ class CleantalkSFW
 		// Getting test IP
 		$sfw_test_ip = isset($_GET['sfw_test_ip']) ? $_GET['sfw_test_ip'] : null;
 		if($sfw_test_ip){
-			$result[] = filter_var( $sfw_test_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
+			$result['remote_addr'] = filter_var( $sfw_test_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
 			$this->ip_str_array[]=$sfw_test_ip;
 			$this->ip_array[]=sprintf("%u", ip2long($sfw_test_ip));
 		}
