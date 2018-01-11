@@ -55,7 +55,7 @@
 			- Support Cloudflare CDN
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk до версии 2.18:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk до версии 2.19:
 			- Исправлено обновление базы SpamFireWall при сохранении настроек
 			- Изменен шаблон для SpamFireWall
 			- Удаление настроек из БД при удалении плагина
