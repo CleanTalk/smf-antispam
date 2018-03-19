@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-219');
+define('CT_AGENT_VERSION', 'smf-220');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -270,9 +270,9 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 		if($ct_result->errno != 0 && !cleantalk_is_valid_js()){
 			cleantalk_log('deny post (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
 			fatal_error($ct_answer_text, false);
+
 			return;
 		}
-
 		if ($ct_result->allow == 0){
 			$msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
 			if ($modSettings['postmod_active']){
@@ -303,13 +303,12 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
  */
 function cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions){
 	
-    global $sourcedir, $scripturl;
+    global $sourcedir, $scripturl, $modSettings;
 
     if (SMF == 'SSI'){
 		return;
     }
-
-    if (isset($msgOptions['cleantalk_check_message_result'])){
+    if (isset($msgOptions['cleantalk_check_message_result']) && isset($modSettings['cleantalk_email_notifications']) && $modSettings['cleantalk_email_notifications'] == 1){
 		
         require_once($sourcedir . '/Subs-Admin.php');
 

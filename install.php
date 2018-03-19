@@ -44,6 +44,7 @@ if ($isInstalling) {
 	updateSettings(array('cleantalk_logging'             => isset($modSettings['cleantalk_logging'])             ? $modSettings['cleantalk_logging']             : '0'), false);
 	updateSettings(array('cleantalk_tell_others'         => isset($modSettings['cleantalk_tell_others'])         ? $modSettings['cleantalk_tell_others']         : '1'), false);
 	updateSettings(array('cleantalk_sfw'                 => isset($modSettings['cleantalk_sfw'])                 ? $modSettings['cleantalk_sfw']                 : '0'), false);
+	updateSettings(array('cleantalk_email_notifications' => isset($modSettings['cleantalk_email_notifications']) ? $modSettings['cleantalk_email_notifications'] : '0'), false);
 	
 	// Cleantalk's secondary data                                                                                                                                  
 	updateSettings(array('cleantalk_js_keys'             => isset($modSettings['cleantalk_js_keys'])             ? $modSettings['cleantalk_js_keys']             : ''),  false);
