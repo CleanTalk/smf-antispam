@@ -134,6 +134,7 @@
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
@@ -154,6 +155,7 @@
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
 		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -176,6 +178,7 @@
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>	
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
