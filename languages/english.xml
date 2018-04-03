@@ -27,6 +27,7 @@ $txt['cleantalk_logging'] = 'Enable logging';
 $txt['cleantalk_logging_postinput'] = 'All plugin\'s actions will be added to the forum\'s log. (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Admin -> Error log</a>)';
 $txt['cleantalk_tell_others'] = 'Tell others about CleanTalk';
 $txt['cleantalk_email_notifications'] = 'Enable admin email notifications';
+$txt['cleantalk_ccf_checking'] = 'Check custom forms';
 $txt['cleantalk_tell_others_postinput'] = 'Checking this box places a small link in the footer that lets others know what anti-spam tool protects your site.';
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
 $txt['cleantalk_sfw'] = 'Enable SpamFireWall';

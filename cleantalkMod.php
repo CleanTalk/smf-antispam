@@ -34,40 +34,308 @@ define('CT_DEBUG', false);
  */
 function cleantalk_sfw_check()
 {	
-	global $modSettings, $user_info;
-		
-	if(!empty($modSettings['cleantalk_sfw']) && !empty($modSettings['cleantalk_api_key_is_ok']) && !$user_info['is_admin']){
-		
-		$sfw = new CleantalkSFW();
-		$key = $modSettings['cleantalk_api_key'];
-		
-		$ips = $sfw->get_ip();
-
-		$is_sfw_check=true;
-		foreach($ips as $curr_ip){
+	global $modSettings, $user_info, $language;
+	if (!empty($modSettings['cleantalk_api_key_is_ok']) && !$user_info['is_admin'])	
+	{
+		if(!empty($modSettings['cleantalk_sfw']) ){
 			
-			if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($curr_ip.$key)){
+			$sfw = new CleantalkSFW();
+			$key = $modSettings['cleantalk_api_key'];
+			
+			$ips = $sfw->get_ip();
+
+			$is_sfw_check=true;
+			foreach($ips as $curr_ip){
 				
-				$is_sfw_check=false;
-				
-				if(!empty($_COOKIE['ct_sfw_passed'])){
-					$sfw->sfw_update_logs($curr_ip, 'passed');
-					setcookie ('ct_sfw_passed', '0', 1, "/");
+				if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($curr_ip.$key)){
+					
+					$is_sfw_check=false;
+					
+					if(!empty($_COOKIE['ct_sfw_passed'])){
+						$sfw->sfw_update_logs($curr_ip, 'passed');
+						setcookie ('ct_sfw_passed', '0', 1, "/");
+					}
+				}
+			}
+			if($is_sfw_check){
+				$sfw->check_ip();
+				if($sfw->result){
+					$sfw->sfw_update_logs($sfw->blocked_ip, 'blocked');
+					$sfw->sfw_die($key);
+				}else{
+					setcookie ('ct_sfw_pass_key', md5($sfw->passed_ip.$key), 0, "/");
 				}
 			}
 		}
-		if($is_sfw_check){
-			$sfw->check_ip();
-			if($sfw->result){
-				$sfw->sfw_update_logs($sfw->blocked_ip, 'blocked');
-				$sfw->sfw_die($key);
-			}else{
-				setcookie ('ct_sfw_pass_key', md5($sfw->passed_ip.$key), 0, "/");
-			}
+		if (!empty($modSettings['cleantalk_ccf_checking']) && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false)
+		{
+	    	$ct_temp_msg_data = cleantalkGetFields($_POST);
+			
+			$sender_email    = ($ct_temp_msg_data['email']    ? $ct_temp_msg_data['email']    : '');
+			$sender_nickname = ($ct_temp_msg_data['nickname'] ? $ct_temp_msg_data['nickname'] : '');
+			$subject         = ($ct_temp_msg_data['subject']  ? $ct_temp_msg_data['subject']  : '');
+			$contact_form    = ($ct_temp_msg_data['contact']  ? $ct_temp_msg_data['contact']  : true);
+			$message         = ($ct_temp_msg_data['message']  ? $ct_temp_msg_data['message']  : array());	
+            if ($subject != '')
+                $message = array_merge(array('subject' => $subject), $message);
+            $message = implode("\n", $message);  
+            if ($message != '' || $sender_email != '')
+            {
+                $ct = new Cleantalk();
+                $ct->server_url = CT_SERVER_URL;
+
+                $ct_request = new CleantalkRequest();
+                $ct_request->auth_key = cleantalk_get_api_key();
+
+                $ct_request->response_lang = 'en'; // SMF use any charset and language
+
+                $ct_request->agent = CT_AGENT_VERSION;
+                $ct_request->sender_email = $sender_email;
+
+                $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
+
+                $ct_request->sender_nickname = $sender_nickname;
+                $ct_request->message = $message;
+
+                $ct_request->submit_time = cleantalk_get_form_submit_time();
+
+                $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
+
+                $ct_request->post_info = json_encode(array('comment_type' => 'feedback_custom_contact_forms'));
+                $ct_request->sender_info = json_encode(
+                    array(
+                        'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
+                        'cms_lang'               => substr($language, 0, 2),                                            
+                        'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                        'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
+                        'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
+                        'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
+                        'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                    )
+                );
+                $ct_result = $ct->isAllowMessage($ct_request);  
+                if ($ct_result->allow == 0)
+                {
+                    $error_tpl=file_get_contents(dirname(__FILE__)."/error.html");
+                    print str_replace('%ERROR_TEXT%',$ct_result->comment,$error_tpl);
+                    die();                      
+                }                             
+            }          	
 		}
 	}
-}
 
+}
+//Recursevely gets data from array
+function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = array('nick' => '', 'first' => '', 'last' => ''), $subject = null, $contact = true, $prev_name = ''){
+    
+    //Skip request if fields exists
+    $skip_params = array(
+        'ipn_track_id',     // PayPal IPN #
+        'txn_type',         // PayPal transaction type
+        'payment_status',   // PayPal payment status
+        'ccbill_ipn',       // CCBill IPN 
+        'ct_checkjs',       // skip ct_checkjs field
+        'api_mode',         // DigiStore-API
+        'loadLastCommentId' // Plugin: WP Discuz. ticket_id=5571
+    );
+    
+    // Fields to replace with ****
+    $obfuscate_params = array(
+        'password',
+        'password_confirmation',
+        'pass',
+        'pwd',
+        'pswd'
+    );
+    
+    // Skip feilds with these strings and known service fields
+    $skip_fields_with_strings = array( 
+        // Common
+        'ct_checkjs', //Do not send ct_checkjs
+        'nonce', //nonce for strings such as 'rsvp_nonce_name'
+        'security',
+        // 'action',
+        'http_referer',
+        'timestamp',
+        'captcha',
+        // Formidable Form
+        'form_key',
+        'submit_entry',
+        // Custom Contact Forms
+        'form_id',
+        'ccf_form',
+        'form_page',
+        // Qu Forms
+        'iphorm_uid',
+        'form_url',
+        'post_id',
+        'iphorm_ajax',
+        'iphorm_id',
+        // Fast SecureContact Froms
+        'fs_postonce_1',
+        'fscf_submitted',
+        'mailto_id',
+        'si_contact_action',
+        // Ninja Forms
+        'formData_id',
+        'formData_settings',
+        'formData_fields_\d+_id',
+        'formData_fields_\d+_files.*',      
+        // E_signature
+        'recipient_signature',
+        'output_\d+_\w{0,2}',
+        // Contact Form by Web-Settler protection
+        '_formId',
+        '_returnLink',
+        // Social login and more
+        '_save',
+        '_facebook',
+        '_social',
+        'user_login-',
+        'submit',
+        'form_token',
+        'creation_time',
+        'uenc',
+        'product',
+        'qty',
+
+    );
+            
+    foreach($skip_params as $value){
+        if(array_key_exists($value,$_POST))
+        {
+            $contact = false;
+        }
+    } unset($value);
+        
+    if(count($arr)){
+        foreach($arr as $key => $value){
+            
+            if(gettype($value)=='string'){
+                $decoded_json_value = json_decode($value, true);
+                if($decoded_json_value !== null)
+                {
+                    $value = $decoded_json_value;
+                }
+            }
+            
+            if(!is_array($value) && !is_object($value)){
+                
+                if (in_array($key, $skip_params, true) && $key != 0 && $key != '' || preg_match("/^ct_checkjs/", $key))
+                {
+                    $contact = false;
+                }
+                
+                if($value === '')
+                {
+                    continue;
+                }
+                
+                // Skipping fields names with strings from (array)skip_fields_with_strings
+                foreach($skip_fields_with_strings as $needle){
+                    if (preg_match("/".$needle."/", $prev_name.$key) == 1){
+                        continue(2);
+                    }
+                }unset($needle);
+                // Obfuscating params
+                foreach($obfuscate_params as $needle){
+                    if (strpos($key, $needle) !== false){
+                        $value = obfuscate_param($value);
+                    }
+                }unset($needle);
+                
+
+                // Decodes URL-encoded data to string.
+                $value = urldecode($value); 
+
+                // Email
+                if (!$email && preg_match("/^\S+@\S+\.\S+$/", $value)){
+                    $email = $value;
+                    
+                // Names
+                }elseif (preg_match("/name/i", $key)){
+                    
+                    preg_match("/(first.?name)?(name.?first)?(forename)?/", $key, $match_forename);
+                    preg_match("/(last.?name)?(family.?name)?(second.?name)?(surname)?/", $key, $match_surname);
+                    preg_match("/(nick.?name)?(user.?name)?(nick)?/", $key, $match_nickname);
+                    
+                    if(count($match_forename) > 1)
+                    {
+                        $nickname['first'] = $value;
+                    }
+                    elseif(count($match_surname) > 1)
+                    {
+                        $nickname['last'] = $value;
+                    }
+                    elseif(count($match_nickname) > 1)
+                    {
+                        $nickname['nick'] = $value;
+                    }
+                    else
+                    {
+                        $message[$prev_name.$key] = $value;
+                    }
+                
+                // Subject
+                }elseif ($subject === null && preg_match("/subject/i", $key)){
+                    $subject = $value;
+                
+                // Message
+                }else{
+                    $message[$prev_name.$key] = $value;                 
+                }
+                
+            }elseif(!is_object($value)){
+                
+                $prev_name_original = $prev_name;
+                $prev_name = ($prev_name === '' ? $key.'_' : $prev_name.$key.'_');
+                
+                $temp = cleantalkGetFields($value, $message, $email, $nickname, $subject, $contact, $prev_name);
+                
+                $message    = $temp['message'];
+                $email      = ($temp['email']       ? $temp['email'] : null);
+                $nickname   = ($temp['nickname']    ? $temp['nickname'] : null);                
+                $subject    = ($temp['subject']     ? $temp['subject'] : null);
+                if($contact === true)
+                {
+                    $contact = ($temp['contact'] === false ? false : true);
+                }
+                $prev_name  = $prev_name_original;
+            }
+        } unset($key, $value);
+    }
+            
+    //If top iteration, returns compiled name field. Example: "Nickname Firtsname Lastname".
+    if($prev_name === ''){
+        if(!empty($nickname)){
+            $nickname_str = '';
+            foreach($nickname as $value){
+                $nickname_str .= ($value ? $value." " : "");
+            }unset($value);
+        }
+        $nickname = $nickname_str;
+    }
+    
+    $return_param = array(
+        'email'     => $email,
+        'nickname'  => $nickname,
+        'subject'   => $subject,
+        'contact'   => $contact,
+        'message'   => $message
+    );  
+    return $return_param;
+}
+/**
+* Masks a value with asterisks (*)
+* @return string
+*/
+function obfuscate_param($value = null) {
+    if ($value && (!is_object($value) || !is_array($value))) {
+        $length = strlen($value);
+        $value = str_repeat('*', $length);
+    }
+    return $value;
+}
 
 /**
  * CleanTalk integrate register hook
@@ -395,7 +663,8 @@ function cleantalk_general_mod_settings(&$config_vars){
     $config_vars[] = array('text',  'cleantalk_api_key');
     $config_vars[] = array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']);
     $config_vars[] = array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl));
-    $config_vars[] = array('check', 'cleantalk_email_notifications', 'subtext' => $txt['cleantalk_email_notifications']);    
+    $config_vars[] = array('check', 'cleantalk_email_notifications', 'subtext' => $txt['cleantalk_email_notifications']);  
+    $config_vars[] = array('check', 'cleantalk_ccf_checking', 'subtext' => $txt['cleantalk_ccf_checking']);    
     $config_vars[] = array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']);
     $config_vars[] = array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']);
 	$config_vars[] = array('desc',  'cleantalk_api_key_description');

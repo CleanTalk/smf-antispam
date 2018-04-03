@@ -17,6 +17,7 @@
 		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>
 		<require-file name="lib/phpFix.php" destination="$sourcedir/cleantalk">Fix for old PHP versions</require-file>
 		<require-file name="lib/sfw_die_page.html" destination="$sourcedir/cleantalk">SFW die page</require-file>
+		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>
 		<require-file name="attention.png" destination="$sourcedir/cleantalk">attention picture</require-file>
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -78,6 +79,7 @@
 		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>
 		<require-file name="lib/phpFix.php" destination="$sourcedir/cleantalk">Fix for old PHP versions</require-file>
 		<require-file name="lib/sfw_die_page.html" destination="$sourcedir/cleantalk">SFW die page</require-file>
+		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<require-file name="attention.png" destination="$sourcedir/cleantalk">attention picture</require-file>
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -111,6 +113,7 @@
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
@@ -135,6 +138,7 @@
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
@@ -156,7 +160,8 @@
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
-		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>		
+		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>	
+		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>			
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
@@ -179,6 +184,7 @@
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>	
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
