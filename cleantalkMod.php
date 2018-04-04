@@ -68,7 +68,7 @@ function cleantalk_sfw_check()
                 }
             }
         }
-        if (!empty($modSettings['cleantalk_ccf_checking']) && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false && strpos($_SERVER['REQUEST_URI'], 'action=register') === false && strpos($_SERVER['REQUEST_URI'], 'action=login') === false && strpos($_SERVER['REQUEST_URI'], 'action=post') === false && $_SERVER['REQUEST_METHOD'] == 'POST')
+        if (!empty($modSettings['cleantalk_ccf_checking']) && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false && strpos($_SERVER['REQUEST_URI'], 'action=register') === false && strpos($_SERVER['REQUEST_URI'], 'action=login') === false && strpos($_SERVER['REQUEST_URI'], 'action=post') === false && strpos($_SERVER['REQUEST_URI'], 'action=tpadmin') === false &&  $_SERVER['REQUEST_METHOD'] == 'POST')
         {
             $ct_temp_msg_data = cleantalkGetFields($_POST);
             $sender_email    = ($ct_temp_msg_data['email']    ? $ct_temp_msg_data['email']    : '');
