@@ -471,7 +471,6 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
     if (SMF == 'SSI') {
         return;
     }
-    
     // Do not check admin
     if(!$user_info['is_admin']){
     
@@ -495,7 +494,8 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
         $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
 
         $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
-        $ct_request->message = preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
+        $ct_request->message = isset($msgOptions['subject']) ? preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['subject']))."\n".preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body'])) : preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
+
 
         $ct_request->submit_time = cleantalk_get_form_submit_time();
 
