@@ -68,7 +68,7 @@ function cleantalk_sfw_check()
                 }
             }
         }
-        if (!empty($modSettings['cleantalk_ccf_checking']) && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false && strpos($_SERVER['REQUEST_URI'], 'action=register') === false && strpos($_SERVER['REQUEST_URI'], 'action=login') === false && strpos($_SERVER['REQUEST_URI'], 'action=post') === false && strpos($_SERVER['REQUEST_URI'], 'action=tpadmin') === false &&  $_SERVER['REQUEST_METHOD'] == 'POST')
+        if (!empty($modSettings['cleantalk_ccf_checking']) && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false && strpos($_SERVER['REQUEST_URI'], 'action=register') === false && strpos($_SERVER['REQUEST_URI'], 'action=login') === false && strpos($_SERVER['REQUEST_URI'], 'action=post') === false && $_SERVER['REQUEST_METHOD'] == 'POST')
         {
             $ct_temp_msg_data = cleantalkGetFields($_POST);
             $sender_email    = ($ct_temp_msg_data['email']    ? $ct_temp_msg_data['email']    : '');
@@ -795,14 +795,35 @@ function cleantalk_print_js_input()
         }
     </script>';
 }
-
+/**
+ * Calling by hook integrate_exit
+ */
+function cleantalk_exit()
+{
+    global $context, $user_info;
+    if (
+        isset($context['template_layers']) &&
+        is_array($context['template_layers']) &&
+        in_array('body', $context['template_layers']) &&
+        ($user_info['is_guest'] || $user_info['posts'] == 0)
+    ) {
+        cleantalk_store_form_start_time();
+    }
+}
+/**
+ * Store form start time
+ */
+function cleantalk_store_form_start_time()
+{
+    $_SESSION['ct_form_start_time'] = time();
+}
 /**
  * Get form submit time
  * @return int|null
  */
 function cleantalk_get_form_submit_time()
 {
-    return isset($_COOKIE['apbct_timestamp']) ? time() - intval($_COOKIE['apbct_timestamp']) : 0; 
+    return isset($_SESSION['ct_form_start_time']) ? time() - $_SESSION['ct_form_start_time'] : null;
 }
 
 /**

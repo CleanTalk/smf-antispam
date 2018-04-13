@@ -6,10 +6,10 @@
     <file name="$sourcedir/Register.php">
         <operation error="fatal">
             <search position="replace"><![CDATA[if (!isset($_POST['regSubmit']))
-	{
-		// cleantalk set start time of registration
-		cleantalk_store_form_start_time(-1);
-	}
+    {
+        // cleantalk set start time of registration
+        cleantalk_store_form_start_time(-1);
+    }
 
 // Show the user the right form.]]></search>
             <add><![CDATA[// Show the user the right form.]]></add>
