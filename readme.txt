@@ -1,5 +1,5 @@
 MOD [b]Anti-spam by CleanTalk[/b]
-Version: 2.21
+Version: 2.22
 
 Anti-spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.

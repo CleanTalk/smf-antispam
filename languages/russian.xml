@@ -27,7 +27,7 @@ $txt['cleantalk_logging'] = 'Включить логирование ответов сервиса';
 $txt['cleantalk_logging_postinput'] = 'Все действия плаигна будут записываться в лог форума (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Админка -> Логи ошибок</a>)';
 $txt['cleantalk_tell_others'] = 'Рассказать другим про CleanTalk';
 $txt['cleantalk_email_notifications'] = 'Включить e-mail уведомления для администраторов';
-$txt['cleantalk_ccf_checking'] = 'Проверять кастомные формы';
+$txt['cleantalk_ccf_checking'] = 'Проверять кастомные формы (Используйте осторожно. Возможен конфликт с другими плагинами)';
 $txt['cleantalk_tell_others_postinput'] = 'При выставлении этого флажка добавляется маленькая ссылка в футере, чтобы другие узнали об антиспаме, которым защищен ваш сайт.';
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">Защита SMF от спама</a> от CleanTalk';
 $txt['cleantalk_sfw'] = 'Включить Spam FireWall';
