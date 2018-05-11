@@ -1148,7 +1148,8 @@ function template_cleantalk_below()
         return;
     }
 
-    if(!empty($modSettings['cleantalk_tell_others'])){
+    if(!empty($modSettings['cleantalk_tell_others']) && isset($txt['cleantalk_tell_others_footer_message'])){
+    )
         $message = $txt['cleantalk_tell_others_footer_message'];
         echo '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">', $message, '</div>';
     }
