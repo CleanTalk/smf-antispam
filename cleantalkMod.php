@@ -823,7 +823,7 @@ function cleantalk_store_form_start_time()
  */
 function cleantalk_get_form_submit_time()
 {
-    return isset($_SESSION['ct_form_start_time']) ? time() - $_SESSION['ct_form_start_time'] : null;
+    return isset($_SESSION['ct_form_start_time']) ? time() - intval($_SESSION['ct_form_start_time']) : null;
 }
 
 /**
