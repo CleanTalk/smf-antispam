@@ -33,9 +33,9 @@ define('CT_DEBUG', false);
  * @return void
  */
 function cleantalk_sfw_check()
-{   
-    global $modSettings, $user_info, $language;
-    if (!empty($modSettings['cleantalk_api_key_is_ok']) && !$user_info['is_admin']) 
+{
+    global $modSettings, $language;
+    if (!empty($modSettings['cleantalk_api_key_is_ok']))
     {
         CookieTest();
         if(!empty($modSettings['cleantalk_sfw']) ){
@@ -68,8 +68,17 @@ function cleantalk_sfw_check()
                 }
             }
         }
-        if (!empty($modSettings['cleantalk_ccf_checking']) && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false && strpos($_SERVER['REQUEST_URI'], 'action=register') === false && strpos($_SERVER['REQUEST_URI'], 'action=login') === false && strpos($_SERVER['REQUEST_URI'], 'action=post') === false && $_SERVER['REQUEST_METHOD'] == 'POST')
-        {
+		
+        if (
+			!empty($modSettings['cleantalk_ccf_checking'])
+			&& $_SERVER['REQUEST_METHOD'] == 'POST'
+			&& strpos($_SERVER['REQUEST_URI'], 'action=admin') === false 
+			&& strpos($_SERVER['REQUEST_URI'], 'action=register') === false
+			&& strpos($_SERVER['REQUEST_URI'], 'action=login') === false
+			&& strpos($_SERVER['REQUEST_URI'], 'action=post') === false
+			&& strpos($_SERVER['REQUEST_URI'], 'action=pm') === false
+		){
+			
             $ct_temp_msg_data = cleantalkGetFields($_POST);
             $sender_email    = ($ct_temp_msg_data['email']    ? $ct_temp_msg_data['email']    : '');
             $sender_nickname = ($ct_temp_msg_data['nickname'] ? $ct_temp_msg_data['nickname'] : '');
@@ -124,8 +133,8 @@ function cleantalk_sfw_check()
             }           
         }
     }
-
 }
+
 //Recursevely gets data from array
 function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = array('nick' => '', 'first' => '', 'last' => ''), $subject = null, $contact = true, $prev_name = ''){
     
@@ -349,10 +358,10 @@ function CookieTest() {
     );
         
     // Submit time
-    $apbct_timestamp = time();
-    setcookie('apbct_timestamp', $apbct_timestamp, 0, '/');
-    $cookie_test_value['cookies_names'][] = 'apbct_timestamp';
-    $cookie_test_value['check_value'] .= $apbct_timestamp;
+    // $apbct_timestamp = time();
+    // setcookie('apbct_timestamp', $apbct_timestamp, 0, '/');
+    // $cookie_test_value['cookies_names'][] = 'apbct_timestamp';
+    // $cookie_test_value['check_value'] .= $apbct_timestamp;
 
     // Pervious referer
     if(!empty($_SERVER['HTTP_REFERER'])){
@@ -795,28 +804,7 @@ function cleantalk_print_js_input()
         }
     </script>';
 }
-/**
- * Calling by hook integrate_exit
- */
-function cleantalk_exit()
-{
-    global $context, $user_info;
-    if (
-        isset($context['template_layers']) &&
-        is_array($context['template_layers']) &&
-        in_array('body', $context['template_layers']) &&
-        ($user_info['is_guest'] || $user_info['posts'] == 0)
-    ) {
-        cleantalk_store_form_start_time();
-    }
-}
-/**
- * Store form start time
- */
-function cleantalk_store_form_start_time()
-{
-    $_SESSION['ct_form_start_time'] = time();
-}
+
 /**
  * Get form submit time
  * @return int|null
@@ -845,12 +833,11 @@ function cleantalk_log($message)
 function cleantalk_load()
 {
     global $context, $user_info, $modSettings, $smcFunc, $db_connection;
-    
+		
     if(SMF == 'SSI'){
         return;
     }
-    
-    // Output JS for users
+	
     if (
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
@@ -858,6 +845,11 @@ function cleantalk_load()
         ($user_info['is_guest'] || $user_info['posts'] == 0) &&
         !$user_info['is_admin']//!cleantalk_is_valid_js()
     ) {
+		
+		// Set session submit_time
+		$_SESSION['ct_form_start_time'] = time();
+		
+		// Output JS for users
         $context ['html_headers'] .= cleantalk_print_js_input();
     }
     
@@ -1148,8 +1140,7 @@ function template_cleantalk_below()
         return;
     }
 
-    if(!empty($modSettings['cleantalk_tell_others']) && isset($txt['cleantalk_tell_others_footer_message'])){
-    )
+    if(!empty($modSettings['cleantalk_tell_others'])){
         $message = $txt['cleantalk_tell_others_footer_message'];
         echo '<div class="cleantalk_tell_others" style="text-align: center;padding:5px 0;">', $message, '</div>';
     }
