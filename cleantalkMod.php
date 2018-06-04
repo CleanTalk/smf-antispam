@@ -74,6 +74,7 @@ function cleantalk_sfw_check()
 			&& $_SERVER['REQUEST_METHOD'] == 'POST'
 			&& strpos($_SERVER['REQUEST_URI'], 'action=admin') === false 
 			&& strpos($_SERVER['REQUEST_URI'], 'action=register') === false
+			&& strpos($_SERVER['REQUEST_URI'], 'action=signup') === false
 			&& strpos($_SERVER['REQUEST_URI'], 'action=login') === false
 			&& strpos($_SERVER['REQUEST_URI'], 'action=post') === false
 			&& strpos($_SERVER['REQUEST_URI'], 'action=pm') === false
