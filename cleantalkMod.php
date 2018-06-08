@@ -122,6 +122,7 @@ function cleantalk_sfw_check()
                         'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
                         'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                         'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
+                        'cookies_enabled'        => apbct_cookies_test(),
                     )
                 );
                 $ct_result = $ct->isAllowMessage($ct_request);  
@@ -374,6 +375,31 @@ function CookieTest() {
     $cookie_test_value['check_value'] = md5($cookie_test_value['check_value']);
     setcookie('apbct_cookies_test', json_encode($cookie_test_value), 0, '/');
 }
+    /**
+     * Cookies test for sender 
+     * Also checks for valid timestamp in $_COOKIE['apbct_timestamp'] and other apbct_ COOKIES
+     * @return null|0|1;
+     */
+    function apbct_cookies_test()
+    {   
+        if(isset($_COOKIE['apbct_cookies_test'])){
+            
+            $cookie_test = json_decode(stripslashes($_COOKIE['apbct_cookies_test']), true);
+            
+            $check_srting = cleantalk_get_api_key();
+            foreach($cookie_test['cookies_names'] as $cookie_name){
+                $check_srting .= isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
+            } unset($cokie_name);
+            
+            if($cookie_test['check_value'] == md5($check_srting)){
+                return 1;
+            }else{
+                return 0;
+            }
+        }else{
+            return null;
+        }
+    }
 /**
  * CleanTalk integrate register hook
  * @param array $regOptions
@@ -419,6 +445,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
             'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
             'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
             'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
+            'cookies_enabled'        => apbct_cookies_test(),
         )
     );
 
@@ -521,6 +548,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                 'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
                 'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
+                'cookies_enabled'        => apbct_cookies_test(),
             )
         );
 
