@@ -359,10 +359,10 @@ function CookieTest() {
     );
         
     // Submit time
-    // $apbct_timestamp = time();
-    // setcookie('apbct_timestamp', $apbct_timestamp, 0, '/');
-    // $cookie_test_value['cookies_names'][] = 'apbct_timestamp';
-    // $cookie_test_value['check_value'] .= $apbct_timestamp;
+    $apbct_timestamp = time();
+    setcookie('apbct_timestamp', $apbct_timestamp, 0, '/');
+    $cookie_test_value['cookies_names'][] = 'apbct_timestamp';
+    $cookie_test_value['check_value'] .= $apbct_timestamp;
 
     // Pervious referer
     if(!empty($_SERVER['HTTP_REFERER'])){
