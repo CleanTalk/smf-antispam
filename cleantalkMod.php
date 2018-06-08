@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-222');
+define('CT_AGENT_VERSION', 'smf-223');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -805,7 +805,28 @@ function cleantalk_print_js_input()
         }
     </script>';
 }
-
+/**
+ * Calling by hook integrate_exit
+ */
+function cleantalk_exit()
+{
+    global $context, $user_info;
+    if (
+        isset($context['template_layers']) &&
+        is_array($context['template_layers']) &&
+        in_array('body', $context['template_layers']) &&
+        ($user_info['is_guest'] || $user_info['posts'] == 0)
+    ) {
+        cleantalk_store_form_start_time();
+    }
+}
+/**
+ * Store form start time
+ */
+function cleantalk_store_form_start_time()
+{
+    $_SESSION['ct_form_start_time'] = time();
+}
 /**
  * Get form submit time
  * @return int|null
