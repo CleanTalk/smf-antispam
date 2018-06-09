@@ -861,7 +861,11 @@ function cleantalk_store_form_start_time()
  */
 function cleantalk_get_form_submit_time()
 {
-    return isset($_SESSION['ct_form_start_time']) ? time() - intval($_SESSION['ct_form_start_time']) : null;
+    $cookie_submit_time = isset($_COOKIE['apbct_timestamp']) ? time() - intval($_COOKIE['apbct_timestamp']): 0;
+    if ($cookie_submit_time > 2)
+        return $cookie_submit_time;
+    else
+        return isset($_SESSION['ct_form_start_time']) ? time() - intval($_SESSION['ct_form_start_time']) : 0;
 }
 
 /**
