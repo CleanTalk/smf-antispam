@@ -896,10 +896,7 @@ function cleantalk_load()
         !$user_info['is_admin']//!cleantalk_is_valid_js()
     ) {
 		
-		// Set session submit_time
-		$_SESSION['ct_form_start_time'] = time();
-		
-		// Output JS for users
+    	// Output JS for users
         $context ['html_headers'] .= cleantalk_print_js_input();
     }
     
