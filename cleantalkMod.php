@@ -120,7 +120,7 @@ function cleantalk_sfw_check()
                         'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                         'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                         'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-                        'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                        'page_set_timestamp'     => !empty($_COOKIE['apbct_timestamp'])  ? $_COOKIE['apbct_timestamp']  : null,
                         'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
                         'cookies_enabled'        => apbct_cookies_test(),
                     )
@@ -443,7 +443,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
             'js_timezone'            => !empty($_COOKIE['ct_timezone'])      ? $_COOKIE['ct_timezone']      : null,
             'mouse_cursor_positions' => !empty($_COOKIE['ct_pointer_data'])  ? $_COOKIE['ct_pointer_data']  : null,
             'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-            'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+            'page_set_timestamp'     => !empty($_COOKIE['apbct_timestamp'])  ? $_COOKIE['apbct_timestamp']  : null,
             'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
             'cookies_enabled'        => apbct_cookies_test(),
         )
@@ -546,7 +546,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                 'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                 'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                 'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-                'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                'page_set_timestamp'     => !empty($_COOKIE['apbct_timestamp'])  ? $_COOKIE['apbct_timestamp']  : null,
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
                 'cookies_enabled'        => apbct_cookies_test(),
             )
