@@ -15,10 +15,12 @@ $hooks = array(
     'integrate_pre_include'          => '$sourcedir/cleantalk/cleantalkMod.php',
 	'integrate_pre_load'             => 'cleantalk_sfw_check',
     'integrate_register'             => 'cleantalk_check_register',
-    'integrate_general_mod_settings' => 'cleantalk_general_mod_settings',
     'integrate_load_theme'           => 'cleantalk_load',
     'integrate_exit'                 => 'cleantalk_exit',    
     'integrate_buffer'               => 'cleantalk_buffer',
+    'integrate_admin_include'        => '$sourcedir/cleantalk/cleantalkModAdmin.php',
+    'integrate_admin_areas'          => 'cleantalk_admin_area',
+    'integrate_modify_modifications' => 'cleantalk_admin_action',
 );
 
 $isInstalling = empty($context['uninstalling']);

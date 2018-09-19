@@ -719,26 +719,6 @@ function cleantalk_get_api_key(){
 }
 
 /**
- * Add CleanTalk setting into admin panel
- * @param array $config_vars
- */
-function cleantalk_general_mod_settings(&$config_vars){
-    
-    global $txt, $boardurl;
-    
-    $config_vars[] = array('title', 'cleantalk_settings');
-    $config_vars[] = array('text',  'cleantalk_api_key');
-    $config_vars[] = array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']);
-    $config_vars[] = array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl));
-    $config_vars[] = array('check', 'cleantalk_email_notifications', 'subtext' => $txt['cleantalk_email_notifications']);  
-    $config_vars[] = array('check', 'cleantalk_ccf_checking', 'subtext' => $txt['cleantalk_ccf_checking']);    
-    $config_vars[] = array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']);
-    $config_vars[] = array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']);
-    $config_vars[] = array('desc',  'cleantalk_api_key_description');
-    $config_vars[] = array('desc',  'cleantalk_check_users');
-}
-
-/**
  * Return CleanTalk javascript verify code
  */
 function cleantalk_print_js_input()
