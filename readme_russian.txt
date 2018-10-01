@@ -20,7 +20,7 @@
 [b]Совместимость[/b]
 SMF 2.0 и выше
 
-[b]ЛИцензия[/b]
+[b]Лицензия[/b]
 [url=http://www.gnu.org/copyleft/gpl.html]GNU General Public License[/url]
 
 [b]Изменения[/b]

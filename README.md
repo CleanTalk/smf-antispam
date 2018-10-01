@@ -1,5 +1,6 @@
 # SMF Antispam mod
 ================
+
 [![Build Status](https://travis-ci.org/CleanTalk/smf-antispam.svg)](https://travis-ci.org/CleanTalk/smf-antispam)
 
 * **Version:** 2.24
