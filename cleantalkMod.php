@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-223');
+define('CT_AGENT_VERSION', 'smf-224');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -37,7 +37,7 @@ function cleantalk_sfw_check()
     global $modSettings, $language;
     if (!empty($modSettings['cleantalk_api_key_is_ok']))
     {
-        CookieTest();
+        cleantalk_cookies_set();
         if(!empty($modSettings['cleantalk_sfw']) ){
             
             $sfw = new CleantalkSFW();
@@ -102,7 +102,9 @@ function cleantalk_sfw_check()
                 $ct_request->agent = CT_AGENT_VERSION;
                 $ct_request->sender_email = $sender_email;
 
-                $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
+                $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
+                $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
+                $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
 
                 $ct_request->sender_nickname = $sender_nickname;
                 $ct_request->message = $message;
@@ -120,9 +122,9 @@ function cleantalk_sfw_check()
                         'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                         'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                         'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-                        'page_set_timestamp'     => !empty($_COOKIE['apbct_timestamp'])  ? $_COOKIE['apbct_timestamp']  : null,
-                        'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
-                        'cookies_enabled'        => apbct_cookies_test(),
+                        'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                        'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
+                        'cookies_enabled'        => cleantalk_cookies_test(),
                     )
                 );
                 $ct_result = $ct->isAllowMessage($ct_request);  
@@ -352,54 +354,48 @@ function obfuscate_param($value = null) {
  * Cookie test 
  * @return 
  */
-function CookieTest() {
+function cleantalk_cookies_set() {
     // Cookie names to validate
     $cookie_test_value = array(
         'cookies_names' => array(),
         'check_value' => cleantalk_get_api_key(),
     );
-        
-    // Submit time
-    $apbct_timestamp = time();
-    setcookie('apbct_timestamp', $apbct_timestamp, 0, '/');
-    $cookie_test_value['cookies_names'][] = 'apbct_timestamp';
-    $cookie_test_value['check_value'] .= $apbct_timestamp;
 
     // Pervious referer
     if(!empty($_SERVER['HTTP_REFERER'])){
-        setcookie('apbct_prev_referer', $_SERVER['HTTP_REFERER'], 0, '/');
-        $cookie_test_value['cookies_names'][] = 'apbct_prev_referer';
+        setcookie('ct_prev_referer', $_SERVER['HTTP_REFERER'], 0, '/');
+        $cookie_test_value['cookies_names'][] = 'ct_prev_referer';
         $cookie_test_value['check_value'] .= $_SERVER['HTTP_REFERER'];
     }
     // Cookies test
     $cookie_test_value['check_value'] = md5($cookie_test_value['check_value']);
-    setcookie('apbct_cookies_test', json_encode($cookie_test_value), 0, '/');
+    setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');
 }
-    /**
-     * Cookies test for sender 
-     * Also checks for valid timestamp in $_COOKIE['apbct_timestamp'] and other apbct_ COOKIES
-     * @return null|0|1;
-     */
-    function apbct_cookies_test()
-    {   
-        if(isset($_COOKIE['apbct_cookies_test'])){
-            
-            $cookie_test = json_decode(stripslashes($_COOKIE['apbct_cookies_test']), true);
-            
-            $check_srting = cleantalk_get_api_key();
-            foreach($cookie_test['cookies_names'] as $cookie_name){
-                $check_srting .= isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
-            } unset($cokie_name);
-            
-            if($cookie_test['check_value'] == md5($check_srting)){
-                return 1;
-            }else{
-                return 0;
-            }
+/**
+ * Cookies test for sender 
+ * Also checks for valid timestamp in $_COOKIE['ct_timestamp'] and other ct_ COOKIES
+ * @return null|0|1;
+ */
+function cleantalk_cookies_test()
+{   
+    if(isset($_COOKIE['ct_cookies_test'])){
+        
+        $cookie_test = json_decode(stripslashes($_COOKIE['ct_cookies_test']), true);
+        
+        $check_srting = cleantalk_get_api_key();
+        foreach($cookie_test['cookies_names'] as $cookie_name){
+            $check_srting .= isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
+        } unset($cokie_name);
+        
+        if($cookie_test['check_value'] == md5($check_srting)){
+            return 1;
         }else{
-            return null;
+            return 0;
         }
+    }else{
+        return null;
     }
+}
 /**
  * CleanTalk integrate register hook
  * @param array $regOptions
@@ -427,7 +423,9 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     $ct_request->agent = CT_AGENT_VERSION;
     $ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
 
-    $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
+    $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
+    $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
+    $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
 
     $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
@@ -443,9 +441,9 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
             'js_timezone'            => !empty($_COOKIE['ct_timezone'])      ? $_COOKIE['ct_timezone']      : null,
             'mouse_cursor_positions' => !empty($_COOKIE['ct_pointer_data'])  ? $_COOKIE['ct_pointer_data']  : null,
             'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-            'page_set_timestamp'     => !empty($_COOKIE['apbct_timestamp'])  ? $_COOKIE['apbct_timestamp']  : null,
-            'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
-            'cookies_enabled'        => apbct_cookies_test(),
+            'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+            'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
+            'cookies_enabled'        => cleantalk_cookies_test(),
         )
     );
 
@@ -528,7 +526,9 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
         $ct_request->agent = CT_AGENT_VERSION;
         $ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
 
-        $ct_request->sender_ip = $ct->cleantalk_get_real_ip();
+        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
+        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
+        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
 
         $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
         $ct_request->message = isset($msgOptions['subject']) ? preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['subject']))."\n".preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body'])) : preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
@@ -546,9 +546,9 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                 'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                 'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                 'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-                'page_set_timestamp'     => !empty($_COOKIE['apbct_timestamp'])  ? $_COOKIE['apbct_timestamp']  : null,
-                'REFFERRER_PREVIOUS'     => isset($_COOKIE['apbct_prev_referer'])? $_COOKIE['apbct_prev_referer']: null,
-                'cookies_enabled'        => apbct_cookies_test(),
+                'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
+                'cookies_enabled'        => cleantalk_cookies_test(),
             )
         );
 
@@ -719,26 +719,6 @@ function cleantalk_get_api_key(){
 }
 
 /**
- * Add CleanTalk setting into admin panel
- * @param array $config_vars
- */
-function cleantalk_general_mod_settings(&$config_vars){
-    
-    global $txt, $boardurl;
-    
-    $config_vars[] = array('title', 'cleantalk_settings');
-    $config_vars[] = array('text',  'cleantalk_api_key');
-    $config_vars[] = array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']);
-    $config_vars[] = array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl));
-    $config_vars[] = array('check', 'cleantalk_email_notifications', 'subtext' => $txt['cleantalk_email_notifications']);  
-    $config_vars[] = array('check', 'cleantalk_ccf_checking', 'subtext' => $txt['cleantalk_ccf_checking']);    
-    $config_vars[] = array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']);
-    $config_vars[] = array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']);
-    $config_vars[] = array('desc',  'cleantalk_api_key_description');
-    $config_vars[] = array('desc',  'cleantalk_check_users');
-}
-
-/**
  * Return CleanTalk javascript verify code
  */
 function cleantalk_print_js_input()
@@ -756,6 +736,7 @@ function cleantalk_print_js_input()
         function ctSetCookie(c_name, value) {
             document.cookie = c_name + "=" + encodeURIComponent(value) + "; path=/";
         }
+        ctSetCookie("ct_ps_timestamp", Math.floor(new Date().getTime()/1000));
         ctSetCookie("ct_fkp_timestamp", "0");
         ctSetCookie("ct_pointer_data", "0");
         ctSetCookie("ct_timezone", "0");
@@ -861,8 +842,8 @@ function cleantalk_store_form_start_time()
  */
 function cleantalk_get_form_submit_time()
 {
-    $cookie_submit_time = isset($_COOKIE['apbct_timestamp']) ? time() - intval($_COOKIE['apbct_timestamp']): 0;
-    if ($cookie_submit_time > 2)
+    $cookie_submit_time = isset($_COOKIE['ct_ps_timestamp']) ? time() - intval($_COOKIE['ct_ps_timestamp']): 0;
+    if ($cookie_submit_time > 3)
         return $cookie_submit_time;
     else
         return isset($_SESSION['ct_form_start_time']) ? time() - intval($_SESSION['ct_form_start_time']) : 0;
@@ -910,7 +891,7 @@ function cleantalk_load()
         // Getting key automatically
         if(!empty($_GET['ctgetautokey'])){
             
-            $result = CleantalkHelper::getApiKey($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
+            $result = CleantalkHelper::api_method__get_api_key($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
             
             if (empty($result['error'])){
                             
@@ -946,7 +927,7 @@ function cleantalk_load()
             if($_POST['cleantalk_api_key'] != $curr_key){
                 
                 $key_to_validate = strval($_POST['cleantalk_api_key']);
-                $result = CleantalkHelper::noticeValidateKey($key_to_validate);
+                $result = CleantalkHelper::api_method__notice_validate_key($key_to_validate);
                 
                 if(empty($result['error'])){
                     
@@ -1063,7 +1044,7 @@ function cleantalk_load()
     /* Cron for account status */
     if(!empty($modSettings['cleantalk_api_key_is_ok']) && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time() || !empty($doing_cron)){
         
-        $result = CleantalkHelper::noticePaidTill($modSettings['cleantalk_api_key']);
+        $result = CleantalkHelper::api_method__notice_paid_till($modSettings['cleantalk_api_key']);
         
         if(empty($result['error'])){
             $settings_array = array(
@@ -1259,7 +1240,7 @@ function cleantalk_buffer($buffer)
                         }
                         
                         // Request
-                        $api_result = CleantalkHelper::spamCheckCms(cleantalk_get_api_key(), $data);
+                        $api_result = CleantalkHelper::api_method__spam_check_cms(cleantalk_get_api_key(), $data);
                         
                         // Error handling
                         if(!empty($api_result['error'])){
@@ -1408,7 +1389,7 @@ function cleantalk_buffer($buffer)
         
         if(!isset($modSettings['cleantalk_api_key_is_ok'])){
             
-            $result = CleantalkHelper::noticeValidateKey($modSettings['cleantalk_api_key']);        
+            $result = CleantalkHelper::api_method__notice_validate_key($modSettings['cleantalk_api_key']);        
             
             if(empty($result['error'])){
                 

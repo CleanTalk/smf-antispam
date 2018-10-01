@@ -4,12 +4,13 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.23</version>
+	<version>2.24</version>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
 		<require-file name="lib/CleantalkRequest.php" destination="$sourcedir/cleantalk">Extend for base class</require-file>
 		<require-file name="lib/CleantalkResponse.php" destination="$sourcedir/cleantalk">Extend for base class</require-file>
@@ -25,7 +26,7 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
@@ -44,7 +45,7 @@
 		</readme>
 	</upgrade>
 	<upgrade from="2.12 - 2.15">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.24 version:
 			- Fix SFW update on save settings
 			- Change SFW template
 			- Remove plugin settings on uninstall
@@ -72,6 +73,7 @@
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
 		<require-file name="lib/CleantalkRequest.php" destination="$sourcedir/cleantalk">Extend for base class</require-file>
 		<require-file name="lib/CleantalkResponse.php" destination="$sourcedir/cleantalk">Extend for base class</require-file>
@@ -87,12 +89,12 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.16">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.24 version:
 			- Fix create_table for sql_lite
 			- IPv6 support
 			- Update sfw_networks on plugin install
@@ -101,7 +103,7 @@
 			- New option to disable/enable email notifications		
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.16 до 2.23:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.16 до 2.24:
 			- Исправлен скрипт создания таблиц для sql_lite
 			- Поддержка IPV6
 			- Обновление баз SpamFireWall при установке плагина
@@ -112,7 +114,9 @@
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
 		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -120,24 +124,26 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.17">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.17 to 2.23 version:	
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.17 to 2.24 version:	
 			- Support Cloudflare CDN
 			- New option to disable/enable email notifications	
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.17 до 2.23:	
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.17 до 2.24:	
 			- Поддержка Cloudflare CDN
 			- Добавлена новая опция о включении/отключении e-mail уведомлений
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
 		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -145,21 +151,24 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>	
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.18">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.18 to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.18 to 2.24 version:
 			- New option to disable/enable email notifications		
 			- Bug fixes and other minor improvements
 		</readme>
+		<readme>
 			- Добавлена новая опция о включении/отключении e-mail уведомлений
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
 		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>	
 		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>			
 		<modification format="xml" type="file">modification.xml</modification>
@@ -168,22 +177,24 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>	
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.19">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.19 to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.19 to 2.24 version:
 			- New option to disable/enable email notifications	
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.19 до 2.23:	
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.19 до 2.24:	
 			- Добавлена новая опция о включении/отключении e-mail уведомлений
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
-		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>	
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
 		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
 		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>		
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -191,54 +202,89 @@
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.20">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.20 to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.20 to 2.24 version:
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.20 до 2.23:	
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.20 до 2.24:	
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
-		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>	
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>	
 		<modification format="xml" type="file">modification.xml</modification>	
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.21">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.21 to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.21 to 2.24 version:
 			- Bug fixes and other minor improvements
 			- Private messages check excluded.
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.21 до 2.23:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.21 до 2.24:
 			- Исправлен баг с проверкой линых сообщений
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
-		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>	
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>	
 		<modification format="xml" type="file">modification.xml</modification>	
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.22">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.22 to 2.23 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.22 to 2.24 version:
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.22 до 2.23:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.22 до 2.24:
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
-		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>	
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
 		<modification format="xml" type="file">modification.xml</modification>	
 		<database>install.php</database>
-		<redirect url="$boardurl/index.php?action=admin;area=modsettings" type="inline">Please stand by while
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>			
+	</upgrade>
+	<upgrade from="2.23">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.23 to 2.24 version:
+			- Lib class updated
+			- Move mod settings to a separate tab
+			- Bug fixes and other minor improvements
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.23 до 2.24:
+			- Обновление классов
+			- Настройки мода вынесены в отдельную вкладку
+			- Устранение багов и остальные незначительные улучшения
+		</readme>
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
+		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
+		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
+		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
+		<modification format="xml" type="file">modification.xml</modification>	
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<database>install.php</database>
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>			

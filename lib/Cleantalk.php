@@ -347,7 +347,7 @@ class Cleantalk
             }
         }
         
-        if (!$result || !self::cleantalk_is_JSON($result)) {
+        if (!$result || !$this->cleantalk_is_JSON($result)) {
             $response = null;
             $response['errno'] = 1;
             $response['errstr'] = true;
@@ -387,7 +387,7 @@ class Cleantalk
 		if($msg->method_name != 'send_feedback'){
 			$tmp = function_exists('apache_request_headers')
 				? apache_request_headers()
-				: self::apache_request_headers();
+				: $this->apache_request_headers();
 			
 			if(isset($tmp['Cookie'])){
 				$cookie_name = 'Cookie';
@@ -453,7 +453,8 @@ class Cleantalk
                         $server_host = $server['ip'];
                         $work_url = $server_host;
                     }
-                    $work_url = $url_prefix . $work_url; 
+                    $host = filter_var($work_url,FILTER_VALIDATE_IP) ? gethostbyaddr($work_url) : $work_url;
+                    $work_url = $url_prefix . $host; 
                     if (isset($url_suffix)) 
                         $work_url = $work_url . $url_suffix;
                     
@@ -490,8 +491,8 @@ class Cleantalk
      * @param $host
      * @return array
      */
-    public function get_servers_ip($host)
-	{
+    private function get_servers_ip($host)
+	  {
         $response = null;
         if (!isset($host))
             return $response;
@@ -560,61 +561,9 @@ class Cleantalk
     }
 
     /**
-     * Function to get the message hash from Cleantalk.ru comment
-     * @param $message
-     * @return null
-     */
-    public function getCleantalkCommentHash($message) {
-        $matches = array();
-        if (preg_match('/\n\n\*\*\*.+([a-z0-9]{32}).+\*\*\*$/', $message, $matches))
-            return $matches[1];
-        else if (preg_match('/\<br.*\>[\n]{0,1}\<br.*\>[\n]{0,1}\*\*\*.+([a-z0-9]{32}).+\*\*\*$/', $message, $matches))
-            return $matches[1];
-
-        return NULL;
-    }
-
-    /**
-     * Function adds to the post comment Cleantalk.ru
-     * @param $message
-     * @param $comment
-     * @return string
-     */
-    public function addCleantalkComment($message, $comment) {
-        $comment = preg_match('/\*\*\*(.+)\*\*\*/', $comment, $matches) ? $comment : '*** ' . $comment . ' ***';
-        return $message . "\n\n" . $comment;
-    }
-
-    /**
-     * Function deletes the comment Cleantalk.ru
-     * @param $message
-     * @return mixed
-     */
-    public function delCleantalkComment($message) {
-        $message = preg_replace('/\n\n\*\*\*.+\*\*\*$/', '', $message);
-
-        // DLE sign cut
-        $message = preg_replace('/<br\s?\/><br\s?\/>\*\*\*.+\*\*\*$/', '', $message);
-
-        $message = preg_replace('/\<br.*\>[\n]{0,1}\<br.*\>[\n]{0,1}\*\*\*.+\*\*\*$/', '', $message);
-        
-        return $message;
-    }
-
-    /**
-    *   Get user IP behind proxy server
-    */
-    public function ct_session_ip( $data_ip ) {
-        if (!$data_ip || !preg_match("/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/", $data_ip))
-            return $data_ip;
-        
-        return self::cleantalk_get_real_ip();
-    }
-
-    /**
     * From http://php.net/manual/en/function.ip2long.php#82397
     */
-    public function net_match($CIDR,$IP) { 
+    private function net_match($CIDR,$IP) { 
         list ($net, $mask) = explode ('/', $CIDR); 
         return ( ip2long ($IP) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($net); 
     } 
@@ -624,7 +573,7 @@ class Cleantalk
     * param string
     * @return int
     */
-    public function httpPing($host){
+    private function httpPing($host){
 
         // Skip localhost ping cause it raise error at fsockopen.
         // And return minimun value 
@@ -652,7 +601,7 @@ class Cleantalk
     * param string
     * @return string
     */
-    public function stringToUTF8($str, $data_codepage = null){
+    private function stringToUTF8($str, $data_codepage = null){
         if (!preg_match('//u', $str) && function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding'))
 		{
             
@@ -673,7 +622,7 @@ class Cleantalk
     * param string
     * @return string
     */
-    public function stringFromUTF8($str, $data_codepage = null){
+    private function stringFromUTF8($str, $data_codepage = null){
         if (preg_match('//u', $str) && function_exists('mb_convert_encoding') && $data_codepage !== null)
 		{
             return mb_convert_encoding($str, $data_codepage, 'UTF-8');
@@ -681,64 +630,32 @@ class Cleantalk
         
         return $str;
     }
-    
-	static public function cleantalk_get_real_ip(){
-		
-		$headers = function_exists('apache_request_headers')
-			? apache_request_headers()
-			: self::apache_request_headers();
-		
-        // Getting IP for validating
-        if (array_key_exists( 'X-Forwarded-For', $headers )){
-            $ip = explode(",", trim($headers['X-Forwarded-For']));
-            $ip = trim($ip[0]);
-        }elseif(array_key_exists( 'HTTP_X_FORWARDED_FOR', $headers)){
-            $ip = explode(",", trim($headers['HTTP_X_FORWARDED_FOR']));
-            $ip = trim($ip[0]);
-        }else{
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-
-        // Validating IP
-        // IPv4
-        if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
-            $the_ip = $ip;
-            // IPv6
-        }elseif(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)){
-            $the_ip = $ip;
-            // Unknown
-        }else{
-            $the_ip = null;
-        }
-
-        return $the_ip;
-	}
 	
-	static public function cleantalk_is_JSON($string){
-		return ((is_string($string) && (is_object(json_decode($string)) || is_array(json_decode($string))))) ? true : false;
-	}
-	
-	/* 
-	 * If Apache web server is missing then making
-	 * Patch for apache_request_headers() 
-	 */
-	static function apache_request_headers(){
-		
-		$headers = array();	
-		foreach($_SERVER as $key => $val){
-			if(preg_match('/\AHTTP_/', $key)){
-				$server_key = preg_replace('/\AHTTP_/', '', $key);
-				$key_parts = explode('_', $server_key);
-				if(count($key_parts) > 0 and strlen($server_key) > 2){
-					foreach($key_parts as $part_index => $part){
-						$key_parts[$part_index] = mb_strtolower($part);
-						$key_parts[$part_index][0] = strtoupper($key_parts[$part_index][0]);					
-					}
-					$server_key = implode('-', $key_parts);
-				}
-				$headers[$server_key] = $val;
-			}
-		}
-		return $headers;
-	}
+  	private function cleantalk_is_JSON($string){
+  		return ((is_string($string) && (is_object(json_decode($string)) || is_array(json_decode($string))))) ? true : false;
+  	}
+  	
+  	/* 
+  	 * If Apache web server is missing then making
+  	 * Patch for apache_request_headers() 
+  	 */
+  	private function apache_request_headers(){
+  		
+  		$headers = array();	
+  		foreach($_SERVER as $key => $val){
+  			if(preg_match('/\AHTTP_/', $key)){
+  				$server_key = preg_replace('/\AHTTP_/', '', $key);
+  				$key_parts = explode('_', $server_key);
+  				if(count($key_parts) > 0 and strlen($server_key) > 2){
+  					foreach($key_parts as $part_index => $part){
+  						$key_parts[$part_index] = mb_strtolower($part);
+  						$key_parts[$part_index][0] = strtoupper($key_parts[$part_index][0]);					
+  					}
+  					$server_key = implode('-', $key_parts);
+  				}
+  				$headers[$server_key] = $val;
+  			}
+  		}
+  		return $headers;
+  	}
 }
