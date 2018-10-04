@@ -80,8 +80,8 @@ Also, you can use CleanTalk app for iPhone/iPad to control anti-spam service on 
 5. Press the string [ Download ] near the module's name "Anti-spam by CleanTalk".
 6. Press the string [ Install Mod ].
 7. Press the button "Install Now" at the bottom of the page.
-8. You will be redirected to the module's settings after you install it (or you can go to the settings page manually: Admin —> Package Manager, Configuration —> Modification Settings...). Copy your access key from your CleanTalk Control Panel, setup the module and press the button "Save".
+8. You will be redirected to the module's settings after you install it (or you can go to the settings page manually: Admin —> Package Manager, Configuration —> Modification Settings —> Antispam by CleanTalk). Copy your access key from your CleanTalk Control Panel, setup the module and press the button "Save".
 Go to Dashboard to see the anti-spam status, add new websites or manage existing ones! Please check your email to get account password.
 
 **Admin Settings**  
-Mod has admin settings on page Admin - Features and options - Configuration - Modification settings
+Mod has admin settings on page Admin - Features and options - Configuration - Modification settings - Antispam by CleanTalk
