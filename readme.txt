@@ -15,7 +15,7 @@ The mod is a client application for cloud anti-spam [url=http://cleantalk.org/]C
 Also you can use CleanTalk app for iPhone/iPad to control anti-spam service on web-site or control comments, signups, contacts and orders.
 
 [b]Admin Settings[/b]
-Mod has admin settings on page Admin - Features and options - Configuration - Modification settings
+Mod has admin settings on page Admin - Features and options - Configuration - Modification settings - Antispam by CleanTalk
 
 [b]Compatibility Notes[/b]
 SMF 2.0 and up
