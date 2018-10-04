@@ -21,7 +21,7 @@ $txt['cleantalk_key_not_valid'] = 'Ключ неверен!';
 $txt['cleantalk_get_statistics'] = 'Просмотр статистики работы антиспама';
 $txt['cleantalk_admin_email_will_be_used'] = 'Для регистрации будет использован E-mail администратора (%s)';
 $txt['cleantalk_first_post_checking'] = 'Включить проверку новых пользователей на спам';
-$txt['cleantalk_first_post_checking_postinput'] = 'Все сообщения от пользователей группы <a href="index.php?action=moderate;area=viewgroups;sa=members;group=4">Новичек</a> будут проверены на спам';
+$txt['cleantalk_first_post_checking_postinput'] = 'Все сообщения от пользователей группы <a href="index.php?action=moderate;area=viewgroups;sa=members;group=4">%GROUP%</a> будут проверены на спам';
 $txt['cleantalk_api_key_description'] = 'Домашняя страница расширения: <a target="_blank" href="https://cleantalk.org/">http://cleantalk.org</a>';
 $txt['cleantalk_logging'] = 'Включить логирование ответов сервиса';
 $txt['cleantalk_logging_postinput'] = 'Все действия плагина будут записываться в лог форума (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Админка -> Логи ошибок</a>)';

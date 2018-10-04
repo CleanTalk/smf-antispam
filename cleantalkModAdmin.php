@@ -40,10 +40,29 @@ function cleantalk_admin_action(&$subActions)
  */
 function cleantalk_general_mod_settings($return_config = false)
 {
-    global $txt, $scripturl, $context, $boardurl;
+    global $txt, $scripturl, $context, $boardurl, $smcFunc;
 
     $context['page_title'] = $txt['cleantalk_settings'];
     $context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=cleantalk';
+
+    // Get a real name for the Newbie membergroup
+    $request = $smcFunc['db_query']('', '
+				SELECT group_name
+				FROM {db_prefix}membergroups
+				WHERE id_group = {int:id_group}
+				LIMIT 1',
+        array(
+            'id_group' => 4,
+        )
+    );
+
+    list ($newbie_group_name) = $smcFunc['db_fetch_row']($request);
+    $smcFunc['db_free_result']($request);
+    if (!(trim($newbie_group_name))) {
+        $newbie_group_name = '#4'; // Show a group number for empty name
+    }
+    $txt['cleantalk_first_post_checking_postinput'] = str_replace('%GROUP%', $newbie_group_name,
+        $txt['cleantalk_first_post_checking_postinput']);
 
     $config_vars = array(
         array('title', 'cleantalk_settings'),
