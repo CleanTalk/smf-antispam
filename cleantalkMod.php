@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-224');
+define('CT_AGENT_VERSION', 'smf-225');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -472,8 +472,8 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
         $regOptions['require'] = 'approval';
 
         // temporarly turn on notify for new registration
-        if (!isset($modSettings['notify_new_registration']) || empty($modSettings['notify_new_registration']))
-            $modSettings['notify_new_registration'] = 1;
+        if (!isset($modSettings['cleantalk_email_notifications']) || empty($modSettings['cleantalk_email_notifications']))
+            $modSettings['cleantalk_email_notifications'] = 1;
 
         // add Cleantalk message to email template
         $user_info['cleantalkmessage'] = $ct_result->comment;
@@ -486,10 +486,12 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     if ($ct_result->allow == 0){
         // this is bot, stop registration
         cleantalk_log('deny registration' . strip_tags($ct_result->comment));
+        cleantalk_send_email('Deny registration. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
         fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
     } else {
         // all ok, only logging
         cleantalk_log('allow regisration for "' . $regOptions['username'] . '"');
+        cleantalk_send_email('Allow registration. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
     }
 }
 
@@ -506,15 +508,10 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
     if (SMF == 'SSI') {
         return;
     }
-    // Do not check admin
-    if(!$user_info['is_admin']){
-    
-        if(!$modSettings['cleantalk_first_post_checking']){
-            return;
-        }elseif (isset($user_info['groups'][1]) && $user_info['groups'][1] !== 4){
-            return;
-        }
 
+    // Do not check admin
+    if(!$user_info['is_admin'] && $modSettings['cleantalk_first_post_checking'] && ((isset($user_info['groups'][1]) && $user_info['groups'][1] === 4) || $user_info['is_guest'] === 1)){
+    
         $ct = new Cleantalk();
         $ct->server_url = CT_SERVER_URL;
 
@@ -613,46 +610,25 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
             if ($modSettings['postmod_active']){
                 if ($ct_result->stop_queue == 1){
                     cleantalk_log('spam message "' . $ct_result->comment . '"');
+                    cleantalk_send_email('Spam message blocked. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
                     fatal_error($ct_answer_text, false);
                 }else{
                     // If post moderation active then set message not approved
                     cleantalk_log('to postmoderation "' . $ct_result->comment . '"');
+                    cleantalk_send_email('Suspicious spam message send to postmoderation. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
                     $msgOptions['approved'] = 0;
                 }
             }else{
                 cleantalk_log('spam message "' . $ct_result->comment . '"');
+                cleantalk_send_email('Spam message blocked. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
                 fatal_error($ct_answer_text, false);
             }
         }else{
             // all ok, only logging
             cleantalk_log('allow message for "' . $posterOptions['name'] . '"');
+            cleantalk_send_email('Allow message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
         }
     }    
-}
-
-/**
- * After post created
- * @param array $msgOptions
- * @param array $topicOptions
- * @param array $posterOptions
- */
-function cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions){
-    
-    global $sourcedir, $scripturl, $modSettings;
-
-    if (SMF == 'SSI'){
-        return;
-    }
-    if (isset($msgOptions['cleantalk_check_message_result']) && isset($modSettings['cleantalk_email_notifications']) && $modSettings['cleantalk_email_notifications'] == 1){
-        
-        require_once($sourcedir . '/Subs-Admin.php');
-
-        $link = $scripturl . '?topic=' . $topicOptions['id'] . '.msg' . $msgOptions['id'] . '#msg' . $msgOptions['id'];
-
-        $message = $msgOptions['cleantalk_check_message_result'] . "\n\n" . $link;
-
-        emailAdmins('send_email', array('EMAILSUBJECT' => '[Antispam for the board]', 'EMAILBODY' => "CleanTalk antispam failed: \n$message"));
-    }
 }
 
 /**
@@ -861,7 +837,22 @@ function cleantalk_log($message)
         log_error('CleanTalk: ' . $message, 'user');
     }
 }
+/**
+ * Logging message into SMF log
+ * @param string $message
+ */
+function cleantalk_send_email($message)
+{
+    global $modSettings;
+    
+    if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications']) {
+        require_once($sourcedir . '/Subs-Admin.php');
 
+        $link = $scripturl . '?topic=' . $topicOptions['id'] . '.msg' . $msgOptions['id'] . '#msg' . $msgOptions['id'];
+
+        emailAdmins('send_email', array('EMAILSUBJECT' => '[Cleantalk antispam for the board]', 'EMAILBODY' => "CleanTalk antispam checking result: \n$message"));
+    }
+}
 /**
  * Calling by hook integrate_load_theme
  */
