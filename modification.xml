@@ -10,4 +10,10 @@
             </add>
         </operation>
     </file>
+    <file name="$sourcedir/Subs-Post.php">
+        <operation error="fatal">
+            <search position="after"><![CDATA[// Increase the number of posts and topics on the board.]]></search>
+            <add><![CDATA[cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions);]]></add>
+        </operation>
+    </file>    
 </modification>
