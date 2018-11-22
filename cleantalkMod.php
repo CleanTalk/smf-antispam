@@ -510,8 +510,8 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
     }
 
     // Do not check admin
-    if(!$user_info['is_admin'] && $modSettings['cleantalk_first_post_checking'] && ((isset($user_info['groups'][1]) && $user_info['groups'][1] === 4) || $user_info['is_guest'] == 1)){
-    
+    if(!$user_info['is_admin'] && ($user_info['is_guest'] == 1 || ($modSettings['cleantalk_first_post_checking'] && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)))
+    {
         $ct = new Cleantalk();
         $ct->server_url = CT_SERVER_URL;
 
@@ -530,7 +530,6 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 
         $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
         $ct_request->message = isset($msgOptions['subject']) ? preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['subject']))."\n".preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body'])) : preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
-
 
         $ct_request->submit_time = cleantalk_get_form_submit_time();
 
