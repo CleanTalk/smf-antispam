@@ -843,13 +843,11 @@ function cleantalk_log($message)
  */
 function cleantalk_send_email($message)
 {
-    global $modSettings;
+    global $sourcedir, $modSettings;
     
     if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications']) {
         require_once($sourcedir . '/Subs-Admin.php');
-
-        $link = $scripturl . '?topic=' . $topicOptions['id'] . '.msg' . $msgOptions['id'] . '#msg' . $msgOptions['id'];
-
+        
         emailAdmins('send_email', array('EMAILSUBJECT' => '[Cleantalk antispam for the board]', 'EMAILBODY' => "CleanTalk antispam checking result: \n$message"));
     }
 }
