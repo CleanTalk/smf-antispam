@@ -291,10 +291,14 @@
 	<upgrade from="2.24">
 		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.23 to 2.25 version:
 			- Show a real name for the Newbie membergroup on the mod settings page
+			- Add automod option
+			- Admin e-mail notification for each spam checking
 			- Bug fixes and other minor improvements
 		</readme>
 		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.23 до 2.25:
 			- Вывод реального имени для группы "Новичек" в настройках мода
+			- Новая опция для автомодерации сообщений
+			- Уведомление администраторов по e-mail по каждой сработки антиспама
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>

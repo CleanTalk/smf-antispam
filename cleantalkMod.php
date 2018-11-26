@@ -34,8 +34,8 @@ define('CT_DEBUG', false);
  */
 function cleantalk_sfw_check()
 {
-    global $modSettings, $language;
-    if (!empty($modSettings['cleantalk_api_key_is_ok']))
+    global $modSettings, $language, $user_info;
+    if (!empty($modSettings['cleantalk_api_key_is_ok']) && !$user_info['is_admin'])
     {
         cleantalk_cookies_set();
         if(!empty($modSettings['cleantalk_sfw']) ){
@@ -405,94 +405,100 @@ function cleantalk_cookies_test()
 function cleantalk_check_register(&$regOptions, $theme_vars){
     
     global $language, $user_info, $modSettings;
+    static $executed_check_register = true;
 
     if (SMF == 'SSI')
         return;
 
     if ($regOptions['interface'] == 'admin')
         return;
-
-    $ct = new Cleantalk();
-    $ct->server_url = CT_SERVER_URL;
-
-    $ct_request = new CleantalkRequest();
-    $ct_request->auth_key = cleantalk_get_api_key();
-
-    $ct_request->response_lang = 'en'; // SMF use any charset and language
-
-    $ct_request->agent = CT_AGENT_VERSION;
-    $ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
-
-    $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-    $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-    $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
-
-    $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
-
-    $ct_request->submit_time = cleantalk_get_form_submit_time();
-
-    $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
-
-    $ct_request->sender_info = json_encode(
-        array(
-            'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
-            'cms_lang'               => substr($language, 0, 2),                                            
-            'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
-            'js_timezone'            => !empty($_COOKIE['ct_timezone'])      ? $_COOKIE['ct_timezone']      : null,
-            'mouse_cursor_positions' => !empty($_COOKIE['ct_pointer_data'])  ? $_COOKIE['ct_pointer_data']  : null,
-            'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-            'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
-            'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
-            'cookies_enabled'        => cleantalk_cookies_test(),
-        )
-    );
-
-    if (defined('CT_DEBUG') && CT_DEBUG)
-        log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
-
-    /**
-     * @var CleantalkResponse $ct_result CleanTalk API call result
-     */
-    $ct_result = $ct->isAllowUser($ct_request);
-
-    if($ct_result->errno != 0 && !cleantalk_is_valid_js())
+    if ($executed_check_register)
     {
-        cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
-        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
-        return;
+        $executed_check_register = false;
+
+        $ct = new Cleantalk();
+        $ct->server_url = CT_SERVER_URL;
+
+        $ct_request = new CleantalkRequest();
+        $ct_request->auth_key = cleantalk_get_api_key();
+
+        $ct_request->response_lang = 'en'; // SMF use any charset and language
+
+        $ct_request->agent = CT_AGENT_VERSION;
+        $ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
+
+        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
+        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
+        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+
+        $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
+
+        $ct_request->submit_time = cleantalk_get_form_submit_time();
+
+        $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
+
+        $ct_request->sender_info = json_encode(
+            array(
+                'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
+                'cms_lang'               => substr($language, 0, 2),                                            
+                'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                'js_timezone'            => !empty($_COOKIE['ct_timezone'])      ? $_COOKIE['ct_timezone']      : null,
+                'mouse_cursor_positions' => !empty($_COOKIE['ct_pointer_data'])  ? $_COOKIE['ct_pointer_data']  : null,
+                'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
+                'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
+                'cookies_enabled'        => cleantalk_cookies_test(),
+            )
+        );
+
+        if (defined('CT_DEBUG') && CT_DEBUG)
+            log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
+
+        /**
+         * @var CleantalkResponse $ct_result CleanTalk API call result
+         */
+        $ct_result = $ct->isAllowUser($ct_request);
+
+        if($ct_result->errno != 0 && !cleantalk_is_valid_js())
+        {
+            cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
+            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+            return;
+        }
+
+        if($ct_result->inactive == 1)
+        {
+            // need admin approval
+
+            cleantalk_log('need approval for "' . $regOptions['username'] . '"');
+
+            $regOptions['register_vars']['is_activated'] = 3; // waiting for admin approval
+            $regOptions['require'] = 'approval';
+
+            // temporarly turn on notify for new registration
+            if (!isset($modSettings['cleantalk_email_notifications']) || empty($modSettings['cleantalk_email_notifications']))
+                $modSettings['cleantalk_email_notifications'] = 1;
+
+            // add Cleantalk message to email template
+            $user_info['cleantalkmessage'] = $ct_result->comment;
+
+            // temporarly turn on registration_method to approval_after
+            $modSettings['registration_method'] = 2;
+            return;
+        }
+
+        if ($ct_result->allow == 0){
+            // this is bot, stop registration
+            cleantalk_log('deny registration' . strip_tags($ct_result->comment));
+            cleantalk_after_create_topic('Deny registration. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
+            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+        } else {
+            // all ok, only logging
+            cleantalk_log('allow regisration for "' . $regOptions['username'] . '"');
+            cleantalk_after_create_topic('Allow registration. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
+        }        
     }
 
-    if($ct_result->inactive == 1)
-    {
-        // need admin approval
-
-        cleantalk_log('need approval for "' . $regOptions['username'] . '"');
-
-        $regOptions['register_vars']['is_activated'] = 3; // waiting for admin approval
-        $regOptions['require'] = 'approval';
-
-        // temporarly turn on notify for new registration
-        if (!isset($modSettings['cleantalk_email_notifications']) || empty($modSettings['cleantalk_email_notifications']))
-            $modSettings['cleantalk_email_notifications'] = 1;
-
-        // add Cleantalk message to email template
-        $user_info['cleantalkmessage'] = $ct_result->comment;
-
-        // temporarly turn on registration_method to approval_after
-        $modSettings['registration_method'] = 2;
-        return;
-    }
-
-    if ($ct_result->allow == 0){
-        // this is bot, stop registration
-        cleantalk_log('deny registration' . strip_tags($ct_result->comment));
-        cleantalk_after_create_topic('Deny registration. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
-        fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
-    } else {
-        // all ok, only logging
-        cleantalk_log('allow regisration for "' . $regOptions['username'] . '"');
-        cleantalk_after_create_topic('Allow registration. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
-    }
 }
 
 /**
@@ -504,131 +510,137 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
 function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
     
     global $language, $user_info, $modSettings, $smcFunc, $db_connection;
-    
+    static $executed_check_message = true;
+
     if (SMF == 'SSI') {
         return;
     }
-
-    // Do not check admin
-    if(!$user_info['is_admin'] && ($user_info['is_guest'] == 1 || ($modSettings['cleantalk_first_post_checking'] && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)))
+    if ($executed_check_message)
     {
-        $ct = new Cleantalk();
-        $ct->server_url = CT_SERVER_URL;
+        $executed_check_message = false;
 
-        $ct_request = new CleantalkRequest();
-        $ct_request->auth_key = cleantalk_get_api_key();
+        // Do not check admin
+        if(!$user_info['is_admin'] && ($user_info['is_guest'] == 1 || ($modSettings['cleantalk_first_post_checking'] && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)))
+        {
+            $ct = new Cleantalk();
+            $ct->server_url = CT_SERVER_URL;
 
-        $ct_request->response_lang = 'en'; // SMF use any charset and language
+            $ct_request = new CleantalkRequest();
+            $ct_request->auth_key = cleantalk_get_api_key();
 
-        $ct_request->agent = CT_AGENT_VERSION;
+            $ct_request->response_lang = 'en'; // SMF use any charset and language
 
-        $ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
+            $ct_request->agent = CT_AGENT_VERSION;
 
-        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+            $ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
 
-        $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
-        $ct_request->message = isset($msgOptions['subject']) ? preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['subject']))."\n".preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body'])) : preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
+            $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
+            $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
+            $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
 
-        $ct_request->submit_time = cleantalk_get_form_submit_time();
+            $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
+            $ct_request->message = isset($msgOptions['subject']) ? preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['subject']))."\n".preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body'])) : preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
 
-        $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
+            $ct_request->submit_time = cleantalk_get_form_submit_time();
 
-        $ct_request->sender_info = json_encode(
-            array(
-                'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
-                'cms_lang'               => substr($language, 0, 2),                                            
-                'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
-                'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
-                'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
-                'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
-                'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
-                'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
-                'cookies_enabled'        => cleantalk_cookies_test(),
-            )
-        );
+            $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
-        if (isset($topicOptions['id'])) {
-            
-            if(!isset($db_connection) || $db_connection === false)
-                    loadDatabase();
+            $ct_request->sender_info = json_encode(
+                array(
+                    'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
+                    'cms_lang'               => substr($language, 0, 2),                                            
+                    'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                    'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
+                    'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
+                    'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
+                    'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                    'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
+                    'cookies_enabled'        => cleantalk_cookies_test(),
+                )
+            );
+
+            if (isset($topicOptions['id'])) {
                 
-            if(isset($db_connection) && $db_connection != false){
-                
-                    // disable query check for UNION operator
-                    $oldQueryCheck = isset($modSettings['disableQueryCheck']) ? $modSettings['disableQueryCheck'] : false;
-                    $modSettings['disableQueryCheck'] = true;
+                if(!isset($db_connection) || $db_connection === false)
+                        loadDatabase();
+                    
+                if(isset($db_connection) && $db_connection != false){
+                    
+                        // disable query check for UNION operator
+                        $oldQueryCheck = isset($modSettings['disableQueryCheck']) ? $modSettings['disableQueryCheck'] : false;
+                        $modSettings['disableQueryCheck'] = true;
 
-                    // find first and last 5 messages
-                    $posts = $smcFunc['db_query'](
-                        '',
-                        'SELECT m.id_msg, m.body
-                           FROM {db_prefix}messages AS m
-                           JOIN {db_prefix}topics AS t ON t.id_first_msg=m.id_msg
-                           WHERE t.id_topic = {int:id_topic}
-                           UNION
-                           (SELECT m.id_msg, m.body
-                           FROM {db_prefix}messages AS m
-                           WHERE m.id_topic = {int:id_topic2} AND m.approved=1
-                           ORDER BY id_msg desc
-                           limit 5)
-                           ORDER BY id_msg',
-                        array(
-                                'id_topic' => $topicOptions['id'],
-                                'id_topic2' => $topicOptions['id'],
-                        )
-                    );
-                    $messages = array();
-                    while ($post = $smcFunc['db_fetch_assoc']($posts)) {
-                        $messages[] = $post['body'];
-                    }
-                    $smcFunc['db_free_result']($posts);
-                    $modSettings['disableQueryCheck'] = $oldQueryCheck;
+                        // find first and last 5 messages
+                        $posts = $smcFunc['db_query'](
+                            '',
+                            'SELECT m.id_msg, m.body
+                               FROM {db_prefix}messages AS m
+                               JOIN {db_prefix}topics AS t ON t.id_first_msg=m.id_msg
+                               WHERE t.id_topic = {int:id_topic}
+                               UNION
+                               (SELECT m.id_msg, m.body
+                               FROM {db_prefix}messages AS m
+                               WHERE m.id_topic = {int:id_topic2} AND m.approved=1
+                               ORDER BY id_msg desc
+                               limit 5)
+                               ORDER BY id_msg',
+                            array(
+                                    'id_topic' => $topicOptions['id'],
+                                    'id_topic2' => $topicOptions['id'],
+                            )
+                        );
+                        $messages = array();
+                        while ($post = $smcFunc['db_fetch_assoc']($posts)) {
+                            $messages[] = $post['body'];
+                        }
+                        $smcFunc['db_free_result']($posts);
+                        $modSettings['disableQueryCheck'] = $oldQueryCheck;
 
-                    $ct_request->example = implode("\n", $messages);
+                        $ct_request->example = implode("\n", $messages);
+                }
             }
-        }
 
-        if(defined('CT_DEBUG') && CT_DEBUG)
-            log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
+            if(defined('CT_DEBUG') && CT_DEBUG)
+                log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
 
-        /**
-         * @var CleantalkResponse $ct_result CleanTalk API call result
-         */
-        $ct_result = $ct->isAllowMessage($ct_request);
-        $ct_answer_text = 'CleanTalk: ' . strip_tags($ct_result->comment);
+            /**
+             * @var CleantalkResponse $ct_result CleanTalk API call result
+             */
+            $ct_result = $ct->isAllowMessage($ct_request);
+            $ct_answer_text = 'CleanTalk: ' . strip_tags($ct_result->comment);
 
-        if($ct_result->errno != 0 && !cleantalk_is_valid_js()){
-            cleantalk_log('deny post (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
-            fatal_error($ct_answer_text, false);
+            if($ct_result->errno != 0 && !cleantalk_is_valid_js()){
+                cleantalk_log('deny post (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
+                fatal_error($ct_answer_text, false);
 
-            return;
-        }
-        if ($ct_result->allow == 0){
-            $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
-            if ($modSettings['cleantalk_automod']){
-                if ($ct_result->stop_queue == 1){
+                return;
+            }
+            if ($ct_result->allow == 0){
+                $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
+                if ($modSettings['cleantalk_automod']){
+                    if ($ct_result->stop_queue == 1){
+                        cleantalk_log('spam message "' . $ct_result->comment . '"');
+                        cleantalk_after_create_topic('Spam message blocked. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
+                        fatal_error($ct_answer_text, false);
+                    }else{
+                        // If post moderation active then set message not approved
+                        cleantalk_log('to postmoderation "' . $ct_result->comment . '"');
+                        cleantalk_after_create_topic('Suspicious spam message send to postmoderation. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
+                        $msgOptions['approved'] = 0;
+                    }
+                }else{
                     cleantalk_log('spam message "' . $ct_result->comment . '"');
                     cleantalk_after_create_topic('Spam message blocked. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
                     fatal_error($ct_answer_text, false);
-                }else{
-                    // If post moderation active then set message not approved
-                    cleantalk_log('to postmoderation "' . $ct_result->comment . '"');
-                    cleantalk_after_create_topic('Suspicious spam message send to postmoderation. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
-                    $msgOptions['approved'] = 0;
                 }
             }else{
-                cleantalk_log('spam message "' . $ct_result->comment . '"');
-                cleantalk_after_create_topic('Spam message blocked. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
-                fatal_error($ct_answer_text, false);
+                // all ok, only logging
+                cleantalk_log('allow message for "' . $posterOptions['name'] . '"');
+                cleantalk_after_create_topic('Allow message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
             }
-        }else{
-            // all ok, only logging
-            cleantalk_log('allow message for "' . $posterOptions['name'] . '"');
-            cleantalk_after_create_topic('Allow message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
         }
-    }    
+    }
+    
 }
 
 /**
