@@ -125,6 +125,7 @@ function cleantalk_sfw_check()
                         'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                         'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                         'cookies_enabled'        => cleantalk_cookies_test(),
+                        'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
                     )
                 );
                 $ct_result = $ct->isAllowMessage($ct_request);  
@@ -448,6 +449,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
                 'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                 'cookies_enabled'        => cleantalk_cookies_test(),
+                'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
             )
         );
 
@@ -556,6 +558,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                     'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                     'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                     'cookies_enabled'        => cleantalk_cookies_test(),
+                    'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
                 )
             );
 
@@ -830,11 +833,14 @@ function cleantalk_store_form_start_time()
  */
 function cleantalk_get_form_submit_time()
 {
-    $cookie_submit_time = isset($_COOKIE['ct_ps_timestamp']) ? time() - intval($_COOKIE['ct_ps_timestamp']): 0;
-    if ($cookie_submit_time > 3)
-        return $cookie_submit_time;
-    else
-        return isset($_SESSION['ct_form_start_time']) ? time() - intval($_SESSION['ct_form_start_time']) : 0;
+    if (cleantalk_cookies_test() == 1)
+    {
+        if (isset($_SESSION['ct_form_start_time']))
+            return time() - intval($_SESSION['ct_form_start_time']);
+        elseif (isset($_COOKIE['ct_ps_timestamp']))
+            return time() - intval($_COOKIE['ct_ps_timestamp']);        
+    }
+    return null;
 }
 
 /**
