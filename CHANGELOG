@@ -1,3 +1,8 @@
+Version 2.26 Jan 17, 2019
+------------------------------		
+- Fix admin checking with custom contact forms option enabled
+- Bug fixes and other minor improvements
+
 Version 2.25 Nov 02, 2018
 ------------------------------		
 - Show a real name for the Newbie membergroup on the mod settings page

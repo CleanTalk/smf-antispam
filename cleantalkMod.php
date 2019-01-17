@@ -35,7 +35,11 @@ define('CT_DEBUG', false);
 function cleantalk_sfw_check()
 {
     global $modSettings, $language, $user_info;
-    if (!empty($modSettings['cleantalk_api_key_is_ok']) && !$user_info['is_admin'])
+
+    if ($user_info['is_admin'])
+        return;
+    
+    if (!empty($modSettings['cleantalk_api_key_is_ok']))
     {
         cleantalk_cookies_set();
         if(!empty($modSettings['cleantalk_sfw']) ){
