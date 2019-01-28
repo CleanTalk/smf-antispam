@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-225');
+define('CT_AGENT_VERSION', 'smf-226');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 
@@ -117,7 +117,7 @@ function cleantalk_sfw_check()
 
                 $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
-                $ct_request->post_info = json_encode(array('comment_type' => 'feedback_custom_contact_forms'));
+                $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'feedback_custom_contact_forms'));
                 $ct_request->sender_info = json_encode(
                     array(
                         'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
@@ -456,6 +456,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
                 'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
             )
         );
+        $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'register'));
 
         if (defined('CT_DEBUG') && CT_DEBUG)
             log_error('CleanTalk request: ' . var_export($ct_request, true), 'user');
@@ -565,7 +566,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                     'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
                 )
             );
-
+            $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'comment'));
             if (isset($topicOptions['id'])) {
                 
                 if(!isset($db_connection) || $db_connection === false)
@@ -660,46 +661,49 @@ function cleantalk_get_checkjs_code(){
     
     $api_key = isset($modSettings['cleantalk_api_key']) ? $modSettings['cleantalk_api_key'] : null;
     $js_keys = isset($modSettings['cleantalk_js_keys']) ? json_decode($modSettings['cleantalk_js_keys'], true) : null;
-    
-    if($js_keys == null){
-        
-        $js_key = strval(md5($api_key . $webmaster_email . time()));
-        
+
+    $keys = $js_keys['keys'];
+    $keys_checksum = md5(json_encode($keys));
+
+    $key = rand();
+    $latest_key_time = 0;
+
+    if ($keys && is_array($keys) && !empty($keys))
+    {
+        foreach ($keys as $k => $t) {
+
+            // Removing key if it's to old
+            if (time() - $t > $js_keys['js_keys_amount'] * 86400) {
+                unset($keys[$k]);
+                continue;
+            }
+
+            if ($t > $latest_key_time) {
+                $latest_key_time = $t;
+                $key = $k;
+            }
+        }
+        // Get new key if the latest key is too old
+        if (time() - $latest_key_time > $js_keys['js_key_lifetime']) {
+            $keys[$key] = time();
+        }           
+    }
+    else $keys = array($key => time());
+                
+    if (md5(json_encode($keys)) != $keys_checksum) {
         $js_keys = array(
             'keys' => array(
                 array(
-                    time() => $js_key
+                    time() => $keys
                 )
             ), // Keys to do JavaScript antispam test 
             'js_keys_amount' => 24, // JavaScript keys store days - 8 days now
             'js_key_lifetime' => 86400, // JavaScript key life time in seconds - 1 day now
         );
-        
-    }else{
-        
-        $keys_times = array();
-        
-        foreach($js_keys['keys'] as $time => $key){
-            
-            if($time + $js_keys['js_key_lifetime'] < time())
-                unset($js_keys['keys'][$time]);
-            
-            $keys_times[] = $time;
-
-        }unset($time, $key);
-        
-        if(max($keys_times) + 3600 < time()){
-            $js_key =  strval(md5($api_key . $webmaster_email . time()));
-            $js_keys['keys'][time()] = $js_key;
-        }else{
-            $js_key = $js_keys['keys'][max($keys_times)];
-        }
-        
-    }
-    
-    updateSettings(array('cleantalk_js_keys' => json_encode($js_keys)), false); 
-    
-    return $js_key; 
+        updateSettings(array('cleantalk_js_keys' => json_encode($js_keys)), false); 
+    }           
+                   
+    return $key;
 }
 
 /**
@@ -1101,9 +1105,9 @@ function cleantalk_is_valid_js()
         global $modSettings;
         
         $js_keys = isset($modSettings['cleantalk_js_keys']) ? json_decode($modSettings['cleantalk_js_keys'], true) : null;
-                
-        if($js_keys){
-            $result = in_array($_COOKIE['ct_checkjs'], $js_keys['keys']);
+        $keys = $js_keys['keys'];        
+        if($keys && is_array($keys)){
+            $result = isset($keys[$_COOKIE['ct_checkjs']]) ? 1 : 0;
         }else{
             $result = false;
         }
