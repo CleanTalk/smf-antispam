@@ -673,7 +673,7 @@ function cleantalk_get_checkjs_code(){
         foreach ($keys as $k => $t) {
 
             // Removing key if it's to old
-            if (time() - $t > $js_keys['js_keys_amount'] * 86400) {
+            if (time() - $t > (int)$js_keys['js_keys_amount'] * 86400) {
                 unset($keys[$k]);
                 continue;
             }
@@ -684,7 +684,7 @@ function cleantalk_get_checkjs_code(){
             }
         }
         // Get new key if the latest key is too old
-        if (time() - $latest_key_time > $js_keys['js_key_lifetime']) {
+        if (time() - $latest_key_time > (int)$js_keys['js_key_lifetime']) {
             $keys[$key] = time();
         }           
     }
