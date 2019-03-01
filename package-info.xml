@@ -319,10 +319,12 @@
 	<upgrade from="2.25">
 		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.25 to 2.26 version:
 			- Fix admin checking with custom contact forms option enabled 
+			- Fix JS checking
 			- Bug fixes and other minor improvements
 		</readme>
 		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.25 до 2.26:
 			- Исправлен баг с проверкой администратора с включенной опцией проверки кастомных форм
+			- Исправлена JS проверка
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
