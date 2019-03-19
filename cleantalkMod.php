@@ -129,7 +129,7 @@ function cleantalk_sfw_check()
                         'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                         'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                         'cookies_enabled'        => cleantalk_cookies_test(),
-                        'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
+                        'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
                     )
                 );
                 $ct_result = $ct->isAllowMessage($ct_request);  
@@ -453,7 +453,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
                 'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                 'cookies_enabled'        => cleantalk_cookies_test(),
-                'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
+                'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
             )
         );
         $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'register'));
@@ -563,7 +563,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                     'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                     'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                     'cookies_enabled'        => cleantalk_cookies_test(),
-                    'js_keys'                => json_encode($modSettings['cleantalk_js_keys']['keys']),
+                    'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
                 )
             );
             $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'comment'));
