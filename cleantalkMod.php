@@ -657,7 +657,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
  */
 function cleantalk_get_checkjs_code(){
     
-    global $webmaster_email, $modSettings;
+    global $modSettings;
     
     $api_key = isset($modSettings['cleantalk_api_key']) ? $modSettings['cleantalk_api_key'] : null;
     $js_keys = isset($modSettings['cleantalk_js_keys']) ? json_decode($modSettings['cleantalk_js_keys'], true) : null;
