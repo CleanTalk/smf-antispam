@@ -1287,7 +1287,7 @@ function cleantalk_buffer($buffer)
                     if(!empty($api_result['error'])){
                         $html.='<center>'
                                 .'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
-                                    .'<b>'.$error.'</b>'
+                                    .'<b>'.$api_result['error'].'</b>'
                                 .'</div>'
                                 .'<br>'
                             .'</center>';
