@@ -41,7 +41,9 @@
 <script>
 var reload_timeout = 3000;
 function set_spamFireWallCookie(cookie_name, cookie_value) {
-    document.cookie = cookie_name + '=' + escape(cookie_value) + '; path=/;{COOKIE_DOMAIN}';
+    var date = new Date;
+    date.setDate(date.getDate() + 30);    
+    document.cookie = cookie_name + "=" + escape(cookie_value) + "; path=/;expires=" + date.toUTCString() + ";{COOKIE_DOMAIN}";
     return null;
 }
 function get_current_url() {
