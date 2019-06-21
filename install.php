@@ -60,13 +60,17 @@ if ($isInstalling) {
 	updateSettings(array('cleantalk_user_token'          => isset($modSettings['cleantalk_user_token'])          ? $modSettings['cleantalk_user_token']          : ''),  false);
 	updateSettings(array('cleantalk_spam_count'          => isset($modSettings['cleantalk_spam_count'])          ? $modSettings['cleantalk_spam_count']          : '0'), false);
 	updateSettings(array('cleantalk_moderate_ip'         => isset($modSettings['cleantalk_moderate_ip'])         ? $modSettings['cleantalk_moderate_ip']         : '0'), false);
+	updateSettings(array('cleantalk_moderate'        	 => isset($modSettings['cleantalk_moderate'])         	 ? $modSettings['cleantalk_moderate']         	 : '0'), false);
 	updateSettings(array('cleantalk_show_review'         => isset($modSettings['cleantalk_show_review'])         ? $modSettings['cleantalk_show_review']         : '0'), false);
+	updateSettings(array('cleantalk_service_id'          => isset($modSettings['cleantalk_service_id'])          ? $modSettings['cleantalk_service_id']          : '0'), false);
 	updateSettings(array('cleantalk_ip_license'          => isset($modSettings['cleantalk_ip_license'])          ? $modSettings['cleantalk_ip_license']          : '0'), false);
-	
+	updateSettings(array('cleantalk_account_name_ob'     => isset($modSettings['cleantalk_account_name_ob'])     ? $modSettings['cleantalk_account_name_ob']     : '0'), false);
+
 	// Cron's settings
-	updateSettings(array('cleantalk_sfw_last_update'     => isset($modSettings['cleantalk_sfw_last_update'])     ? $modSettings['cleantalk_sfw_last_update']     : time()+86400), false);
-	updateSettings(array('cleantalk_sfw_last_logs_sent'  => isset($modSettings['cleantalk_sfw_last_logs_sent'])  ? $modSettings['cleantalk_sfw_last_logs_sent']  : time()+3600),  false);
-	updateSettings(array('cleantalk_last_account_check'  => isset($modSettings['cleantalk_last_account_check'])  ? $modSettings['cleantalk_last_account_check']  : time()+86400), false);
+	updateSettings(array('cleantalk_sfw_last_update'     => isset($modSettings['cleantalk_sfw_last_update'])     ? $modSettings['cleantalk_sfw_last_update']     : '0'), false);
+	updateSettings(array('cleantalk_sfw_last_logs_sent'  => isset($modSettings['cleantalk_sfw_last_logs_sent'])  ? $modSettings['cleantalk_sfw_last_logs_sent']  : '0'),  false);
+	updateSettings(array('cleantalk_last_account_check'  => isset($modSettings['cleantalk_last_account_check'])  ? $modSettings['cleantalk_last_account_check']  : '0'), false);
+	updateSettings(array('cleantalk_remote_calls'  		 => isset($modSettings['cleantalk_remote_calls'])  		 ? $modSettings['cleantalk_remote_calls']  		 : 	json_encode(array('sfw_update' => array('last_call' => 0), 'close_renew_banner' => array('last_call' => 0), 'sfw_send_logs' => array('last_call' => 0), 'update_plugin' => array('last_call' => 0)))), false);
 	
     //xdebug_break();
     if (!isset($db_connection) || $db_connection === false) {

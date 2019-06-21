@@ -246,26 +246,16 @@ class CleantalkHelper
 		
 		return $result;
 	}
-	
-	/**
-	 * Function gets information about renew notice
-	 *
-	 * @param string api_key
-	 * @return type
-	 */
-	static public function api_method__notice_validate_key($api_key, $do_check = true)
+
+	/*
+	*	Checking api_key
+	*	returns (boolean)
+	*/
+	static public function apbct_key_is_correct($api_key = '') 
 	{
-		$request = array(
-			'method_name' => 'notice_validate_key',
-			'auth_key' => $api_key,		
-		);
-		
-		$result = self::api_send_request($request);
-		$result = $do_check ? self::api_check_response($result, 'notice_validate_key') : $result;
-		
-		return $result;
+		return preg_match('/^[a-z\d]{3,15}$|^$/', $api_key);
 	}
-	
+
 	/**
 	 * Function gets information about renew notice
 	 *
@@ -373,28 +363,6 @@ class CleantalkHelper
 		
 		$result = self::api_send_request($request, self::URL, false, 6);
 		$result = $do_check ? self::api_check_response($result, 'spam_check_cms') : $result;
-		
-		return $result;
-	}
-	
-	/**
-	 * Function sends empty feedback for version comparison in Dashboard
-	 *
-	 * @param string api_key
-	 * @param string agent-version
-	 * @param bool perform check flag
-	 * @return mixed (STRING || array('error' => true, 'error_string' => STRING))
-	 */
-	static public function api_method_send_empty_feedback($api_key, $agent, $do_check = true){
-		
-		$request = array(
-			'method_name' => 'send_feedback',
-			'auth_key' => $api_key,
-			'feedback' => 0 . ':' . $agent,
-		);
-		
-		$result = self::api_send_request($request);
-		$result = $do_check ? self::api_check_response($result, 'send_feedback') : $result;
 		
 		return $result;
 	}

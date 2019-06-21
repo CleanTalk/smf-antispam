@@ -24,9 +24,10 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-227');
+define('CT_AGENT_VERSION', 'smf-228');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
+define('CT_REMOTE_CALL_SLEEP', 10);
 
 /**
  * CleanTalk SFW check
@@ -38,7 +39,11 @@ function cleantalk_sfw_check()
 
     if ($user_info['is_admin'])
         return;
-    
+        // Remote calls
+    if(isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam','anti-spam', 'apbct'))){
+        apbct_remote_call__perform();
+    }
+
     if (!empty($modSettings['cleantalk_api_key_is_ok']))
     {
         cleantalk_cookies_set();
@@ -898,101 +903,7 @@ function cleantalk_load()
     
     // Only for admin
     if(!empty($user_info['is_admin'])){
-        
-        // Getting key automatically
-        if(!empty($_GET['ctgetautokey'])){
-            
-            $result = CleantalkHelper::api_method__get_api_key($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
-            
-            if (empty($result['error'])){
-                            
-                // Doing noticePaidTill(), sfw update and sfw send logs via cron
-                $doing_cron = true;
-                
-                $settings_array = array(
-                    'cleantalk_api_key_is_ok' => '1',
-                    'cleantalk_api_key'       => $result['auth_key'],
-                    'cleantalk_user_token'    => empty($result['user_token']) ? '' : $result['user_token']
-                );
-                
-                updateSettings($settings_array, false);
-                
-            }
-        }
-        
-        // Settings saved
-        if(isset($_POST['cleantalk_api_key'])){
-            
-            checkSession('request');
-            
-            // Send feedback about version
-            $ct = new Cleantalk();
-            $ct->server_url = CT_SERVER_URL;
-            $ct_request = new CleantalkRequest();
-            $ct_request->auth_key = cleantalk_get_api_key();
-            $ct_request->feedback = '0:'.CT_AGENT_VERSION;
-            $ct_result = $ct->sendFeedback($ct_request);
-            unset($ct, $ct_request);
-            $curr_key = isset($modSettings['cleantalk_api_key'])?$modSettings['cleantalk_api_key']:'';
-            // Check if key is valid
-            if($_POST['cleantalk_api_key'] != $curr_key){
-                
-                $key_to_validate = strval($_POST['cleantalk_api_key']);
-                $result = CleantalkHelper::api_method__notice_validate_key($key_to_validate);
-                
-                if(empty($result['error'])){
-                    
-                    if(!empty($result['valid'])){
-                        
-                        updateSettings(
-                            array(
-                                'cleantalk_api_key_is_ok' => '1',
-                                'cleantalk_api_key' => $key_to_validate                             
-                            ),
-                            false
-                        );                      
-                    }else{
-                        updateSettings(
-                            array(
-                                'cleantalk_api_key_is_ok' => 0,
-                                'cleantalk_show_notice'   => 0,
-                                'cleantalk_renew'         => 0,
-                                'cleantalk_trial'         => 0,
-                                'cleantalk_user_token'    => '', 
-                                'cleantalk_spam_count'    => 0,
-                                'cleantalk_moderate_ip'   => 0,
-                                'cleantalk_show_review'   => 0,
-                                'cleantalk_ip_license'    => 0,
-                            )
-                        );
-                    }
-                }else{
-                    updateSettings(
-                            array(
-                                'cleantalk_api_key_is_ok' => 0,
-                                'cleantalk_show_notice'   => 0,
-                                'cleantalk_renew'         => 0,
-                                'cleantalk_trial'         => 0,
-                                'cleantalk_user_token'    => '', 
-                                'cleantalk_spam_count'    => 0,
-                                'cleantalk_moderate_ip'   => 0,
-                                'cleantalk_show_review'   => 0,
-                                'cleantalk_ip_license'    => 0,
-                            )
-                        );
-                }
-            }
-            
-            // If key is valid doing noticePaidTill(), sfw update and sfw send logs via cron
-            if(!empty($modSettings['cleantalk_api_key_is_ok']))
-            {
-                if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
-                    updateSettings(array('cleantalk_sfw' => '1'), false);                                       
-                $doing_cron = true;
-            }
-            
-        }
-        
+               
         // Deleting selected users
         if(isset($_POST['ct_del_user']))
         {
@@ -1034,49 +945,46 @@ function cleantalk_load()
     }
     
     /* Cron for update SFW */
-    if(!empty($modSettings['cleantalk_sfw']) && (!empty($doing_cron) || (!empty($modSettings['cleantalk_api_key_is_ok']) && ((isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time()) || !isset($modSettings['cleantalk_sfw_last_update']) ) ))){
+    if(isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == '1' && isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && isset($modSettings['cleantalk_sfw_last_update']) && $modSettings['cleantalk_sfw_last_update'] < time() - 86400){
         $sfw = new CleantalkSFW;
         $sfw->sfw_update($modSettings['cleantalk_api_key']);
         unset($sfw);
-        updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);
+        updateSettings(array('cleantalk_sfw_last_update' => time()), false);
         
     }
     
     /* Cron for send SFW logs */
-    if(!empty($modSettings['cleantalk_sfw']) && (!empty($doing_cron) || (!empty($modSettings['cleantalk_api_key_is_ok']) &&  ((isset($modSettings['cleantalk_sfw_last_logs_sent']) && $modSettings['cleantalk_sfw_last_logs_sent'] < time()) || !isset($modSettings['cleantalk_sfw_last_logs_sent']) ) ))){
+    if(isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == '1' && isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && isset($modSettings['cleantalk_sfw_last_logs_sent']) && $modSettings['cleantalk_sfw_last_logs_sent'] < time() - 3600){
         
         $sfw = new CleantalkSFW;
         $sfw->send_logs($modSettings['cleantalk_api_key']);
         unset($sfw);
-        updateSettings(array('cleantalk_sfw_last_logs_sent' => time()+3600), false);
+        updateSettings(array('cleantalk_sfw_last_logs_sent' => time()), false);
         
     }
     
     /* Cron for account status */
-    if(!empty($modSettings['cleantalk_api_key_is_ok']) && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time() || !empty($doing_cron)){
+    if(isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time() - 86400){
         
         $result = CleantalkHelper::api_method__notice_paid_till($modSettings['cleantalk_api_key']);
         
         if(empty($result['error'])){
             $settings_array = array(
-                'cleantalk_show_notice'        => (int)    $result['show_notice'],
-                'cleantalk_renew'              => (int)    $result['renew'],      
-                'cleantalk_trial'              => (int)    $result['trial'],      
-                'cleantalk_user_token'         => (string) $result['user_token'], 
-                'cleantalk_spam_count'         => (int)    $result['spam_count'], 
-                'cleantalk_moderate_ip'        => (int)    $result['moderate_ip'],
-                'cleantalk_show_review'        => (int)    $result['show_review'],
-                'cleantalk_ip_license'         => (int)    $result['ip_license'],
-                'cleantalk_last_account_check' => time()+86400
+                'cleantalk_show_notice'   => isset($result['show_notice']) ? $result['show_notice'] : '0',
+                'cleantalk_renew'         => isset($result['renew']) ? $result['renew'] : '0',
+                'cleantalk_trial'         => isset($result['trial']) ? $result['trial'] : '0',
+                'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '', 
+                'cleantalk_spam_count'    => isset($result['spam_count']) ? $result['spam_count'] : '0',
+                'cleantalk_moderate_ip'   => isset($result['moderate_ip']) ? $result['moderate_ip'] : '0',
+                'cleantalk_moderate'      => isset($result['moderate']) ? $result['moderate'] : '0',
+                'cleantalk_show_review'   => isset($result['show_review']) ? $result['show_review'] : '0',
+                'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
+                'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',  
+                'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
+                'cleantalk_last_account_check' => time(), 
             );
-        }else{
-            $settings_array = array(
-                'cleantalk_last_account_check' => time()+3600
-            );
-        }
-        
-        updateSettings($settings_array, false);
-        
+            updateSettings($settings_array, false);
+        }        
     }
     
     // Add "tell others" templates
@@ -1113,7 +1021,51 @@ function cleantalk_is_valid_js()
     
     return  $result;
 }
+/**
+* Remote calls
+*/
+function apbct_remote_call__perform()
+{
+    global $modSettings;
 
+    $remote_calls_config = json_decode($modSettings['cleantalk_remote_calls'],true);
+    $remote_action = $_GET['spbc_remote_call_action'];
+
+    if(array_key_exists($remote_action, $remote_calls_config)){
+                
+        if(time() - $remote_calls_config[$remote_action]['last_call'] > CT_REMOTE_CALL_SLEEP){
+            $remote_calls_config[$remote_action]['last_call'] = time();
+            updateSettings(array('cleantalk_remote_calls' => json_encode($remote_calls_config)), false);
+
+            if(strtolower($_GET['spbc_remote_call_token']) == strtolower(md5($modSettings['cleantalk_api_key']))){
+
+                // Close renew banner
+                if($_GET['spbc_remote_call_action'] == 'close_renew_banner'){
+                    die('OK');
+                // SFW update
+                }elseif($_GET['spbc_remote_call_action'] == 'sfw_update'){
+                    $sfw = new CleantalkSFW();                  
+                    $result = $sfw->sfw_update($modSettings['cleantalk_api_key']);
+                    updateSettings(array('cleantalk_sfw_last_update' => time()), false);
+                    die(empty($result['error']) ? 'OK' : 'FAIL '.json_encode(array('error' => $result['error_string'])));
+                // SFW send logs
+                }elseif($_GET['spbc_remote_call_action'] == 'sfw_send_logs'){
+                    $sfw = new CleantalkSFW();                  
+                    $result = $sfw->send_logs($modSettings['cleantalk_api_key']);
+                    updateSettings(array('cleantalk_sfw_last_logs_sent' => time()), false);
+                    die(empty($result['error']) ? 'OK' : 'FAIL '.json_encode(array('error' => $result['error_string'])));
+                // Update plugin
+                }elseif($_GET['spbc_remote_call_action'] == 'update_plugin'){
+                    //add_action('wp', 'apbct_update', 1);
+                }else
+                    die('FAIL '.json_encode(array('error' => 'UNKNOWN_ACTION_2')));
+            }else
+                die('FAIL '.json_encode(array('error' => 'WRONG_TOKEN')));
+        }else
+            die('FAIL '.json_encode(array('error' => 'TOO_MANY_ATTEMPTS')));
+    }else
+        die('FAIL '.json_encode(array('error' => 'UNKNOWN_ACTION')));
+}
 /**
  * Above content. Banners
  */
@@ -1391,29 +1343,18 @@ function cleantalk_buffer($buffer)
         
     // Key auto getting, Key buttons, Control panel button 
         
-        $cleantalk_key_html = '';
-        
-        if(!isset($modSettings['cleantalk_api_key']))
-            $modSettings['cleantalk_api_key'] = '';
-        
-        $cleantalk_key_html .= '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text">';
-        
-        if(!isset($modSettings['cleantalk_api_key_is_ok'])){
-            
-            $result = CleantalkHelper::api_method__notice_validate_key($modSettings['cleantalk_api_key']);        
-            
-            if(empty($result['error'])){
-                
-                if(isset($result['valid']) && $result['valid'] == '1')
-                    updateSettings(array('cleantalk_api_key_is_ok' => '1'), true);
-                else
-                    updateSettings(array('cleantalk_api_key_is_ok' => '0'), true);
-                    
-            }
+        $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text">';
+        if (isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1')
+        {
+            $cleantalk_key_html .= "&nbsp<span style='color: green;'>".$txt['cleantalk_key_valid']."</span>";
+            if (isset($modSettings['cleantalk_account_name_ob']) && $modSettings['cleantalk_account_name_ob'] != '')
+                $cleantalk_key_html.= "<br><b>".$txt['cleantalk_account_name_ob']." ".$modSettings['cleantalk_account_name_ob']."</b>";
+            elseif (isset($modSettings['cleantalk_moderate_ip']) && $modSettings['cleantalk_moderate_ip'] == '1' && isset($modSettings['cleantalk_ip_license']) && $modSettings['cleantalk_ip_license'] != '')
+                $cleantalk_key_html.= "<br><b>".$txt['cleantalk_moderate_ip']." ".$modSettings['cleantalk_ip_license']."</b>";
+            $cleantalk_key_html .= '<br><br><a target="_blank" href="https://cleantalk.org/my?user_token='.$modSettings['cleantalk_user_token'].'&cp_mode=antispam" style="display: inline-block;"><input type="button" value="'.$txt['cleantalk_get_statistics'].'"></a><br><br>';            
         }
-        
-        if($modSettings['cleantalk_api_key_is_ok'] == '0' || $modSettings['cleantalk_api_key'] == ''){
-            
+        else
+        {
             $cleantalk_key_html .= "&nbsp<span style='color: red;'>".$txt['cleantalk_key_not_valid']."</span>";
             $cleantalk_key_html .= "<br><br><a target='_blank' href='https://cleantalk.org/register?platform=smf&email=".urlencode($user_info['email'])."&website=".urlencode($_SERVER['SERVER_NAME'])."&product_name=antispam'>
                     <input type='button' value='".$txt['cleantalk_get_access_manually']."' />
@@ -1421,13 +1362,7 @@ function cleantalk_buffer($buffer)
             $cleantalk_key_html .= '<input name="spbc_get_apikey_auto" type="submit" class="spbc_manual_link" value="'.$txt['cleantalk_get_access_automatically'].'" onclick="location.href=location.href.replace(\'&finishcheck=1\',\'\').replace(\'&ctcheckspam=1\',\'\').replace(\'&ctgetautokey=1\',\'\')+\'&ctgetautokey=1\';return false;"/>';
             $cleantalk_key_html .= "<br/><br/>";
             $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'>" . sprintf($txt['cleantalk_admin_email_will_be_used'], $user_info['email']) . "</div>";
-            $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";
-            
-        }else{
-            
-            $cleantalk_key_html .= "&nbsp<span style='color: green;'>".$txt['cleantalk_key_valid']."</span>";
-            $cleantalk_key_html .= '<br><br><a target="_blank" href="https://cleantalk.org/my?user_token='.$modSettings['cleantalk_user_token'].'&cp_mode=antispam" style="display: inline-block;"><input type="button" value="'.$txt['cleantalk_get_statistics'].'"></a><br><br>';
-            
+            $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";            
         }
         
         $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="[\da-zA-Z]{0,}" class="input_text"\s?\/?>/',$cleantalk_key_html, $buffer, 1);
