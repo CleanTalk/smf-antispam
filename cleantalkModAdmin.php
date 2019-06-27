@@ -40,7 +40,7 @@ function cleantalk_admin_action(&$subActions)
  */
 function cleantalk_general_mod_settings($return_config = false)
 {
-    global $txt, $scripturl, $context, $boardurl, $smcFunc;
+    global $user_info, $txt, $scripturl, $context, $boardurl, $smcFunc;
 
     $context['page_title'] = $txt['cleantalk_settings'];
     $context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=cleantalk';
@@ -81,7 +81,7 @@ function cleantalk_general_mod_settings($return_config = false)
     if ($return_config) {
         return $config_vars;
     }
-    if (count($_POST))
+    if (count($_POST) || !empty($_GET['ctgetautokey']))
     {
         $key_is_valid = false;
         $key_is_ok = false;    
@@ -89,7 +89,7 @@ function cleantalk_general_mod_settings($return_config = false)
         if(!empty($_GET['ctgetautokey'])){
             
             $result = CleantalkHelper::api_method__get_api_key($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
-            
+
             if (empty($result['error'])){
                             
                 // Doing noticePaidTill(), sfw update and sfw send logs via cron
@@ -107,6 +107,7 @@ function cleantalk_general_mod_settings($return_config = false)
         if ($key_is_valid)
         {
             $result = CleantalkHelper::api_method__notice_paid_till($save_key);
+            
             if (empty($result['error']))
             {
                 $key_is_ok = true;
