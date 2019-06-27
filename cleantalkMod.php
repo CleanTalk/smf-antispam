@@ -1365,7 +1365,7 @@ function cleantalk_buffer($buffer)
             $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";            
         }
         
-        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="[\da-zA-Z]{0,}" class="input_text"\s?\/?>/',$cleantalk_key_html, $buffer, 1);
+        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text"\s?\/?>/',$cleantalk_key_html, $buffer, 1);
         
     }
     
