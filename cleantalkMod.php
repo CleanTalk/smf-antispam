@@ -371,6 +371,12 @@ function cleantalk_cookies_set() {
         'check_value' => cleantalk_get_api_key(),
     );
 
+    // Submit time
+    $ct_timestamp = time();
+    setcookie('ct_timestamp', $ct_timestamp, 0, '/');
+    $cookie_test_value['cookies_names'][] = 'ct_timestamp';
+    $cookie_test_value['check_value'] .= $ct_timestamp;
+
     // Pervious referer
     if(!empty($_SERVER['HTTP_REFERER'])){
         setcookie('ct_prev_referer', $_SERVER['HTTP_REFERER'], 0, '/');
@@ -846,8 +852,8 @@ function cleantalk_get_form_submit_time()
     {
         if (isset($_SESSION['ct_form_start_time']))
             return time() - intval($_SESSION['ct_form_start_time']);
-        elseif (isset($_COOKIE['ct_ps_timestamp']))
-            return time() - intval($_COOKIE['ct_ps_timestamp']);        
+        elseif (isset($_COOKIE['ct_timestamp']))
+            return time() - intval($_COOKIE['ct_timestamp']);        
     }
     return null;
 }
