@@ -474,7 +474,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
         if($ct_result->errno != 0 && !cleantalk_is_valid_js())
         {
             cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
-            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
             return;
         }
 
@@ -503,7 +503,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
             // this is bot, stop registration
             cleantalk_log('deny registration' . strip_tags($ct_result->comment));
             cleantalk_after_create_topic('Deny registration. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
-            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment), false);
+            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
         } else {
             // all ok, only logging
             cleantalk_log('allow regisration for "' . $regOptions['username'] . '"');
@@ -620,7 +620,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
              * @var CleantalkResponse $ct_result CleanTalk API call result
              */
             $ct_result = $ct->isAllowMessage($ct_request);
-            $ct_answer_text = 'CleanTalk: ' . strip_tags($ct_result->comment);
+            $ct_answer_text = 'CleanTalk: ' . strip_tags($ct_result->comment, "<p><a>");
 
             if($ct_result->errno != 0 && !cleantalk_is_valid_js()){
                 cleantalk_log('deny post (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
