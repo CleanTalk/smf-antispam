@@ -512,7 +512,81 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     }
 
 }
+function cleantalk_check_personal_messages($recipients, $from, $subject, $message)
+{
+    global $language, $user_info, $modSettings, $smcFunc;
+    
+    if (SMF == 'SSI')
+        return;
 
+    if(!$user_info['is_admin'] && $modSettings['cleantalk_check_personal_messages'])
+    {
+        if (isset($from))
+        {
+            $sql = "SELECT email_address FROM {db_prefix}members WHERE member_name='".$from."'";
+            $result = $smcFunc['db_query']('', $sql, Array());
+            while ($email_address = $smcFunc['db_fetch_assoc']($result))
+                $sender_email = $email_address['email_address'];
+        }
+        $ct = new Cleantalk();
+        $ct->server_url = CT_SERVER_URL;
+
+        $ct_request = new CleantalkRequest();
+        $ct_request->auth_key = cleantalk_get_api_key();
+
+        $ct_request->response_lang = 'en'; // SMF use any charset and language
+
+        $ct_request->agent = CT_AGENT_VERSION;
+
+        $ct_request->sender_email = isset($sender_email) ? $sender_email : '';
+
+        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
+        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
+        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+
+        $ct_request->sender_nickname = isset($from) ? $from : '';
+        $ct_request->message = isset($subject) ? $subject."\n".$message : $message;
+
+        $ct_request->submit_time = cleantalk_get_form_submit_time();
+
+        $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
+
+        $ct_request->sender_info = json_encode(
+            array(
+                'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
+                'cms_lang'               => substr($language, 0, 2),                                            
+                'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
+                'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
+                'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
+                'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
+                'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
+                'cookies_enabled'        => cleantalk_cookies_test(),
+                'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
+            )
+        );
+        $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'personal_message'));      
+        $ct_result = $ct->isAllowMessage($ct_request); 
+
+        if($ct_result->errno != 0 && !cleantalk_is_valid_js())
+        {
+            cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
+            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
+            return;
+        } 
+
+        if ($ct_result->allow == 0){
+            // this is bot, stop registration
+            cleantalk_log('deny personal message' . strip_tags($ct_result->comment));
+            cleantalk_after_create_topic('Deny personal message. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
+            fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
+        } else {
+            // all ok, only logging
+            cleantalk_log('allow personal message for "' . $from . '"');
+            cleantalk_after_create_topic('Allow personal message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
+        }               
+    }
+}
 /**
  * Cleantalk check posts function
  * @param array $msgOptions

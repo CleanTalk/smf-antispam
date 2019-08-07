@@ -21,6 +21,7 @@ $hooks = array(
     'integrate_admin_include'        => '$sourcedir/cleantalk/cleantalkModAdmin.php',
     'integrate_admin_areas'          => 'cleantalk_admin_area',
     'integrate_modify_modifications' => 'cleantalk_admin_action',
+    'integrate_personal_message'	 => 'cleantalk_check_personal_messages'
 );
 
 $isInstalling = empty($context['uninstalling']);

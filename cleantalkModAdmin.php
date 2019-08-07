@@ -68,6 +68,7 @@ function cleantalk_general_mod_settings($return_config = false)
         array('title', 'cleantalk_settings'),
         array('text', 'cleantalk_api_key'),
         array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']),
+        array('check', 'cleantalk_check_personal_messages', 'subtext' => $txt['cleantalk_check_personal_messages_postinput']),
         array('check', 'cleantalk_automod', 'subtext' => $txt['cleantalk_automod_postinput']),
         array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl)),
         array('check', 'cleantalk_email_notifications', 'subtext' => $txt['cleantalk_email_notifications_postinput']),
