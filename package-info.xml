@@ -25,6 +25,8 @@
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -37,6 +39,8 @@
 		<modification format="xml" type="file" reverse="true">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/russian.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file" reverse="true">languages/spanish.xml</modification>
+		<modification format="xml" type="file" reverse="true">languages/spanish-utf8.xml</modification>
 		<remove-dir name="$sourcedir/cleantalk/"/>
 	</uninstall>
 	<upgrade from="1.80 - 2.11">
@@ -88,6 +92,8 @@
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -122,7 +128,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -149,7 +157,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>	
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>	
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -175,7 +185,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>	
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>	
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -200,7 +212,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -222,7 +236,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -246,7 +262,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -268,7 +286,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -294,7 +314,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -326,7 +348,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -355,7 +379,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>		
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>		
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -380,7 +406,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>			
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>			
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -405,7 +433,9 @@
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
 		<modification format="xml" type="file">languages/russian.xml</modification>
-		<modification format="xml" type="file">languages/russian-utf8.xml</modification>			
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish.xml</modification>
+		<modification format="xml" type="file">languages/spanish-utf8.xml</modification>			
 		<database>install.php</database>
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
