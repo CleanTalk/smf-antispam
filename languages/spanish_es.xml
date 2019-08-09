@@ -4,7 +4,7 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<version>1.02</version>
-	<file name="$languagedir/Modifications.spanish-utf8.php" error="skip">
+	<file name="$languagedir/Modifications.spanish_es.php" error="skip">
 		<operation>
 			<search position="end"/>
 			<add><![CDATA[
@@ -73,7 +73,7 @@ $txt['cleantalk_banner_bad_key_2'] = 'Mod CleanTalk';
 ]]></add>
 		</operation>
 	</file>
-	<file name="$languagedir/EmailTemplates.spanish-utf8.php" error="skip">
+	<file name="$languagedir/EmailTemplates.spanish_es.php" error="skip">
 		<operation>
 			<search position="replace"><![CDATA[{APPROVALLINK}]]></search>
 			<add><![CDATA[
