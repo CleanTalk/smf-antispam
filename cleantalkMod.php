@@ -519,7 +519,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
     if (SMF == 'SSI')
         return;
 
-    if(!$user_info['is_admin'] && $modSettings['cleantalk_check_personal_messages'])
+    if(!$user_info['is_admin'] && $modSettings['cleantalk_check_personal_messages'] && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)
     {
         if (isset($from))
         {
