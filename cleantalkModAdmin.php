@@ -107,7 +107,7 @@ function cleantalk_general_mod_settings($return_config = false)
         }
         if ($key_is_valid)
         {
-            $result = CleantalkHelper::api_method__notice_paid_till($save_key);
+            $result = CleantalkHelper::api_method__notice_paid_till($save_key, preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
             
             if (empty($result['error']))
             {
