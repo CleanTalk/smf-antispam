@@ -1416,8 +1416,9 @@ function cleantalk_buffer($buffer)
         $buffer = str_replace("%CLEANTALK_CHECK_USERS%", $html, $buffer);
         
     // Key auto getting, Key buttons, Control panel button 
-        
-        $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text">';
+
+	    $cleantalk_api_key = isset( $modSettings['cleantalk_api_key'] ) ? $modSettings['cleantalk_api_key'] : '';
+        $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'" class="input_text">';
         if (isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1')
         {
             $cleantalk_key_html .= "&nbsp<span style='color: green;'>".$txt['cleantalk_key_valid']."</span>";
@@ -1439,7 +1440,7 @@ function cleantalk_buffer($buffer)
             $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";            
         }
         
-        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text"\s?\/?>/',$cleantalk_key_html, $buffer, 1);
+        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'" class="input_text"\s?\/?>/',$cleantalk_key_html, $buffer, 1);
         
     }
     
