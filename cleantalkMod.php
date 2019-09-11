@@ -946,9 +946,10 @@ function cleantalk_after_create_topic($message)
 {
     global $sourcedir, $modSettings;
     
-    if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications']) {
+    if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications'] && $message) {
         require_once($sourcedir . '/Subs-Admin.php');
-        
+        if (is_array($message))
+            $message = implode("\n", $message);
         emailAdmins('send_email', array('EMAILSUBJECT' => '[Cleantalk antispam for the board]', 'EMAILBODY' => "CleanTalk antispam checking result: \n$message"));
     }
 }
