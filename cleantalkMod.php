@@ -1348,7 +1348,7 @@ function cleantalk_buffer($buffer)
                                     ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
                                         for($i = 1; $i <= $pages; $i++){
                                             $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
-                                                    ."<a href='".preg_replace('/(&ctcheckspam=.*|&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i'>"
+                                                    ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
                                                         .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
                                                     ."</a>"
                                                 ."</li>";
@@ -1396,7 +1396,7 @@ function cleantalk_buffer($buffer)
                                     ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
                                         for($i = 1; $i <= $pages; $i++){
                                             $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
-                                                    ."<a href='".preg_replace('/(&ctcheckspam=.*|&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i'>"
+                                                    ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
                                                         .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
                                                     ."</a>"
                                                 ."</li>";
