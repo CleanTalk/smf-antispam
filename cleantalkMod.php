@@ -269,15 +269,16 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
                 }unset($needle);
                 
 
-                // Decodes URL-encoded data to string.
-                $value = urldecode($value); 
+                // Removes whitespaces
+				$value = urldecode( trim( $value ) ); // Fully cleaned message
+				$value_for_email = trim( $value );
 
-                // Email
-                if (!$email && preg_match("/^\S+@\S+\.\S+$/", $value)){
-                    $email = $value;
-                    
-                // Names
-                }elseif (preg_match("/name/i", $key)){
+				// Email
+				if ( ! $email && preg_match( "/^\S+@\S+\.\S+$/", $value_for_email ) ) {
+					$email = $value_for_email;
+
+				// Names
+				}elseif (preg_match("/name/i", $key)){
                     
                     preg_match("/(first.?name)?(name.?first)?(forename)?/", $key, $match_forename);
                     preg_match("/(last.?name)?(family.?name)?(second.?name)?(surname)?/", $key, $match_surname);
