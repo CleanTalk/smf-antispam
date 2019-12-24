@@ -111,31 +111,44 @@ function cleantalk_general_mod_settings($return_config = false)
             
             if (empty($result['error']))
             {
-                $key_is_ok = true;
-                $settings_array = array(
-                    'cleantalk_api_key'       => ($save_key) ? $save_key : '',
-                    'cleantalk_show_notice'   => isset($result['show_notice']) ? $result['show_notice'] : '0',
-                    'cleantalk_renew'         => isset($result['renew']) ? $result['renew'] : '0',
-                    'cleantalk_trial'         => isset($result['trial']) ? $result['trial'] : '0',
-                    'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '', 
-                    'cleantalk_spam_count'    => isset($result['spam_count']) ? $result['spam_count'] : '0',
-                    'cleantalk_moderate_ip'   => isset($result['moderate_ip']) ? $result['moderate_ip'] : '0',
-                    'cleantalk_moderate'      => isset($result['moderate']) ? $result['moderate'] : '0',
-                    'cleantalk_show_review'   => isset($result['show_review']) ? $result['show_review'] : '0',
-                    'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
-                    'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',  
-                    'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
-                    'cleantalk_last_account_check' => time(),              
-                );
-                if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
-                {
-                    $settings_array['cleantalk_sfw'] = '1';
-                    $settings_array['cleantalk_sfw_last_update'] = time();
-                    $settings_array['cleantalk_sfw_last_logs_sent'] = time();
-                    $sfw = new CleantalkSFW;
-                    $sfw->sfw_update($save_key);
-                    $sfw->send_logs($save_key);
+                if( $result['valid'] ) {
+                    $key_is_ok = true;
+                    $settings_array = array(
+                        'cleantalk_api_key'       => ($save_key) ? $save_key : '',
+                        'cleantalk_show_notice'   => isset($result['show_notice']) ? $result['show_notice'] : '0',
+                        'cleantalk_renew'         => isset($result['renew']) ? $result['renew'] : '0',
+                        'cleantalk_trial'         => isset($result['trial']) ? $result['trial'] : '0',
+                        'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '',
+                        'cleantalk_spam_count'    => isset($result['spam_count']) ? $result['spam_count'] : '0',
+                        'cleantalk_moderate_ip'   => isset($result['moderate_ip']) ? $result['moderate_ip'] : '0',
+                        'cleantalk_moderate'      => isset($result['moderate']) ? $result['moderate'] : '0',
+                        'cleantalk_show_review'   => isset($result['show_review']) ? $result['show_review'] : '0',
+                        'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
+                        'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',
+                        'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
+                        'cleantalk_last_account_check' => time(),
+                    );
+                    if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
+                    {
+                        $settings_array['cleantalk_sfw'] = '1';
+                        $settings_array['cleantalk_sfw_last_update'] = time();
+                        $settings_array['cleantalk_sfw_last_logs_sent'] = time();
+                        $sfw = new CleantalkSFW;
+                        $sfw->sfw_update($save_key);
+                        $sfw->send_logs($save_key);
+                    }
                 }
+                else
+                {
+                    // @ToDo have to handle errors!
+                    // return array('error' => 'KEY_IS_NOT_VALID');
+                }
+
+            }
+            else
+            {
+                // @ToDo have to handle errors!
+                // return array('error' => $result);
             }
         }
         $settings_array['cleantalk_api_key_is_ok'] = ($key_is_ok) ? '1' : '0';
