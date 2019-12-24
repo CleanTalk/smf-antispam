@@ -467,16 +467,17 @@
 			you are being redirected to this mod configuration settings.
 		</redirect>			
 	</upgrade>
-	<upgrade from="2.28">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.30 to 2.30 version:
+	<upgrade from="2.29">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.29 to 2.30 version:
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.30 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.29 до 2.30:
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
 		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
+		<require-file name="lib/phpFix.php" destination="$sourcedir/cleantalk">Fix for old PHP versions</require-file>
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
