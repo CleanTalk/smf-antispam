@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-229');
+define('CT_AGENT_VERSION', 'smf-230');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
@@ -83,6 +83,7 @@ function cleantalk_sfw_check()
             && $_SERVER['REQUEST_METHOD'] == 'POST'
             && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false 
             && strpos($_SERVER['REQUEST_URI'], 'action=register') === false
+            && strpos($_SERVER['REQUEST_URI'], 'action=profile') === false
             && strpos($_SERVER['REQUEST_URI'], 'action=signup') === false
             && strpos($_SERVER['REQUEST_URI'], 'action=login') === false
             && strpos($_SERVER['REQUEST_URI'], 'action=post') === false
@@ -269,15 +270,16 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
                 }unset($needle);
                 
 
-                // Decodes URL-encoded data to string.
-                $value = urldecode($value); 
+                // Removes whitespaces
+				$value = urldecode( trim( $value ) ); // Fully cleaned message
+				$value_for_email = trim( $value );
 
-                // Email
-                if (!$email && preg_match("/^\S+@\S+\.\S+$/", $value)){
-                    $email = $value;
-                    
-                // Names
-                }elseif (preg_match("/name/i", $key)){
+				// Email
+				if ( ! $email && preg_match( "/^\S+@\S+\.\S+$/", $value_for_email ) ) {
+					$email = $value_for_email;
+
+				// Names
+				}elseif (preg_match("/name/i", $key)){
                     
                     preg_match("/(first.?name)?(name.?first)?(forename)?/", $key, $match_forename);
                     preg_match("/(last.?name)?(family.?name)?(second.?name)?(surname)?/", $key, $match_surname);
@@ -519,7 +521,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
     if (SMF == 'SSI')
         return;
 
-    if(!$user_info['is_admin'] && $modSettings['cleantalk_check_personal_messages'] && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)
+    if(!$user_info['is_admin'] && (isset($modSettings['cleantalk_check_personal_messages']) && $modSettings['cleantalk_check_personal_messages']) && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)
     {
         if (isset($from))
         {
@@ -752,7 +754,7 @@ function cleantalk_get_checkjs_code(){
         foreach ($keys as $k => $t) {
 
             // Removing key if it's to old
-            if (time() - $t > $js_keys['js_keys_amount'] * 86400) {
+            if (time() - (int)$t > $js_keys['js_keys_amount'] * 86400) {
                 unset($keys[$k]);
                 continue;
             }
@@ -763,7 +765,7 @@ function cleantalk_get_checkjs_code(){
             }
         }
         // Get new key if the latest key is too old
-        if (time() - $latest_key_time > $js_keys['js_key_lifetime']) {
+        if (time() - (int)$latest_key_time > $js_keys['js_key_lifetime']) {
             $keys[$key] = time();
         }           
     }
@@ -946,9 +948,10 @@ function cleantalk_after_create_topic($message)
 {
     global $sourcedir, $modSettings;
     
-    if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications']) {
+    if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications'] && $message) {
         require_once($sourcedir . '/Subs-Admin.php');
-        
+        if (is_array($message))
+            $message = implode("\n", $message);
         emailAdmins('send_email', array('EMAILSUBJECT' => '[Cleantalk antispam for the board]', 'EMAILBODY' => "CleanTalk antispam checking result: \n$message"));
     }
 }
@@ -1347,7 +1350,7 @@ function cleantalk_buffer($buffer)
                                     ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
                                         for($i = 1; $i <= $pages; $i++){
                                             $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
-                                                    ."<a href='".preg_replace('/(&ctcheckspam=.*|&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i'>"
+                                                    ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
                                                         .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
                                                     ."</a>"
                                                 ."</li>";
@@ -1395,7 +1398,7 @@ function cleantalk_buffer($buffer)
                                     ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
                                         for($i = 1; $i <= $pages; $i++){
                                             $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
-                                                    ."<a href='".preg_replace('/(&ctcheckspam=.*|&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i'>"
+                                                    ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
                                                         .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
                                                     ."</a>"
                                                 ."</li>";
@@ -1417,7 +1420,8 @@ function cleantalk_buffer($buffer)
         
     // Key auto getting, Key buttons, Control panel button 
         
-        $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text">';
+        $cleantalk_api_key = isset( $modSettings['cleantalk_api_key'] ) ? $modSettings['cleantalk_api_key'] : '';
+        $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'" class="input_text">';
         if (isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1')
         {
             $cleantalk_key_html .= "&nbsp<span style='color: green;'>".$txt['cleantalk_key_valid']."</span>";
@@ -1439,7 +1443,7 @@ function cleantalk_buffer($buffer)
             $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";            
         }
         
-        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$modSettings['cleantalk_api_key'].'" class="input_text"\s?\/?>/',$cleantalk_key_html, $buffer, 1);
+        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'"\s?(class="input_text")?\s?\/?>/',$cleantalk_key_html, $buffer, 1);
         
     }
     
