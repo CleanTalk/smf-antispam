@@ -9,9 +9,13 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
+use CleantalkAP\Variables\Post;
+
 if (!defined('SMF')) {
     die('Hacking attempt...');
 }
+
+require_once(dirname(__FILE__) . '/lib/autoloader.php');
 
 // Fixes for old PHP versions
 require_once(dirname(__FILE__) . '/phpFix.php');
@@ -982,7 +986,7 @@ function cleantalk_load()
     if(!empty($user_info['is_admin'])){
                
         // Deleting selected users
-        if(isset($_POST['ct_del_user']))
+        if(Post::get('ct_del_user'))
         {
             checkSession('request');
             
@@ -991,7 +995,7 @@ function cleantalk_load()
             
             if (isset($db_connection) && $db_connection != false)
             {
-                foreach($_POST['ct_del_user'] as $key=>$value)
+                foreach(Post::get('ct_del_user') as $key=>$value)
                 {
                     $result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array('db_error_skip' => true));
                     $result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array('db_error_skip' => true));
@@ -1001,7 +1005,7 @@ function cleantalk_load()
         }
         
         // Deleting all users
-        if(isset($_POST['ct_delete_all']))
+        if(Post::get('ct_delete_all'))
         {
             checkSession('request');
             
@@ -1222,12 +1226,12 @@ function cleantalk_buffer($buffer)
 {
     
     global $modSettings, $user_info, $smcFunc, $txt, $forum_version, $db_connection;
-        
+    
     if (SMF == 'SSI')
         return $buffer;
 
-    if($user_info['is_admin'] && isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
-        
+    if(isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
+    	
         if(strpos($forum_version, 'SMF 2.0')===false){
             
             $html='';
