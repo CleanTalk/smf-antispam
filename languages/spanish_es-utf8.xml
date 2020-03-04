@@ -12,6 +12,7 @@
 $txt['cleantalk_name'] = 'Antispam por CleanTalk';
 $txt['cleantalk_settings'] = 'Ajustes del Mod Antispam por CleanTalk Mod';
 $txt['cleantalk_api_key'] = 'Clave de Acceso';
+$txt['cleantalk_check_registrations'] = 'Activar verificación de registro de spam';
 $txt['cleantalk_get_access_manually'] = 'Obtener la clave de acceso manualmente';
 $txt['cleantalk_get_access_key_or'] = 'o';
 $txt['cleantalk_get_access_automatically'] = 'Obtener a clave de acceso automáticamente';

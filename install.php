@@ -43,6 +43,7 @@ if ($isInstalling) {
 	
 	// Cleantalk's settings. Getting and set previous valuse, or set default valuse.
 	updateSettings(array('cleantalk_api_key'             => isset($modSettings['cleantalk_api_key'])             ? $modSettings['cleantalk_api_key']             : ''),  false);
+	updateSettings(array('cleantalk_check_registrations' => isset($modSettings['cleantalk_check_registrations']) ? $modSettings['cleantalk_check_registrations'] : '1'),  false);
 	updateSettings(array('cleantalk_first_post_checking' => isset($modSettings['cleantalk_first_post_checking']) ? $modSettings['cleantalk_first_post_checking'] : '1'), false);
 	updateSettings(array('cleantalk_logging'             => isset($modSettings['cleantalk_logging'])             ? $modSettings['cleantalk_logging']             : '0'), false);
 	updateSettings(array('cleantalk_tell_others'         => isset($modSettings['cleantalk_tell_others'])         ? $modSettings['cleantalk_tell_others']         : '1'), false);

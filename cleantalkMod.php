@@ -28,7 +28,7 @@ require_once(dirname(__FILE__) . '/CleantalkHelper.php');
 require_once(dirname(__FILE__) . '/CleantalkSFW.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-230');
+define('CT_AGENT_VERSION', 'smf-231');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
@@ -426,8 +426,12 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     if (SMF == 'SSI')
         return;
 
-    if ($regOptions['interface'] == 'admin')
+    if (
+    	$regOptions['interface'] == 'admin' && // Skip admin
+	    $modSettings['cleantalk_check_registrations'] // Skip if registrations check are disabled
+    )
         return;
+
     if ($executed_check_register)
     {
         $executed_check_register = false;
