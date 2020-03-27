@@ -9,22 +9,20 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
+use CleantalkAP\Variables\Post;
+
 if (!defined('SMF')) {
     die('Hacking attempt...');
 }
 
 // Fixes for old PHP versions
-require_once(dirname(__FILE__) . '/phpFix.php');
+require_once(dirname(__FILE__) . '/lib/phpFix.php');
 
-// Base classes
-require_once(dirname(__FILE__) . '/Cleantalk.php');
-require_once(dirname(__FILE__) . '/CleantalkRequest.php');
-require_once(dirname(__FILE__) . '/CleantalkResponse.php');
-require_once(dirname(__FILE__) . '/CleantalkHelper.php');
-require_once(dirname(__FILE__) . '/CleantalkSFW.php');
+// Classes autoloader
+require_once(dirname(__FILE__) . '/lib/autoloader.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-230');
+define('CT_AGENT_VERSION', 'smf-231');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
@@ -422,8 +420,12 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
     if (SMF == 'SSI')
         return;
 
-    if ($regOptions['interface'] == 'admin')
+    if (
+    	$regOptions['interface'] == 'admin' || // Skip admin
+	    ! $modSettings['cleantalk_check_registrations'] // Skip if registrations check are disabled
+    )
         return;
+
     if ($executed_check_register)
     {
         $executed_check_register = false;
@@ -982,7 +984,7 @@ function cleantalk_load()
     if(!empty($user_info['is_admin'])){
                
         // Deleting selected users
-        if(isset($_POST['ct_del_user']))
+        if(Post::get('ct_del_user'))
         {
             checkSession('request');
             
@@ -991,7 +993,7 @@ function cleantalk_load()
             
             if (isset($db_connection) && $db_connection != false)
             {
-                foreach($_POST['ct_del_user'] as $key=>$value)
+                foreach(Post::get('ct_del_user') as $key=>$value)
                 {
                     $result = $smcFunc['db_query']('', 'delete from {db_prefix}members where id_member='.intval($key),Array('db_error_skip' => true));
                     $result = $smcFunc['db_query']('', 'delete from {db_prefix}topics where id_member_started='.intval($key),Array('db_error_skip' => true));
@@ -1001,7 +1003,7 @@ function cleantalk_load()
         }
         
         // Deleting all users
-        if(isset($_POST['ct_delete_all']))
+        if(Post::get('ct_delete_all'))
         {
             checkSession('request');
             
@@ -1222,12 +1224,12 @@ function cleantalk_buffer($buffer)
 {
     
     global $modSettings, $user_info, $smcFunc, $txt, $forum_version, $db_connection;
-        
+    
     if (SMF == 'SSI')
         return $buffer;
 
-    if($user_info['is_admin'] && isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
-        
+    if(isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
+    	
         if(strpos($forum_version, 'SMF 2.0')===false){
             
             $html='';

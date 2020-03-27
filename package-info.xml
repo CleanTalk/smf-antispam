@@ -4,22 +4,18 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.30</version>
+	<version>2.31</version>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
+		
+		<!-- Create source dir -->
 		<create-dir name="cleantalk" destination="$sourcedir"/>
-		<require-file name="cleantalkMod.php" destination="$sourcedir/cleantalk">Mod main file</require-file>
-		<require-file name="cleantalkModAdmin.php" destination="$sourcedir/cleantalk">Mod admin file</require-file>
-		<require-file name="lib/Cleantalk.php" destination="$sourcedir/cleantalk">Base class</require-file>
-		<require-file name="lib/CleantalkRequest.php" destination="$sourcedir/cleantalk">Extend for base class</require-file>
-		<require-file name="lib/CleantalkResponse.php" destination="$sourcedir/cleantalk">Extend for base class</require-file>
-		<require-file name="lib/CleantalkHelper.php" destination="$sourcedir/cleantalk">Helper functions</require-file>
-		<require-file name="lib/CleantalkSFW.php" destination="$sourcedir/cleantalk">SFW class</require-file>
-		<require-file name="lib/phpFix.php" destination="$sourcedir/cleantalk">Fix for old PHP versions</require-file>
-		<require-file name="lib/sfw_die_page.html" destination="$sourcedir/cleantalk">SFW die page</require-file>
-		<require-file name="lib/error.html" destination="$sourcedir/cleantalk">Cleantalk error template</require-file>
-		<require-file name="attention.png" destination="$sourcedir/cleantalk">attention picture</require-file>
+
+		<!-- Copying new source files -->
+		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
+		
+		<!-- Translations -->
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
 		<modification format="xml" type="file">languages/english-utf8.xml</modification>
@@ -27,7 +23,11 @@
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+		
+		<!-- Database updates -->
 		<database>install.php</database>
+		
+		<!-- Redirect -->
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
@@ -489,5 +489,38 @@
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>			
-	</upgrade>	
+	</upgrade>
+	<upgrade from="2.30">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.29 to 2.31 version:
+			- Setting "Check registration" added.
+			- Fix for ut8_decode function.
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.29 до 2.30:
+			- Добавлена опция "Проверка регистраций"
+			- Исправления для функции ut8_decode.
+		</readme>
+		
+		<!-- Cleaning up old data -->
+		<remove-dir name="$sourcedir/cleantalk" />
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+
+		<!-- Copying new source files -->
+		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
+
+		<!-- Translations -->
+		<modification format="xml" type="file">modification.xml</modification>
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+
+		<!-- Database updates -->
+		<database>install.php</database>
+
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</upgrade>
 </package-info>

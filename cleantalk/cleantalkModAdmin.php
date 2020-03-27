@@ -9,6 +9,8 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
+use CleantalkAP\Variables\Post;
+
 if (!defined('SMF')) {
     die('Hacking attempt...');
 }
@@ -67,6 +69,7 @@ function cleantalk_general_mod_settings($return_config = false)
     $config_vars = array(
         array('title', 'cleantalk_settings'),
         array('text', 'cleantalk_api_key'),
+        array('check', 'cleantalk_check_registrations', 'subtext' => $txt['cleantalk_check_registrations']),
         array('check', 'cleantalk_first_post_checking', 'subtext' => $txt['cleantalk_first_post_checking_postinput']),
         array('check', 'cleantalk_check_personal_messages', 'subtext' => $txt['cleantalk_check_personal_messages_postinput']),
         array('check', 'cleantalk_automod', 'subtext' => $txt['cleantalk_automod_postinput']),
@@ -99,7 +102,7 @@ function cleantalk_general_mod_settings($return_config = false)
                 
             }
         }
-        $save_key = $key_is_valid ? $save_key : $_POST['cleantalk_api_key'];
+        $save_key = $key_is_valid ? $save_key : Post::get( 'cleantalk_api_key' );
         if(!$key_is_valid)
         {
             $result = CleantalkHelper::apbct_key_is_correct($save_key);
@@ -109,9 +112,10 @@ function cleantalk_general_mod_settings($return_config = false)
         {
             $result = CleantalkHelper::api_method__notice_paid_till($save_key, preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
             
-            if (empty($result['error']))
-            {
-                if( $result['valid'] ) {
+            if (empty($result['error'])){
+            	
+                if($result['valid']){
+                	
                     $key_is_ok = true;
                     $settings_array = array(
                         'cleantalk_api_key'       => ($save_key) ? $save_key : '',
@@ -128,8 +132,8 @@ function cleantalk_general_mod_settings($return_config = false)
                         'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
                         'cleantalk_last_account_check' => time(),
                     );
-                    if (isset($_POST['cleantalk_sfw']) && $_POST['cleantalk_sfw'] == 1)
-                    {
+                    
+                    if (Post::get( 'cleantalk_sfw' ) == 1){
                         $settings_array['cleantalk_sfw'] = '1';
                         $settings_array['cleantalk_sfw_last_update'] = time();
                         $settings_array['cleantalk_sfw_last_logs_sent'] = time();
@@ -137,16 +141,12 @@ function cleantalk_general_mod_settings($return_config = false)
                         $sfw->sfw_update($save_key);
                         $sfw->send_logs($save_key);
                     }
-                }
-                else
-                {
+                }else{
                     // @ToDo have to handle errors!
                     // return array('error' => 'KEY_IS_NOT_VALID');
                 }
 
-            }
-            else
-            {
+            }else{
                 // @ToDo have to handle errors!
                 // return array('error' => $result);
             }
@@ -154,8 +154,7 @@ function cleantalk_general_mod_settings($return_config = false)
         $settings_array['cleantalk_api_key_is_ok'] = ($key_is_ok) ? '1' : '0';
         updateSettings($settings_array, false);         
     }
- 
-
+    
     if (isset($_GET['save'])) {
         checkSession();
         saveDBSettings($config_vars);
