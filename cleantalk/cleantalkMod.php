@@ -15,17 +15,11 @@ if (!defined('SMF')) {
     die('Hacking attempt...');
 }
 
-require_once(dirname(__FILE__) . '/lib/autoloader.php');
-
 // Fixes for old PHP versions
-require_once(dirname(__FILE__) . '/phpFix.php');
+require_once(dirname(__FILE__) . '/lib/phpFix.php');
 
-// Base classes
-require_once(dirname(__FILE__) . '/Cleantalk.php');
-require_once(dirname(__FILE__) . '/CleantalkRequest.php');
-require_once(dirname(__FILE__) . '/CleantalkResponse.php');
-require_once(dirname(__FILE__) . '/CleantalkHelper.php');
-require_once(dirname(__FILE__) . '/CleantalkSFW.php');
+// Classes autoloader
+require_once(dirname(__FILE__) . '/lib/autoloader.php');
 
 // Common CleanTalk options
 define('CT_AGENT_VERSION', 'smf-231');
@@ -427,8 +421,8 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
         return;
 
     if (
-    	$regOptions['interface'] == 'admin' && // Skip admin
-	    $modSettings['cleantalk_check_registrations'] // Skip if registrations check are disabled
+    	$regOptions['interface'] == 'admin' || // Skip admin
+	    ! $modSettings['cleantalk_check_registrations'] // Skip if registrations check are disabled
     )
         return;
 

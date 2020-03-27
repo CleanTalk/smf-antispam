@@ -153,7 +153,7 @@ if ($isInstalling) {
 		if (isset($modSettings['cleantalk_api_key']) && $modSettings['cleantalk_api_key'] != '' && isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
 		{
 			if (!class_exists('CleantalkSFW'))
-				require_once(dirname(__FILE__) . '/lib/CleantalkSFW.php');			
+				require_once(dirname(__FILE__) . '/cleantalk/lib/CleantalkSFW.php');
 			$sfw = new CleantalkSFW;
 			$sfw->sfw_update($modSettings['cleantalk_api_key']);
 			unset($sfw);
