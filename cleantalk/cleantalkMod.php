@@ -35,7 +35,7 @@ function cleantalk_sfw_check()
 {
     global $modSettings, $language, $user_info;
 
-    if ($user_info['is_admin'])
+    if (isset($user_info) && $user_info['is_admin'])
         return;
         // Remote calls
     if(isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam','anti-spam', 'apbct'))){
