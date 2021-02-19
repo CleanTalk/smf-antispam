@@ -16,8 +16,6 @@ class SuperGlobalVariables{
 	
 	use \CleantalkAP\Templates\Singleton;
 	
-	static $instance;
-	
 	/**
 	 * @var array Contains saved variables
 	 */

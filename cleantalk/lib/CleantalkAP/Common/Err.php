@@ -13,7 +13,6 @@ class Err{
 	
 	use \CleantalkAP\Templates\Singleton;
 	
-	static $instance;
 	public $errors = [];
 	
 	/**

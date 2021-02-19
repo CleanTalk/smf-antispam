@@ -50,6 +50,7 @@ if ($isInstalling) {
 	updateSettings(array('cleantalk_sfw'                 => isset($modSettings['cleantalk_sfw'])                 ? $modSettings['cleantalk_sfw']                 : '0'), false);
 	updateSettings(array('cleantalk_email_notifications' => isset($modSettings['cleantalk_email_notifications']) ? $modSettings['cleantalk_email_notifications'] : '0'), false);
 	updateSettings(array('cleantalk_ccf_checking' 		 => isset($modSettings['cleantalk_ccf_checking'])        ? $modSettings['cleantalk_ccf_checking']        : '0'), false);
+	updateSettings(array('cleantalk_errors'              => isset($modSettings['cleantalk_errors'])              ? $modSettings['cleantalk_errors']              : ''),  false);
 	
 	// Cleantalk's secondary data                                                                                                                                  
 	updateSettings(array('cleantalk_js_keys'             => isset($modSettings['cleantalk_js_keys'])             ? $modSettings['cleantalk_js_keys']             : ''),  false);

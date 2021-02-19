@@ -100,6 +100,9 @@ function cleantalk_general_mod_settings($return_config = false)
                 $key_is_valid = true;
                 $save_key = $result['auth_key'];
                 
+            } else {
+                $settings_array['cleantalk_errors'] = $result['error_string'];
+                updateSettings($settings_array, false);                 
             }
         }
         $save_key = $key_is_valid ? $save_key : Post::get( 'cleantalk_api_key' );
@@ -131,6 +134,7 @@ function cleantalk_general_mod_settings($return_config = false)
                         'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',
                         'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
                         'cleantalk_last_account_check' => time(),
+                        'cleantalk_errors' => '',
                     );
                     
                     if (Post::get( 'cleantalk_sfw' ) == 1){
@@ -144,11 +148,15 @@ function cleantalk_general_mod_settings($return_config = false)
                 }else{
                     // @ToDo have to handle errors!
                     // return array('error' => 'KEY_IS_NOT_VALID');
+                    $settings_array['cleantalk_errors'] = 'Key is not valid!';
+                    updateSettings($settings_array, false);                      
                 }
 
             }else{
                 // @ToDo have to handle errors!
                 // return array('error' => $result);
+                $settings_array['cleantalk_errors'] = $result['error_string'];
+                updateSettings($settings_array, false);      
             }
         }
         $settings_array['cleantalk_api_key_is_ok'] = ($key_is_ok) ? '1' : '0';

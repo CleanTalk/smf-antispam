@@ -22,7 +22,7 @@ require_once(dirname(__FILE__) . '/lib/phpFix.php');
 require_once(dirname(__FILE__) . '/lib/autoloader.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-231');
+define('CT_AGENT_VERSION', 'smf-232');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
@@ -35,7 +35,7 @@ function cleantalk_sfw_check()
 {
     global $modSettings, $language, $user_info;
 
-    if ($user_info['is_admin'])
+    if (isset($user_info) && $user_info['is_admin'])
         return;
         // Remote calls
     if(isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam','anti-spam', 'apbct'))){
@@ -86,6 +86,10 @@ function cleantalk_sfw_check()
             && strpos($_SERVER['REQUEST_URI'], 'action=login') === false
             && strpos($_SERVER['REQUEST_URI'], 'action=post') === false
             && strpos($_SERVER['REQUEST_URI'], 'action=pm') === false
+            /* Skip checking search requests */
+            /* @ToDo implement "Search protection" integration */
+            && strpos($_SERVER['REQUEST_URI'], 'action=search') === false
+            && strpos($_SERVER['REQUEST_URI'], 'action=search2') === false
         ){
             
             $ct_temp_msg_data = cleantalkGetFields($_POST);
@@ -269,15 +273,15 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
                 
 
                 // Removes whitespaces
-				$value = urldecode( trim( $value ) ); // Fully cleaned message
-				$value_for_email = trim( $value );
+                $value = urldecode( trim( $value ) ); // Fully cleaned message
+                $value_for_email = trim( $value );
 
-				// Email
-				if ( ! $email && preg_match( "/^\S+@\S+\.\S+$/", $value_for_email ) ) {
-					$email = $value_for_email;
+                // Email
+                if ( ! $email && preg_match( "/^\S+@\S+\.\S+$/", $value_for_email ) ) {
+                    $email = $value_for_email;
 
-				// Names
-				}elseif (preg_match("/name/i", $key)){
+                // Names
+                }elseif (preg_match("/name/i", $key)){
                     
                     preg_match("/(first.?name)?(name.?first)?(forename)?/", $key, $match_forename);
                     preg_match("/(last.?name)?(family.?name)?(second.?name)?(surname)?/", $key, $match_surname);
@@ -421,8 +425,8 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
         return;
 
     if (
-    	$regOptions['interface'] == 'admin' || // Skip admin
-	    ! $modSettings['cleantalk_check_registrations'] // Skip if registrations check are disabled
+        $regOptions['interface'] == 'admin' || // Skip admin
+        ! $modSettings['cleantalk_check_registrations'] // Skip if registrations check are disabled
     )
         return;
 
@@ -946,15 +950,27 @@ function cleantalk_log($message)
  * Logging message into SMF log
  * @param string $message
  */
-function cleantalk_after_create_topic($message)
-{
+function cleantalk_after_create_topic( $message ){
+    
     global $sourcedir, $modSettings;
     
-    if (array_key_exists('cleantalk_email_notifications', $modSettings) && $modSettings['cleantalk_email_notifications'] && $message) {
+    if(
+        array_key_exists( 'cleantalk_email_notifications', $modSettings ) &&
+        $modSettings['cleantalk_email_notifications'] &&
+        $message
+    ){
         require_once($sourcedir . '/Subs-Admin.php');
-        if (is_array($message))
-            $message = implode("\n", $message);
-        emailAdmins('send_email', array('EMAILSUBJECT' => '[Cleantalk antispam for the board]', 'EMAILBODY' => "CleanTalk antispam checking result: \n$message"));
+        
+        if( is_array( $message ) )
+            $message = CleantalkHelper::array_implode__recursive( "\n", $message );
+        
+        emailAdmins(
+            'send_email',
+            array(
+                'EMAILSUBJECT' => '[Cleantalk antispam for the board]',
+                'EMAILBODY'    => "CleanTalk antispam checking result: \n$message",
+            )
+        );
     }
 }
 /**
@@ -1060,7 +1076,8 @@ function cleantalk_load()
                 'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
                 'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',  
                 'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
-                'cleantalk_last_account_check' => time(), 
+                'cleantalk_last_account_check' => time(),
+                'cleantalk_errors' => '', 
             );
             updateSettings($settings_array, false);
         }        
@@ -1229,7 +1246,7 @@ function cleantalk_buffer($buffer)
         return $buffer;
 
     if(isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
-    	
+        
         if(strpos($forum_version, 'SMF 2.0')===false){
             
             $html='';
@@ -1318,7 +1335,7 @@ function cleantalk_buffer($buffer)
                     if(!empty($api_result['error'])){
                         $html.='<center>'
                                 .'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
-                                    .'<b>'.$api_result['error'].'</b>'
+                                    .'<b>'.$api_result['error_string'].'</b>'
                                 .'</div>'
                                 .'<br>'
                             .'</center>';
@@ -1435,7 +1452,7 @@ function cleantalk_buffer($buffer)
         }
         else
         {
-            $cleantalk_key_html .= "&nbsp<span style='color: red;'>".$txt['cleantalk_key_not_valid']."</span>";
+            $cleantalk_key_html .= "&nbsp<span style='color: red;'>".((isset($modSettings['cleantalk_errors']) && !empty($modSettings['cleantalk_errors'])) ? $modSettings['cleantalk_errors'] : $txt['cleantalk_key_not_valid'])."</span>";
             $cleantalk_key_html .= "<br><br><a target='_blank' href='https://cleantalk.org/register?platform=smf&email=".urlencode($user_info['email'])."&website=".urlencode($_SERVER['SERVER_NAME'])."&product_name=antispam'>
                     <input type='button' value='".$txt['cleantalk_get_access_manually']."' />
                 </a> {$txt['cleantalk_get_access_key_or']} ";

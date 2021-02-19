@@ -485,7 +485,7 @@ class CleantalkHelper
 		if($result && (isset($result['error_no']) || isset($result['error_message']))){
 			return array(
 				'error' => true,
-				'error_string' => "SERVER_ERROR NO: {$result['error_no']} MSG: {$result['error_message']}",
+				'error_string' => $result['error_message'],
 				'error_no' => $result['error_no'],
 				'error_message' => $result['error_message']
 			);
@@ -531,5 +531,36 @@ class CleantalkHelper
 			}
 		}
 		return $headers;
-	}	
+	}
+	
+	/**
+	 * Recuresevly "implodes" array or object
+	 *
+	 * @param $glue
+	 * @param $array
+	 *
+	 * @return string
+	 */
+	static function array_implode__recursive( $glue, $array ){
+		
+		$out = '';
+		
+		foreach( $array as $item ){
+			
+			if( is_array( $item ) || is_object( $item ) )
+				$out .= self::array_implode__recursive( $glue, $item );
+			
+			else{
+				
+				// Skip empty strings
+				if( ! (string) $item )
+					continue;
+				else
+					$out .= (string) $item;
+				
+			}
+		}
+		
+		return $out;
+	}
 }
