@@ -75,21 +75,31 @@ function cleantalk_sfw_check()
                 }
             }
         }
-        
+
         if (
-            !empty($modSettings['cleantalk_ccf_checking'])
-            && $_SERVER['REQUEST_METHOD'] == 'POST'
-            && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false 
-            && strpos($_SERVER['REQUEST_URI'], 'action=register') === false
-            && strpos($_SERVER['REQUEST_URI'], 'action=profile') === false
-            && strpos($_SERVER['REQUEST_URI'], 'action=signup') === false
-            && strpos($_SERVER['REQUEST_URI'], 'action=login') === false
-            && strpos($_SERVER['REQUEST_URI'], 'action=post') === false
-            && strpos($_SERVER['REQUEST_URI'], 'action=pm') === false
-            /* Skip checking search requests */
-            /* @ToDo implement "Search protection" integration */
-            && strpos($_SERVER['REQUEST_URI'], 'action=search') === false
-            && strpos($_SERVER['REQUEST_URI'], 'action=search2') === false
+            /* Check all post query */
+            (
+                !empty($modSettings['cleantalk_ccf_checking'])
+                && $_SERVER['REQUEST_METHOD'] == 'POST'
+                && strpos($_SERVER['REQUEST_URI'], 'action=admin') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=register') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=profile') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=signup') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=login') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=post') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=pm') === false
+                /* Skip checking search requests */
+                /* @ToDo implement "Search protection" integration */
+                && strpos($_SERVER['REQUEST_URI'], 'action=search') === false
+                && strpos($_SERVER['REQUEST_URI'], 'action=search2') === false
+            )
+            /* Check search form */
+            || (
+                !empty($modSettings['cleantalk_check_search_form'])
+                && $modSettings['cleantalk_check_search_form'] == 1
+                && (strpos($_SERVER['REQUEST_URI'], 'action=search') !== false
+                    || strpos($_SERVER['REQUEST_URI'], 'action=search2') !== false)
+            )
         ){
             
             $ct_temp_msg_data = cleantalkGetFields($_POST);
