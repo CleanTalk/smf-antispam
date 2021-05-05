@@ -4,7 +4,7 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.32</version>
+	<version>2.33</version>
 	<install for="2.0 - 2.1.99">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
@@ -535,6 +535,39 @@
 			- Исправление php ошибок.
 		</readme>
 		
+		<!-- Cleaning up old data -->
+		<remove-dir name="$sourcedir/cleantalk" />
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+
+		<!-- Copying new source files -->
+		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
+
+		<!-- Translations -->
+		<modification format="xml" type="file">modification.xml</modification>
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+
+		<!-- Database updates -->
+		<database>install.php</database>
+
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</upgrade>
+	<upgrade from="2.32">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.32 to 2.33 version:
+			- Added the ability to check the search form.
+			- Sending plugin settings in a request.
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.32 до 2.33:
+			- Добавление возможности проверять формы поиска.
+			- Отправка настроек плагина в запросе.
+		</readme>
+
 		<!-- Cleaning up old data -->
 		<remove-dir name="$sourcedir/cleantalk" />
 		<create-dir name="cleantalk" destination="$sourcedir"/>

@@ -141,6 +141,7 @@ function cleantalk_sfw_check()
                         'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
                         'cms_lang'               => substr($language, 0, 2),                                            
                         'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                        'ct_options'             => cleantalk_get_ct_options($modSettings),
                         'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                         'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                         'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
@@ -470,6 +471,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
                 'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
                 'cms_lang'               => substr($language, 0, 2),                                            
                 'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                'ct_options'             => cleantalk_get_ct_options($modSettings),
                 'js_timezone'            => !empty($_COOKIE['ct_timezone'])      ? $_COOKIE['ct_timezone']      : null,
                 'mouse_cursor_positions' => !empty($_COOKIE['ct_pointer_data'])  ? $_COOKIE['ct_pointer_data']  : null,
                 'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
@@ -574,6 +576,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
                 'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
                 'cms_lang'               => substr($language, 0, 2),                                            
                 'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                'ct_options'             => cleantalk_get_ct_options($modSettings),
                 'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                 'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                 'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
@@ -654,6 +657,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                     'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
                     'cms_lang'               => substr($language, 0, 2),                                            
                     'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
+                    'ct_options'             => cleantalk_get_ct_options($modSettings),
                     'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
                     'mouse_cursor_positions' => isset($_COOKIE['ct_pointer_data'])   ? $_COOKIE['ct_pointer_data']  : null,
                     'key_press_timestamp'    => !empty($_COOKIE['ct_fkp_timestamp']) ? $_COOKIE['ct_fkp_timestamp'] : null,
@@ -1477,4 +1481,29 @@ function cleantalk_buffer($buffer)
     }
     
     return $buffer;
+}
+
+/**
+ * Get plugin settings (ct_options)
+ *
+ * @param $mod_settings
+ * @return array
+ */
+function cleantalk_get_ct_options($mod_settings) {
+    $ct_options = array();
+
+    foreach ($mod_settings as $key => $value) {
+        if(strpos($key, 'cleantalk') !== false) {
+            $decoded = json_decode($value, true);
+
+            if($decoded != null) {
+                $ct_options[$key] = $decoded;
+                continue;
+            }
+
+            $ct_options[$key] = $value;
+        }
+    }
+
+    return $ct_options;
 }
