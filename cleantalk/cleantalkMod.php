@@ -148,7 +148,7 @@ function cleantalk_sfw_check()
                         'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                         'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                         'cookies_enabled'        => cleantalk_cookies_test(),
-                        'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
+                        'js_keys'                => cleantalk_get_js_keys($modSettings)
                     )
                 );
                 $ct_result = $ct->isAllowMessage($ct_request);  
@@ -478,7 +478,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
                 'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                 'cookies_enabled'        => cleantalk_cookies_test(),
-                'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
+                'js_keys'                => cleantalk_get_js_keys($modSettings)
             )
         );
         $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'register'));
@@ -583,7 +583,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
                 'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                 'cookies_enabled'        => cleantalk_cookies_test(),
-                'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
+                'js_keys'                => cleantalk_get_js_keys($modSettings)
             )
         );
         $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'personal_message'));      
@@ -664,7 +664,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                     'page_set_timestamp'     => !empty($_COOKIE['ct_ps_timestamp'])  ? $_COOKIE['ct_ps_timestamp']  : null,
                     'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                     'cookies_enabled'        => cleantalk_cookies_test(),
-                    'js_keys'                => isset($modSettings['cleantalk_js_keys']['keys']) ? json_encode($modSettings['cleantalk_js_keys']['keys']) : null,
+                    'js_keys'                => cleantalk_get_js_keys($modSettings)
                 )
             );
             $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'comment'));
@@ -1506,4 +1506,21 @@ function cleantalk_get_ct_options($mod_settings) {
     }
 
     return $ct_options;
+}
+
+/**
+ * Get js keys from plugin settings
+ *
+ * @param $mod_settings
+ * @return null|string
+ */
+function cleantalk_get_js_keys($mod_settings) {
+    if(isset($mod_settings['cleantalk_js_keys'])) {
+        $js_keys = json_decode($mod_settings['cleantalk_js_keys'], true);
+        if(isset($js_keys['keys'])) {
+            return json_encode($js_keys['keys']);
+        }
+    }
+
+    return null;
 }

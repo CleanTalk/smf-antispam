@@ -1,6 +1,8 @@
 Version 2.33 May 04, 2021
 ------------------------------
-
+- Added the ability to check the search form.
+- Sending plugin settings in a request
+- Fix js_keys
 
 Version 2.32 Jun 02, 2020
 ------------------------------
