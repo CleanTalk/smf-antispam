@@ -88,17 +88,13 @@ function cleantalk_sfw_check()
                 && strpos($_SERVER['REQUEST_URI'], 'action=login') === false
                 && strpos($_SERVER['REQUEST_URI'], 'action=post') === false
                 && strpos($_SERVER['REQUEST_URI'], 'action=pm') === false
-                /* Skip checking search requests */
-                /* @ToDo implement "Search protection" integration */
                 && strpos($_SERVER['REQUEST_URI'], 'action=search') === false
-                && strpos($_SERVER['REQUEST_URI'], 'action=search2') === false
             )
             /* Check search form */
             || (
                 !empty($modSettings['cleantalk_check_search_form'])
-                && $modSettings['cleantalk_check_search_form'] == 1
-                && (strpos($_SERVER['REQUEST_URI'], 'action=search') !== false
-                    || strpos($_SERVER['REQUEST_URI'], 'action=search2') !== false)
+                && $_SERVER['REQUEST_METHOD'] == 'POST'
+                && strpos($_SERVER['REQUEST_URI'], 'action=search') !== false
             )
         ){
             
