@@ -30,7 +30,8 @@ $txt['cleantalk_automod_postinput'] = 'Automatically put suspicious comments whi
 $txt['cleantalk_api_key_description'] = 'Extension home page: <a target="_blank" href="https://cleantalk.org/">http://cleantalk.org</a>';
 $txt['cleantalk_logging'] = 'Enable logging';
 $txt['cleantalk_logging_postinput'] = 'All plugin\'s actions will be added to the forum\'s log. (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Admin -> Error log</a>)';
-$txt['cleantalk_check_search_form'] = 'Check search forms';
+$txt['cleantalk_check_search_form'] = 'Test search form for spam';
+$txt['cleantalk_check_search_form_postinput'] = 'Spam protection for Search form. Read more about <a href="https://blog.cleantalk.org/how-to-protect-website-search-from-spambots/" target="_blank">spam protection for Search form</a> on our blog. ?noindex? tag will be placed in meta derictive on search page.';
 $txt['cleantalk_tell_others'] = 'Tell others about CleanTalk';
 $txt['cleantalk_email_notifications'] = 'Enable admin email notifications';
 $txt['cleantalk_email_notifications_postinput'] = 'Send admin email notifications for allow/blocked checking results';
