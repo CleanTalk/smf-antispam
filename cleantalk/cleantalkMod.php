@@ -32,7 +32,7 @@ if (!defined('SMF')) {
 require_once(dirname(__FILE__) . '/lib/autoload.php');
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-232');
+define('CT_AGENT_VERSION', 'smf-233');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
