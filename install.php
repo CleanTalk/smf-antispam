@@ -74,7 +74,7 @@ if ($isInstalling) {
 	updateSettings(array('cleantalk_sfw_last_update'     => isset($modSettings['cleantalk_sfw_last_update'])     ? $modSettings['cleantalk_sfw_last_update']     : '0'), false);
 	updateSettings(array('cleantalk_sfw_last_logs_sent'  => isset($modSettings['cleantalk_sfw_last_logs_sent'])  ? $modSettings['cleantalk_sfw_last_logs_sent']  : '0'),  false);
 	updateSettings(array('cleantalk_last_account_check'  => isset($modSettings['cleantalk_last_account_check'])  ? $modSettings['cleantalk_last_account_check']  : '0'), false);
-	updateSettings(array('cleantalk_remote_calls'  		 => isset($modSettings['cleantalk_remote_calls'])  		 ? $modSettings['cleantalk_remote_calls']  		 : 	json_encode(array('sfw_update' => array('last_call' => 0), 'close_renew_banner' => array('last_call' => 0), 'sfw_send_logs' => array('last_call' => 0), 'update_plugin' => array('last_call' => 0)))), false);
+	updateSettings(array('cleantalk_remote_calls'  		 => isset($modSettings['cleantalk_remote_calls'])  		 ? $modSettings['cleantalk_remote_calls']  		 : 	json_encode(array('close_renew_banner' => array('last_call' => 0, 'cooldown' => 10), 'sfw_update' => array('last_call' => 0, 'cooldown' => 10), 'sfw_send_logs' => array('last_call' => 0, 'cooldown' => 10), 'sfw_update__write_base' => array('last_call' => 0, 'cooldown' => 0)))), false);
 	
     //xdebug_break();
     if (!isset($db_connection) || $db_connection === false) {
@@ -91,6 +91,11 @@ if ($isInstalling) {
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
 		$columns = array(
 			array(
+				'name' => 'id',
+				'type' => 'int',
+				'size' => 11
+			),
+			array(
 				'name' => 'network',
 				'type' => 'int',
 				'size' => 11,
@@ -103,7 +108,12 @@ if ($isInstalling) {
 				'unsigned' => true
 			),
 		);
-		$indexes = array();
+		$indexes = array(
+			array(
+				'type' => 'primary',
+				'columns' => array('id')
+			),
+		);
 		$parameters = array();
 		$smcFunc['db_create_table']('{db_prefix}cleantalk_sfw', $columns, $indexes, $parameters, 'update_remove');
 		
@@ -111,9 +121,19 @@ if ($isInstalling) {
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw_logs');
 		$columns = array(
 			array(
+				'name' => 'id',
+				'type' => 'varchar',
+				'size' => 40
+			),
+			array(
 				'name' => 'ip',
 				'type' => 'varchar',
 				'size' => 15
+			),
+			array(
+				'name' => 'status',
+				'type' => 'varchar',
+				'size' => 50
 			),
 			array(
 				'name' => 'all_entries',
@@ -133,11 +153,22 @@ if ($isInstalling) {
 				'size' => 11,
 				'default' => 0
 			),
+			array(
+				'name' => 'ua_id',
+				'type' => 'int',
+				'size' => 11,
+				'default' => null
+			),
+			array(
+				'name' => 'ua_name',
+				'type' => 'varchar',
+				'size' => 1024
+			),
 		);
 		$indexes = array(
 			array(
 				'type' => 'primary',
-				'columns' => array('ip')
+				'columns' => array('id')
 			),
 		);
 		$parameters = array();

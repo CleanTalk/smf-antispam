@@ -9,24 +9,75 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
-use CleantalkAP\Variables\Post;
+//Antispam classes
+use Cleantalk\Antispam\Cleantalk;
+use Cleantalk\Antispam\CleantalkRequest;
+use Cleantalk\Antispam\CleantalkResponse;
+
+//Common classes
+use Cleantalk\Common\API as CleantalkAPI;
+use Cleantalk\ApbctSMF\Helper as CleantalkHelper;
+use Cleantalk\Common\Firewall\Firewall;
+use Cleantalk\ApbctSMF\RemoteCalls;
+use Cleantalk\ApbctSMF\Cron;
+use Cleantalk\ApbctSMF\DB;
+use Cleantalk\Common\Variables\Server;
+use Cleantalk\Common\Firewall\Modules\SFW;
 
 if (!defined('SMF')) {
     die('Hacking attempt...');
 }
 
-// Fixes for old PHP versions
-require_once(dirname(__FILE__) . '/lib/phpFix.php');
-
 // Classes autoloader
-require_once(dirname(__FILE__) . '/lib/autoloader.php');
+require_once(dirname(__FILE__) . '/lib/autoload.php');
 
 // Common CleanTalk options
 define('CT_AGENT_VERSION', 'smf-232');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
+define('APBCT_TBL_FIREWALL_DATA', 'cleantalk_sfw');      // Table with firewall data.
+define('APBCT_TBL_FIREWALL_LOG',  'cleantalk_sfw_logs'); // Table with firewall logs.
+define('APBCT_TBL_AC_LOG',        'cleantalk_ac_log');   // Table with firewall logs.
+define('APBCT_TBL_AC_UA_BL',      'cleantalk_ua_bl');    // Table with User-Agents blacklist.
+define('APBCT_TBL_SESSIONS',      'cleantalk_sessions'); // Table with session data.
+define('APBCT_SPAMSCAN_LOGS',     'cleantalk_spamscan_logs'); // Table with session data.
+define('APBCT_SELECT_LIMIT',      5000); // Select limit for logs.
+define('APBCT_WRITE_LIMIT',       5000); // Write limit for firewall data.
 
+function apbct_sfw_update($access_key = '') {
+    if( empty( $access_key ) ){
+        $access_key = cleantalk_get_api_key();
+        if (empty($access_key)) {
+            return false;
+        }
+    }     
+    $firewall = new Firewall(
+        $access_key,
+        DB::getInstance(),
+        APBCT_TBL_FIREWALL_LOG
+    );
+    $firewall->setSpecificHelper( new CleantalkHelper() );
+    $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
+    $fw_updater->update();
+}
+
+function apbct_sfw_send_logs($access_key = '') {
+    global $modSettings;
+
+    if( empty( $access_key ) ){
+        $access_key = cleantalk_get_api_key();
+        if (empty($access_key)) {
+            return false;
+        }
+    } 
+
+    $firewall = new Firewall( $access_key, DB::getInstance(), APBCT_TBL_FIREWALL_LOG );
+    $firewall->setSpecificHelper( new CleantalkHelper() );
+    $result = $firewall->sendLogs();
+
+    return true;
+}
 /**
  * CleanTalk SFW check
  * @return void
@@ -37,9 +88,10 @@ function cleantalk_sfw_check()
 
     if (isset($user_info) && $user_info['is_admin'])
         return;
-        // Remote calls
-    if(isset($_GET['spbc_remote_call_token'], $_GET['spbc_remote_call_action'], $_GET['plugin_name']) && in_array($_GET['plugin_name'], array('antispam','anti-spam', 'apbct'))){
-        apbct_remote_call__perform();
+    // Remote calls
+    if( RemoteCalls::check() ) {
+        $rc = new RemoteCalls( cleantalk_get_api_key());
+        $rc->perform();
     }
 
     if (!empty($modSettings['cleantalk_api_key_is_ok']))
@@ -47,33 +99,22 @@ function cleantalk_sfw_check()
         cleantalk_cookies_set();
         if(!empty($modSettings['cleantalk_sfw']) ){
             
-            $sfw = new CleantalkSFW();
-            $key = $modSettings['cleantalk_api_key'];
-            
-            $ips = $sfw->get_ip();
+            $firewall = new Firewall(
+                cleantalk_get_api_key(),
+                DB::getInstance(),
+                APBCT_TBL_FIREWALL_LOG
+            );
 
-            $is_sfw_check=true;
-            foreach($ips as $curr_ip){
-                
-                if(isset($_COOKIE['ct_sfw_pass_key']) && $_COOKIE['ct_sfw_pass_key'] == md5($curr_ip.$key)){
-                    
-                    $is_sfw_check=false;
-                    
-                    if(!empty($_COOKIE['ct_sfw_passed'])){
-                        $sfw->sfw_update_logs($curr_ip, 'passed');
-                        setcookie ('ct_sfw_passed', '0', 1, "/");
-                    }
-                }
-            }
-            if($is_sfw_check){
-                $sfw->check_ip();
-                if($sfw->result){
-                    $sfw->sfw_update_logs($sfw->blocked_ip, 'blocked');
-                    $sfw->sfw_die($key);
-                }else{
-                    setcookie ('ct_sfw_pass_key', md5($sfw->passed_ip.$key), 0, "/");
-                }
-            }
+            $firewall->loadFwModule( new SFW(
+                APBCT_TBL_FIREWALL_DATA,
+                array(
+                    'sfw_counter'   => 0,
+                    'cookie_domain' => Server::get('HTTP_HOST'),
+                    'set_cookies'    => 1,
+                )
+            ) );
+
+            $firewall->run();
         }
 
         if (
@@ -1130,51 +1171,6 @@ function cleantalk_is_valid_js()
         $result = false;
     
     return  $result;
-}
-/**
-* Remote calls
-*/
-function apbct_remote_call__perform()
-{
-    global $modSettings;
-
-    $remote_calls_config = json_decode($modSettings['cleantalk_remote_calls'],true);
-    $remote_action = $_GET['spbc_remote_call_action'];
-
-    if(array_key_exists($remote_action, $remote_calls_config)){
-                
-        if(time() - $remote_calls_config[$remote_action]['last_call'] > CT_REMOTE_CALL_SLEEP){
-            $remote_calls_config[$remote_action]['last_call'] = time();
-            updateSettings(array('cleantalk_remote_calls' => json_encode($remote_calls_config)), false);
-
-            if(strtolower($_GET['spbc_remote_call_token']) == strtolower(md5($modSettings['cleantalk_api_key']))){
-
-                // Close renew banner
-                if($_GET['spbc_remote_call_action'] == 'close_renew_banner'){
-                    die('OK');
-                // SFW update
-                }elseif($_GET['spbc_remote_call_action'] == 'sfw_update'){
-                    $sfw = new CleantalkSFW();                  
-                    $result = $sfw->sfw_update($modSettings['cleantalk_api_key']);
-                    updateSettings(array('cleantalk_sfw_last_update' => time()), false);
-                    die(empty($result['error']) ? 'OK' : 'FAIL '.json_encode(array('error' => $result['error_string'])));
-                // SFW send logs
-                }elseif($_GET['spbc_remote_call_action'] == 'sfw_send_logs'){
-                    $sfw = new CleantalkSFW();                  
-                    $result = $sfw->send_logs($modSettings['cleantalk_api_key']);
-                    updateSettings(array('cleantalk_sfw_last_logs_sent' => time()), false);
-                    die(empty($result['error']) ? 'OK' : 'FAIL '.json_encode(array('error' => $result['error_string'])));
-                // Update plugin
-                }elseif($_GET['spbc_remote_call_action'] == 'update_plugin'){
-                    //add_action('wp', 'apbct_update', 1);
-                }else
-                    die('FAIL '.json_encode(array('error' => 'UNKNOWN_ACTION_2')));
-            }else
-                die('FAIL '.json_encode(array('error' => 'WRONG_TOKEN')));
-        }else
-            die('FAIL '.json_encode(array('error' => 'TOO_MANY_ATTEMPTS')));
-    }else
-        die('FAIL '.json_encode(array('error' => 'UNKNOWN_ACTION')));
 }
 /**
  * Above content. Banners

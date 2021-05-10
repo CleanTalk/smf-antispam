@@ -9,7 +9,23 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
-use CleantalkAP\Variables\Post;
+//Antispam classes
+use Cleantalk\Antispam\Cleantalk;
+use Cleantalk\Antispam\CleantalkRequest;
+use Cleantalk\Antispam\CleantalkResponse;
+
+//Common classes
+use Cleantalk\Common\API as CleantalkAPI;
+use Cleantalk\ApbctSMF\Helper as CleantalkHelper;
+use Cleantalk\Common\Firewall\Firewall;
+use Cleantalk\ApbctSMF\RemoteCalls;
+use Cleantalk\ApbctSMF\Cron;
+use Cleantalk\ApbctSMF\DB;
+use Cleantalk\Common\Variables\Server;
+use Cleantalk\Common\Firewall\Modules\SFW;
+
+// Classes autoloader
+require_once(dirname(__FILE__) . '/lib/autoload.php');
 
 if (!defined('SMF')) {
     die('Hacking attempt...');
@@ -93,7 +109,7 @@ function cleantalk_general_mod_settings($return_config = false)
         // Getting key automatically
         if(!empty($_GET['ctgetautokey'])){
             
-            $result = CleantalkHelper::api_method__get_api_key($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
+            $result = CleantalkAPI::method__get_api_key($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
 
             if (empty($result['error'])){
                             
@@ -109,12 +125,12 @@ function cleantalk_general_mod_settings($return_config = false)
         $save_key = $key_is_valid ? $save_key : Post::get( 'cleantalk_api_key' );
         if(!$key_is_valid)
         {
-            $result = CleantalkHelper::apbct_key_is_correct($save_key);
+            $result = CleantalkHelper::key_is_correct($save_key);
             $key_is_valid = ($result) ? true: false;
         }
         if ($key_is_valid)
         {
-            $result = CleantalkHelper::api_method__notice_paid_till($save_key, preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
+            $result = CleantalkAPI::method__notice_paid_till($save_key, preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
             
             if (empty($result['error'])){
             	
@@ -142,9 +158,8 @@ function cleantalk_general_mod_settings($return_config = false)
                         $settings_array['cleantalk_sfw'] = '1';
                         $settings_array['cleantalk_sfw_last_update'] = time();
                         $settings_array['cleantalk_sfw_last_logs_sent'] = time();
-                        $sfw = new CleantalkSFW;
-                        $sfw->sfw_update($save_key);
-                        $sfw->send_logs($save_key);
+                        apbct_sfw_update($save_key);
+                        apbct_sfw_send_logs($save_key);
                     }
                 }else{
                     // @ToDo have to handle errors!
