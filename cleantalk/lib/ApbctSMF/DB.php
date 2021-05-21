@@ -50,9 +50,9 @@ class DB extends \Cleantalk\Common\DB {
     public function execute( $query ) {
         global $smcFunc;
 
-        $this->db_result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
+        $this->result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
         
-        return $this->db_result;
+        return $this->result;
     }
 
     /**
@@ -67,9 +67,9 @@ class DB extends \Cleantalk\Common\DB {
     public function fetch( $query = false, $response_type = false ) {
         global $smcFunc;
         
-        $this->db_result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
-        $this->result = $smcFunc['db_fetch_assoc']($this->db_result);
-        $smcFunc['db_free_result']($this->db_result);
+        $db_result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
+        $this->result = $smcFunc['db_fetch_assoc']($db_result);
+        $smcFunc['db_free_result']($db_result);
 
         return $this->result;
     }
@@ -86,13 +86,13 @@ class DB extends \Cleantalk\Common\DB {
     public function fetch_all( $query = false, $response_type = false ) {
         global $smcFunc;
 
-        $this->db_result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
-
-        while ($row = $smcFunc['db_fetch_assoc']($this->db_result)){
-            $this->db_result_data[] = $row;
+        $db_result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
+        $result = array();
+        while ($row = $smcFunc['db_fetch_assoc']($db_result)){
+            $result[] = $row;
         }
-        $smcFunc['db_free_result']($this->db_result);
-
+        $smcFunc['db_free_result']($db_result);
+        $this->result = $result;
         return $this->result;
     }
 
