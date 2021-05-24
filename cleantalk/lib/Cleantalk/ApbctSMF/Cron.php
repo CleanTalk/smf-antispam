@@ -6,7 +6,7 @@ class Cron extends \Cleantalk\Common\Cron {
 
     public function saveTasks($tasks)
     {
-        updateSettings(array($this->cron_option_name => json_encode(array('last_start' => time(), 'tasks' => $tasks)), false);      
+        updateSettings(array($this->cron_option_name => json_encode(array('last_start' => time(), 'tasks' => $tasks)), false));      
     }
 
     /**
@@ -46,7 +46,7 @@ class Cron extends \Cleantalk\Common\Cron {
      */
     public function setCronLastStart()
     {
-        updateSettings(array($this->cron_option_name => json_encode(array('last_start' => time(), 'tasks' => $this->getTasks())), false);
+        updateSettings(array($this->cron_option_name => json_encode(array('last_start' => time(), 'tasks' => $this->getTasks()))), false);
         return true;
     }
 }

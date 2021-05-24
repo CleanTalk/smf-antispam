@@ -112,7 +112,7 @@ function cleantalk_general_mod_settings($return_config = false)
         // Getting key automatically
         if(!empty($_GET['ctgetautokey'])){
             
-            $result = CleantalkAPI::method__get_api_key($user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
+            $result = CleantalkAPI::method__get_api_key('antispam', $user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
 
             if (empty($result['error'])){
                             

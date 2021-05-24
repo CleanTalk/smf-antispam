@@ -95,7 +95,26 @@ function cleantalk_sfw_check()
         $rc = new RemoteCalls( cleantalk_get_api_key());
         $rc->perform();
     }
+    $cron = new Cron();
+    $cron_option = json_decode($modSettings[$cron->getCronOptionName()], true);
 
+    if (empty($cron_option)) {
+        $cron->addTask( 'sfw_update', 'apbct_sfw_update', 86400, time() + 60 );
+        $cron->addTask( 'sfw_send_logs', 'apbct_sfw_send_logs', 3600 );
+    }
+    $tasks_to_run = $cron->checkTasks(); // Check for current tasks. Drop tasks inner counters.
+
+    if(
+        ! empty( $tasks_to_run ) && // There is tasks to run
+        ! RemoteCalls::check() && // Do not doing CRON in remote call action
+        (
+            ! defined( 'DOING_CRON' ) ||
+            ( defined( 'DOING_CRON' ) && DOING_CRON !== true )
+        )
+    ){
+        $cron_res = $cron->runTasks( $tasks_to_run );
+        // Handle the $cron_res for errors here.
+    }
     if (!empty($modSettings['cleantalk_api_key_is_ok']))
     {
         cleantalk_cookies_set();
@@ -1288,7 +1307,7 @@ function cleantalk_buffer($buffer)
                         }
                         
                         // Request
-                        $api_result = CleantalkHelper::api_method__spam_check_cms(cleantalk_get_api_key(), $data);
+                        $api_result = CleantalkAPI::method__spam_check_cms(cleantalk_get_api_key(), $data);
                         
                         // Error handling
                         if(!empty($api_result['error'])){
