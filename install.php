@@ -93,7 +93,8 @@ if ($isInstalling) {
 			array(
 				'name' => 'id',
 				'type' => 'int',
-				'size' => 11
+				'size' => 11,
+				'auto' => true
 			),
 			array(
 				'name' => 'network',
@@ -107,6 +108,12 @@ if ($isInstalling) {
 				'size' => 11,
 				'unsigned' => true
 			),
+			array(
+				'name' => 'status',
+				'type' => 'int',
+				'size' => 1,
+				'default' => 0
+			)
 		);
 		$indexes = array(
 			array(

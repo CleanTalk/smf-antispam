@@ -2,6 +2,10 @@
 
 namespace Cleantalk\ApbctSMF;
 
+use Cleantalk\Common\Firewall\Firewall;
+use Cleantalk\ApbctSMF\DB;
+use Cleantalk\ApbctSMF\Helper as CleantalkHelper;
+
 class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
     /**
      * SFW update
@@ -10,7 +14,14 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
      */
     public function action__sfw_update()
     {
-        return apbct_sfw_update( $this->api_key );
+        $firewall = new Firewall(
+            $this->api_key,
+            DB::getInstance(),
+            APBCT_TBL_FIREWALL_LOG
+        );
+        $firewall->setSpecificHelper( new CleantalkHelper() );
+        $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
+        return $fw_updater->update();        
     }
 
     /**
@@ -20,12 +31,25 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
      */
     public function action__sfw_send_logs()
     {
-        return apbct_sfw_send_logs( $this->api_key );
+        $firewall = new Firewall(
+            $this->api_key,
+            DB::getInstance(),
+            APBCT_TBL_FIREWALL_LOG
+        );
+        $firewall->setSpecificHelper( new CleantalkHelper() );
+        return $firewall->sendLogs();
     }
 
     public function action__sfw_update__write_base()
     {
-        return apbct_sfw_update( $this->api_key );
+        $firewall = new Firewall(
+            $this->api_key,
+            DB::getInstance(),
+            APBCT_TBL_FIREWALL_LOG
+        );
+        $firewall->setSpecificHelper( new CleantalkHelper() );
+        $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
+        return $fw_updater->update(); 
     }
     /**
      * Get available remote calls from the storage.

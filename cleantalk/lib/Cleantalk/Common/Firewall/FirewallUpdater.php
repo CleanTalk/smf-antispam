@@ -128,7 +128,6 @@ class FirewallUpdater
 
                 // @todo We have to handle errors here
                 $this->createTempTables();
-
                 $blacklists = $this->getSfwBlacklists( $this->api_key );
 
                 if( empty( $blacklists['error'] ) ){
@@ -183,7 +182,7 @@ class FirewallUpdater
                             $values[] = '('. $ip .','. $mask .','. $private .')';
                         }
                         if( ! empty( $values ) ){
-                            $query = $query . implode( ',', $values ) . ';';
+                            $query = $query . implode( ',', $values );
                             $this->db->execute( $query );
                         }
                     }
@@ -334,7 +333,7 @@ class FirewallUpdater
 
         if( $exclusions ){
 
-            $sql_result = $this->db->execute( substr( $query, 0, - 1 ) . ';' );
+            $sql_result = $this->db->execute( substr( $query, 0, - 1 ) );
 
             return $sql_result === false
                 ? array( 'error' => 'COULD_NOT_WRITE_TO_DB 4: ' . $this->db->get_last_error() )
@@ -352,15 +351,16 @@ class FirewallUpdater
      */
     private function createTempTables()
     {
-        $sql = 'SHOW TABLES LIKE "%scleantalk_sfw";';
+        $sql = "SHOW TABLES LIKE '%scleantalk_sfw'";
         $sql = sprintf( $sql, $this->db->prefix ); // Adding current blog prefix
         $result = $this->db->fetch( $sql );
+
         if( ! $result ){
             $sql = sprintf( Schema::getSchema('sfw'), $this->db->prefix );
             $this->db->execute( $sql );
         }
-        $this->db->execute( 'CREATE TABLE IF NOT EXISTS `' . $this->fw_data_table_name . '_temp` LIKE `' . $this->fw_data_table_name . '`;' );
-        $this->db->execute( 'TRUNCATE TABLE `' . $this->fw_data_table_name . '_temp`;' );
+        $this->db->execute( 'CREATE TABLE IF NOT EXISTS `' . $this->fw_data_table_name . '_temp` LIKE `' . $this->fw_data_table_name . '`' );
+        $this->db->execute( 'TRUNCATE TABLE `' . $this->fw_data_table_name . '_temp`' );
     }
 
     /**
@@ -370,7 +370,7 @@ class FirewallUpdater
      */
     private function deleteMainDataTables()
     {
-        $this->db->execute( 'DROP TABLE `'. $this->fw_data_table_name .'`;' );
+        $this->db->execute( 'DROP TABLE `'. $this->fw_data_table_name );
     }
 
     /**
@@ -380,7 +380,7 @@ class FirewallUpdater
      */
     private function renameDataTables()
     {
-        $this->db->execute( 'ALTER TABLE `'. $this->fw_data_table_name .'_temp` RENAME `'. $this->fw_data_table_name .'`;' );
+        $this->db->execute( 'ALTER TABLE `'. $this->fw_data_table_name .'_temp` RENAME `'. $this->fw_data_table_name .'`' );
     }
 
 }
