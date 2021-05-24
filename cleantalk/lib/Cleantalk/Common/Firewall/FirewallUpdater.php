@@ -332,7 +332,6 @@ class FirewallUpdater
         }
 
         if( $exclusions ){
-
             $sql_result = $this->db->execute( substr( $query, 0, - 1 ) );
 
             return $sql_result === false
@@ -370,7 +369,7 @@ class FirewallUpdater
      */
     private function deleteMainDataTables()
     {
-        $this->db->execute( 'DROP TABLE `'. $this->fw_data_table_name );
+        $this->db->execute( 'DROP TABLE `'. $this->fw_data_table_name . '`');
     }
 
     /**

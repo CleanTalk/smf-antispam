@@ -323,7 +323,7 @@ class Firewall
     public function sendLogs() {
 
         //Getting logs
-        $query = "SELECT * FROM " . $this->log_table_name . ";";
+        $query = "SELECT * FROM " . $this->log_table_name . "";
         $this->db->fetch_all( $query );
 
         if( count( $this->db->result ) ){
@@ -365,7 +365,7 @@ class Firewall
             //Checking answer and deleting all lines from the table
             if( empty( $result['error'] ) ){
                 if( $result['rows'] == count( $data ) ){
-                    $this->db->execute( "TRUNCATE TABLE " . $this->log_table_name . ";" );
+                    $this->db->execute( "TRUNCATE TABLE " . $this->log_table_name . "" );
                     return $result;
                 }
 

@@ -15,14 +15,14 @@ class Schema
 			`status` TINYINT(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (`id`),
 			INDEX (  `network` ,  `mask` )
-		    );',
+		    )',
         'ua_bl' => 'CREATE TABLE IF NOT EXISTS `%scleantalk_ua_bl` (
 			`id` INT(11) NOT NULL,
 			`ua_template` VARCHAR(255) NULL DEFAULT NULL,
 			`ua_status` TINYINT(1) NULL DEFAULT NULL,
 			PRIMARY KEY ( `id` ),
 			INDEX ( `ua_template` )			
-		    ) DEFAULT CHARSET=utf8;', // Don't remove the default charset!
+		    ) DEFAULT CHARSET=utf8', // Don't remove the default charset!
         'sfw_logs' => 'CREATE TABLE IF NOT EXISTS `%scleantalk_sfw_logs` (
             `id` VARCHAR(40) NOT NULL,
             `ip` VARCHAR(15) NOT NULL,
@@ -32,14 +32,14 @@ class Schema
             `entries_timestamp` INT NOT NULL,
             `ua_id` INT(11) NULL DEFAULT NULL,
             `ua_name` VARCHAR(1024) NOT NULL, 
-            PRIMARY KEY (`id`));',
+            PRIMARY KEY (`id`))',
         'ac_logs' => 'CREATE TABLE IF NOT EXISTS `%scleantalk_ac_log` (
             `id` VARCHAR(40) NOT NULL,
             `ip` VARCHAR(40) NOT NULL,
             `ua` VARCHAR(40) NOT NULL,
             `entries` INT DEFAULT 0,
             `interval_start` INT NOT NULL,
-            PRIMARY KEY (`id`));',
+            PRIMARY KEY (`id`))',
     );
 
     /**
