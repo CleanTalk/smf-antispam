@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CleanTalk SMF mod
  *
@@ -8,6 +9,9 @@
  * @copyright (C) 2014 Сleantalk team (http://cleantalk.org)
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
+
+// Classes autoloader
+require_once(dirname(__FILE__) . '/lib/autoload.php');
 
 //Antispam classes
 use Cleantalk\Antispam\Cleantalk;
@@ -21,11 +25,10 @@ use Cleantalk\Common\Firewall\Firewall;
 use Cleantalk\ApbctSMF\RemoteCalls;
 use Cleantalk\ApbctSMF\Cron;
 use Cleantalk\ApbctSMF\DB;
+use Cleantalk\Common\Variables\Post;
 use Cleantalk\Common\Variables\Server;
 use Cleantalk\Common\Firewall\Modules\SFW;
 
-// Classes autoloader
-require_once(dirname(__FILE__) . '/lib/autoload.php');
 
 if (!defined('SMF')) {
     die('Hacking attempt...');
@@ -133,9 +136,9 @@ function cleantalk_general_mod_settings($return_config = false)
             $result = CleantalkAPI::method__notice_paid_till($save_key, preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
             
             if (empty($result['error'])){
-            	
+                
                 if($result['valid']){
-                	
+                    
                     $key_is_ok = true;
                     $settings_array = array(
                         'cleantalk_api_key'       => ($save_key) ? $save_key : '',
@@ -158,8 +161,15 @@ function cleantalk_general_mod_settings($return_config = false)
                         $settings_array['cleantalk_sfw'] = '1';
                         $settings_array['cleantalk_sfw_last_update'] = time();
                         $settings_array['cleantalk_sfw_last_logs_sent'] = time();
-                        apbct_sfw_update($save_key);
-                        apbct_sfw_send_logs($save_key);
+                        $firewall = new Firewall(
+                            $save_key,
+                            DB::getInstance(),
+                            APBCT_TBL_FIREWALL_LOG
+                        );
+                        $firewall->setSpecificHelper( new CleantalkHelper() );
+                        $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
+                        $firewall->sendLogs();
+                        $fw_updater->update();
                     }
                 }else{
                     // @ToDo have to handle errors!

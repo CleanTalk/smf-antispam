@@ -9,6 +9,9 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
+// Classes autoloader
+require_once(dirname(__FILE__) . '/lib/autoload.php');
+
 //Antispam classes
 use Cleantalk\Antispam\Cleantalk;
 use Cleantalk\Antispam\CleantalkRequest;
@@ -21,15 +24,13 @@ use Cleantalk\Common\Firewall\Firewall;
 use Cleantalk\ApbctSMF\RemoteCalls;
 use Cleantalk\ApbctSMF\Cron;
 use Cleantalk\ApbctSMF\DB;
+use Cleantalk\Common\Variables\Post;
 use Cleantalk\Common\Variables\Server;
 use Cleantalk\Common\Firewall\Modules\SFW;
 
 if (!defined('SMF')) {
     die('Hacking attempt...');
 }
-
-// Classes autoloader
-require_once(dirname(__FILE__) . '/lib/autoload.php');
 
 // Common CleanTalk options
 define('CT_AGENT_VERSION', 'smf-233');
@@ -88,6 +89,7 @@ function cleantalk_sfw_check()
 
     if (isset($user_info) && $user_info['is_admin'])
         return;
+
     // Remote calls
     if( RemoteCalls::check() ) {
         $rc = new RemoteCalls( cleantalk_get_api_key());
@@ -161,9 +163,9 @@ function cleantalk_sfw_check()
                 $ct_request->agent = CT_AGENT_VERSION;
                 $ct_request->sender_email = $sender_email;
 
-                $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-                $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-                $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+                $ct_request->sender_ip = CleantalkHelper::ip__get(array('real'), false);
+                $ct_request->x_forwarded_for = CleantalkHelper::ip__get(array('x_forwarded_for'), false);
+                $ct_request->x_real_ip       = CleantalkHelper::ip__get(array('x_real_ip'), false);
 
                 $ct_request->sender_nickname = $sender_nickname;
                 $ct_request->message = $message;
@@ -493,9 +495,9 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
         $ct_request->agent = CT_AGENT_VERSION;
         $ct_request->sender_email = isset($regOptions['email']) ? $regOptions['email'] : '';
 
-        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+        $ct_request->sender_ip = CleantalkHelper::ip__get(array('real'), false);
+        $ct_request->x_forwarded_for = CleantalkHelper::ip__get(array('x_forwarded_for'), false);
+        $ct_request->x_real_ip       = CleantalkHelper::ip__get(array('x_real_ip'), false);
 
         $ct_request->sender_nickname = isset($regOptions['username']) ? $regOptions['username'] : '';
 
@@ -597,9 +599,9 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
 
         $ct_request->sender_email = isset($sender_email) ? $sender_email : '';
 
-        $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-        $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-        $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+        $ct_request->sender_ip = CleantalkHelper::ip__get(array('real'), false);
+        $ct_request->x_forwarded_for = CleantalkHelper::ip__get(array('x_forwarded_for'), false);
+        $ct_request->x_real_ip       = CleantalkHelper::ip__get(array('x_real_ip'), false);
 
         $ct_request->sender_nickname = isset($from) ? $from : '';
         $ct_request->message = isset($subject) ? $subject."\n".$message : $message;
@@ -678,9 +680,9 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 
             $ct_request->sender_email = isset($posterOptions['email']) ? $posterOptions['email'] : '';
 
-            $ct_request->sender_ip = CleantalkHelper::ip_get(array('real'), false);
-            $ct_request->x_forwarded_for = CleantalkHelper::ip_get(array('x_forwarded_for'), false);
-            $ct_request->x_real_ip       = CleantalkHelper::ip_get(array('x_real_ip'), false);
+            $ct_request->sender_ip = CleantalkHelper::ip__get(array('real'), false);
+            $ct_request->x_forwarded_for = CleantalkHelper::ip__get(array('x_forwarded_for'), false);
+            $ct_request->x_real_ip       = CleantalkHelper::ip__get(array('x_real_ip'), false);
 
             $ct_request->sender_nickname = isset($posterOptions['name']) ? $posterOptions['name'] : '';
             $ct_request->message = isset($msgOptions['subject']) ? preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['subject']))."\n".preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body'])) : preg_replace('/\s+/', ' ',str_replace("<br />", " ", $msgOptions['body']));
