@@ -75,8 +75,8 @@ if ($isInstalling) {
 	updateSettings(array('cleantalk_sfw_last_logs_sent'  => isset($modSettings['cleantalk_sfw_last_logs_sent'])  ? $modSettings['cleantalk_sfw_last_logs_sent']  : '0'),  false);
 	updateSettings(array('cleantalk_last_account_check'  => isset($modSettings['cleantalk_last_account_check'])  ? $modSettings['cleantalk_last_account_check']  : '0'), false);
 	updateSettings(array('cleantalk_remote_calls'  		 => isset($modSettings['cleantalk_remote_calls'])  		 ? $modSettings['cleantalk_remote_calls']  		 : 	json_encode(array('close_renew_banner' => array('last_call' => 0, 'cooldown' => 10), 'sfw_update' => array('last_call' => 0, 'cooldown' => 10), 'sfw_send_logs' => array('last_call' => 0, 'cooldown' => 10), 'sfw_update__write_base' => array('last_call' => 0, 'cooldown' => 0)))), false);
-	updateSettings(array('cleantalk_cron' => isset($modSettings['cleantalk_cron']) ? $modSettings['cleantalk_cron'] : null), false);
-	updateSettings(array('firewall_updating_id' => isset($modSettings['firewall_updating_id']) ? $modSettings['firewall_updating_id'] : null), false);
+	updateSettings(array('cleantalk_cron' => isset($modSettings['cleantalk_cron']) ? $modSettings['cleantalk_cron'] : array()), false);
+	updateSettings(array('firewall_updating_id' => isset($modSettings['firewall_updating_id']) ? $modSettings['firewall_updating_id'] : 0), false);
 	updateSettings(array('firewall_updating_last_start' => isset($modSettings['firewall_updating_last_start']) ? $modSettings['firewall_updating_last_start'] : 0), false);
 	updateSettings(array('firewall_update_percent' => isset($modSettings['firewall_update_percent']) ? $modSettings['firewall_update_percent'] : 0), false);
 	
@@ -211,6 +211,6 @@ if ($isInstalling) {
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw');
 		$smcFunc['db_drop_table']('{db_prefix}cleantalk_sfw_logs');
 		$smcFunc['db_remove_column']('{db_prefix}members', 'ct_marked', array(), '');
-		$smcFunc['db_query']('',"DELETE FROM {db_prefix}settings WHERE variable LIKE '%cleantalk%'",array());
+		$smcFunc['db_query']('',"DELETE FROM {db_prefix}settings WHERE variable LIKE '%cleantalk%' OR variable LIKE '%firewall_upd%'",array());
     }
 }

@@ -15,7 +15,7 @@ class Helper extends \Cleantalk\Common\Helper {
     {
         global $modSettings;
 
-        return array('firewall_updating_id' => isset($modSettings['firewall_updating_id']) ? $modSettings['firewall_updating_id'] : null, 'firewall_updating_last_start' => isset($modSettings['firewall_updating_last_start']) ? $modSettings['firewall_updating_last_start'] : 0, 'firewall_update_percent' => isset($modSettings['firewall_update_percent']) ? $modSettings['firewall_update_percent'] : 0);
+        return array('firewall_updating_id' => isset($modSettings['firewall_updating_id']) ? $modSettings['firewall_updating_id'] : 0, 'firewall_updating_last_start' => isset($modSettings['firewall_updating_last_start']) ? $modSettings['firewall_updating_last_start'] : 0, 'firewall_update_percent' => isset($modSettings['firewall_update_percent']) ? $modSettings['firewall_update_percent'] : 0);
     }
 
     /**
@@ -28,7 +28,7 @@ class Helper extends \Cleantalk\Common\Helper {
     public static function setFwStats( $fw_stats )
     {
         $settings = array();
-        $settings['firewall_updating_id'] = isset($fw_stats['firewall_updating_id']) ? $fw_stats['firewall_updating_id'] : null;
+        $settings['firewall_updating_id'] = isset($fw_stats['firewall_updating_id']) ? $fw_stats['firewall_updating_id'] : 0;
         $settings['firewall_updating_last_start'] = isset($fw_stats['firewall_updating_last_start']) ? $fw_stats['firewall_updating_last_start'] : 0;
         $settings['firewall_update_percent'] = isset($fw_stats['firewall_update_percent']) ? $fw_stats['firewall_update_percent'] : 0;
         updateSettings($settings, false);
