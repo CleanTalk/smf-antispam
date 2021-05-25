@@ -96,7 +96,7 @@ function cleantalk_sfw_check()
         $rc->perform();
     }
     $cron = new Cron();
-    $cron_option = json_decode($modSettings[$cron->getCronOptionName()], true);
+    $cron_option = isset($modSettings[$cron->getCronOptionName()]) ? json_decode($modSettings[$cron->getCronOptionName()], true) : array();
 
     if (empty($cron_option)) {
         $cron->addTask( 'sfw_update', 'apbct_sfw_update', 86400, time() + 60 );
@@ -1340,7 +1340,7 @@ function cleantalk_buffer($buffer)
                     $smcFunc['db_free_result']($result);
                     
                     // Error output
-                    if(!empty($api_result['error'])){
+                    if(!empty($api_result['error']) && isset($api_result['error_string'])){
                         $html.='<center>'
                                 .'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
                                     .'<b>'.$api_result['error_string'].'</b>'
