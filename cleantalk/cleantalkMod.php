@@ -64,8 +64,6 @@ function apbct_sfw_update($access_key = '') {
 }
 
 function apbct_sfw_send_logs($access_key = '') {
-    global $modSettings;
-
     if( empty( $access_key ) ){
         $access_key = cleantalk_get_api_key();
         if (empty($access_key)) {
