@@ -121,8 +121,7 @@ function cleantalk_general_mod_settings($return_config = false)
                 $save_key = $result['auth_key'];
                 
             } else {
-                $settings_array['cleantalk_errors'] = $result['error_string'];
-                updateSettings($settings_array, false);                 
+                updateSettings(array('cleantalk_errors' => $result['error_string']), false);                 
             }
         }
         $save_key = $key_is_valid ? $save_key : Post::get( 'cleantalk_api_key' );
@@ -174,15 +173,13 @@ function cleantalk_general_mod_settings($return_config = false)
                 }else{
                     // @ToDo have to handle errors!
                     // return array('error' => 'KEY_IS_NOT_VALID');
-                    $settings_array['cleantalk_errors'] = 'Key is not valid!';
-                    updateSettings($settings_array, false);                      
+                    updateSettings(array('cleantalk_errors' => 'Key is not valid!'), false);                    
                 }
 
             }else{
                 // @ToDo have to handle errors!
                 // return array('error' => $result);
-                $settings_array['cleantalk_errors'] = $result['error_string'];
-                updateSettings($settings_array, false);      
+                updateSettings(array('cleantalk_errors' => $result['error_string']), false);          
             }
         }
         $settings_array['cleantalk_api_key_is_ok'] = ($key_is_ok) ? '1' : '0';
