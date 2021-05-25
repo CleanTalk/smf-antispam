@@ -1292,6 +1292,37 @@ class Helper
         return static::http__request( $url, array(), 'get dont_split_to_array');
     }
 
+	/**
+	 * Recuresevly "implodes" array or object
+	 *
+	 * @param $glue
+	 * @param $array
+	 *
+	 * @return string
+	 */
+	public static function array_implode__recursive( $glue, $array ){
+		
+		$out = '';
+		
+		foreach( $array as $item ){
+			
+			if( is_array( $item ) || is_object( $item ) )
+				$out .= self::array_implode__recursive( $glue, $item );
+			
+			else{
+				
+				// Skip empty strings
+				if( ! (string) $item )
+					continue;
+				else
+					$out .= (string) $item;
+				
+			}
+		}
+		
+		return $out;
+	}
+
     /**
      * Do the remote call to the host.
      *
