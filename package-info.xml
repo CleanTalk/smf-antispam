@@ -49,7 +49,7 @@
 		</readme>
 	</upgrade>
 	<upgrade from="2.12 - 2.15">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk to 2.33 version:
 			- Fix SFW update on save settings
 			- Change SFW template
 			- Remove plugin settings on uninstall
@@ -62,7 +62,7 @@
 			- New option to disable/enable email notifications
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk до версии 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk до версии 2.33:
 			- Исправлено обновление базы SpamFireWall при сохранении настроек
 			- Изменен шаблон для SpamFireWall
 			- Удаление настроек из БД при удалении плагина
@@ -100,7 +100,7 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.16">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.16 to 2.33 version:
 			- Fix create_table for sql_lite
 			- IPv6 support
 			- Update sfw_networks on plugin install
@@ -109,7 +109,7 @@
 			- New option to disable/enable email notifications		
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.16 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.16 до 2.33:
 			- Исправлен скрипт создания таблиц для sql_lite
 			- Поддержка IPV6
 			- Обновление баз SpamFireWall при установке плагина
@@ -137,12 +137,12 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.17">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.17 to 2.30 version:	
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.17 to 2.33 version:	
 			- Support Cloudflare CDN
 			- New option to disable/enable email notifications	
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.17 до 2.30:	
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.17 до 2.33:	
 			- Поддержка Cloudflare CDN
 			- Добавлена новая опция о включении/отключении e-mail уведомлений
 			- Устранение багов и остальные незначительные улучшения
@@ -166,7 +166,7 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.18">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.18 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.18 to 2.33 version:
 			- New option to disable/enable email notifications		
 			- Bug fixes and other minor improvements
 		</readme>
@@ -194,11 +194,11 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.19">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.19 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.19 to 2.33 version:
 			- New option to disable/enable email notifications	
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.19 до 2.30:	
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.19 до 2.33:	
 			- Добавлена новая опция о включении/отключении e-mail уведомлений
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
@@ -221,10 +221,10 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.20">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.20 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.20 to 2.33 version:
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.20 до 2.30:	
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.20 до 2.33:	
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
@@ -245,11 +245,11 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.21">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.21 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.21 to 2.33 version:
 			- Bug fixes and other minor improvements
 			- Private messages check excluded.
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.21 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.21 до 2.33:
 			- Исправлен баг с проверкой линых сообщений
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
@@ -271,10 +271,10 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.22">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.22 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.22 to 2.33 version:
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.22 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.22 до 2.33:
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
@@ -295,12 +295,12 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.23">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.23 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.23 to 2.33 version:
 			- Lib class updated
 			- Move mod settings to a separate tab
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.23 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.23 до 2.33:
 			- Обновление классов
 			- Настройки мода вынесены в отдельную вкладку
 			- Устранение багов и остальные незначительные улучшения
@@ -323,7 +323,7 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.24">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.23 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.23 to 2.33 version:
 			- Show a real name for the Newbie membergroup on the mod settings page
 			- Add automod option
 			- Admin e-mail notification for each spam checking
@@ -331,7 +331,7 @@
 			- Remote calls support			
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.23 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.23 до 2.33:
 			- Вывод реального имени для группы "Новичек" в настройках мода
 			- Новая опция для автомодерации сообщений
 			- Уведомление администраторов по e-mail по каждой сработки антиспама
@@ -357,14 +357,14 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.25">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.25 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.25 to 2.33 version:
 			- Fix admin checking with custom contact forms option enabled 
 			- Fix JS checking
 			- Optimize settings
 			- Remote calls support			
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.25 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.25 до 2.33:
 			- Исправлен баг с проверкой администратора с включенной опцией проверки кастомных форм
 			- Исправлена JS проверка
 			- Оптимизация настроек
@@ -388,12 +388,12 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.26">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.26 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.26 to 2.33 version:
 			- Optimize settings
 			- Remote calls support			
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.26 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.26 до 2.33:
 			- Оптимизация настроек
 			- Поддержка удаленных вызовов			
 			- Устранение багов и остальные незначительные улучшения
@@ -415,12 +415,12 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.27">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.27 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.27 to 2.33 version:
 			- Optimize settings
 			- Remote calls support
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.27 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.27 до 2.33:
 			- Оптимизация настроек
 			- Поддержка удаленных вызовов
 			- Устранение багов и остальные незначительные улучшения
@@ -442,12 +442,12 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.28">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.28 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.28 to 2.33 version:
 			- Add protection for personal messages
 			- Spanish translation
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.28 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.28 до 2.33:
 			- Добавлена защита личных сообщений
 			- Испанский перевод
 			- Устранение багов и остальные незначительные улучшения
@@ -468,10 +468,10 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.29">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.29 to 2.30 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.29 to 2.33 version:
 			- Bug fixes and other minor improvements
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.29 до 2.30:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.29 до 2.33:
 			- Устранение багов и остальные незначительные улучшения
 		</readme>
 		<create-dir name="cleantalk" destination="$sourcedir"/>
@@ -491,11 +491,11 @@
 		</redirect>			
 	</upgrade>
 	<upgrade from="2.30">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.30 to 2.31 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.30 to 2.33 version:
 			- Setting "Check registration" added.
 			- Fix for ut8_decode function.
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.30 до 2.31:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.30 до 2.33:
 			- Добавлена опция "Проверка регистраций"
 			- Исправления для функции ut8_decode.
 		</readme>
@@ -524,12 +524,12 @@
 		</redirect>
 	</upgrade>
 	<upgrade from="2.31">
-		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.31 to 2.32 version:
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.31 to 2.33 version:
 			- Trait fixes.
 			- Search requests.
 			- Fix php notices.
 		</readme>
-		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.31 до 2.32:
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.31 до 2.33:
 			- Ошибки трейта.
 			- Проверка поиска.
 			- Исправление php ошибок.
