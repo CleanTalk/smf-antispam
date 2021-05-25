@@ -41,6 +41,6 @@ class Helper extends \Cleantalk\Common\Helper {
      */
     public static function SfwUpdate_DoFinisnAction()
     {
-        updateSettings(array('sfw_last_update' => time()), false);
+        updateSettings(array('cleantalk_sfw_last_update' => time()), false);
     }
 }
