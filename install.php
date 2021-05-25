@@ -181,7 +181,7 @@ if ($isInstalling) {
 		$parameters = array();
 		$smcFunc['db_create_table']('{db_prefix}cleantalk_sfw_logs', $columns, $indexes, $parameters, 'update_remove');
 		
-	/* Extending for users table */
+		/* Extending for users table */
 		$smcFunc['db_add_column'](
 			'{db_prefix}members',
 			array(
@@ -189,16 +189,7 @@ if ($isInstalling) {
 				'type' => 'int',
 				'default' => 0
 			)
-		);
-		if (isset($modSettings['cleantalk_api_key']) && $modSettings['cleantalk_api_key'] != '' && isset($modSettings['cleantalk_sfw']) && $modSettings['cleantalk_sfw'] == 1)
-		{
-			if (!class_exists('CleantalkSFW'))
-				require_once(dirname(__FILE__) . '/cleantalk/lib/CleantalkSFW.php');
-			$sfw = new CleantalkSFW;
-			$sfw->sfw_update($modSettings['cleantalk_api_key']);
-			unset($sfw);
-			updateSettings(array('cleantalk_sfw_last_update' => time()+86400), false);			
-		}	
+		);	
     }
 } else {
     // Anti-Spam Verification captcha
