@@ -168,6 +168,7 @@ if ($isInstalling) {
 				'name' => 'ua_id',
 				'type' => 'int',
 				'size' => 11,
+				'null' => true,
 				'default' => null
 			),
 			array(
