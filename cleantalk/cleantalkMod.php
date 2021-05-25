@@ -54,7 +54,7 @@ function apbct_sfw_update($access_key = '') {
         }
     }     
     $firewall = new Firewall(
-        $   ,
+        $access_key,
         DB::getInstance(),
         APBCT_TBL_FIREWALL_LOG
     );
