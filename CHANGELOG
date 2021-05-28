@@ -1,3 +1,7 @@
+Version 2.34 May 28, 2021
+------------------------------
+- Fix call npd on cron.
+
 Version 2.33 May 25, 2021
 ------------------------------
 - Added the ability to check the search form.
