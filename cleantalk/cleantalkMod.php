@@ -1112,7 +1112,7 @@ function cleantalk_load()
     /* Cron for account status */
     if(isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time() - 86400){
         
-        $result = CleantalkHelper::api_method__notice_paid_till($modSettings['cleantalk_api_key'], preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
+        $result = CleantalkAPI::method__notice_paid_till($modSettings['cleantalk_api_key'], preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
         
         if(empty($result['error'])){
             $settings_array = array(
