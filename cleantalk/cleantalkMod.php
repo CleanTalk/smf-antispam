@@ -1159,7 +1159,7 @@ function cleantalk_is_valid_js()
         global $modSettings;
         
         $js_keys = isset($modSettings['cleantalk_js_keys']) ? json_decode($modSettings['cleantalk_js_keys'], true) : null;
-        $keys = $js_keys['keys'];        
+        $keys = isset($js_keys['keys']) ? $js_keys['keys'] : false;
         if($keys && is_array($keys)){
             $result = isset($keys[$_COOKIE['ct_checkjs']]) ? 1 : 0;
         }else{
