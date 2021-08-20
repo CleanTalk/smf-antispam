@@ -1457,7 +1457,9 @@ function cleantalk_buffer($buffer)
                 $cleantalk_key_html.= "<br><b>".$txt['cleantalk_account_name_ob']." ".$modSettings['cleantalk_account_name_ob']."</b>";
             elseif (isset($modSettings['cleantalk_moderate_ip']) && $modSettings['cleantalk_moderate_ip'] == '1' && isset($modSettings['cleantalk_ip_license']) && $modSettings['cleantalk_ip_license'] != '')
                 $cleantalk_key_html.= "<br><b>".$txt['cleantalk_moderate_ip']." ".$modSettings['cleantalk_ip_license']."</b>";
-            $cleantalk_key_html .= '<br><br><a target="_blank" href="https://cleantalk.org/my?user_token='.$modSettings['cleantalk_user_token'].'&cp_mode=antispam" style="display: inline-block;"><input type="button" value="'.$txt['cleantalk_get_statistics'].'"></a><br><br>';            
+            if (isset($modSettings['cleantalk_user_token']) && !empty($modSettings['cleantalk_user_token'])) {
+                $cleantalk_key_html .= '<br><br><a target="_blank" href="https://cleantalk.org/my?user_token='.$modSettings['cleantalk_user_token'].'&cp_mode=antispam" style="display: inline-block;"><input type="button" value="'.$txt['cleantalk_get_statistics'].'"></a><br><br>';
+            }
         }
         else
         {
