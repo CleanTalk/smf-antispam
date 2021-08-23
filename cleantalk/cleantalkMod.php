@@ -827,8 +827,7 @@ function cleantalk_get_checkjs_code(){
         $keys = $js_keys['keys'];
         $keys_checksum = md5(json_encode($keys));
 
-        if ($keys && is_array($keys) && !empty($keys))
-        {
+        if ($keys && is_array($keys) && !empty($keys)) {
             foreach ($keys as $k => $t) {
 
                 // Removing key if it's to old
@@ -846,19 +845,19 @@ function cleantalk_get_checkjs_code(){
             if (time() - (int)$latest_key_time > $js_keys['js_key_lifetime']) {
                 $keys[$key] = time();
             }           
-        }
-        else $keys = array($key => time());
-                    
-        if (md5(json_encode($keys)) != $keys_checksum) {
-            $js_keys = array(
-                'keys' => $keys, // Keys to do JavaScript antispam test 
-                'js_keys_amount' => 24, // JavaScript keys store days - 8 days now
-                'js_key_lifetime' => 86400, // JavaScript key life time in seconds - 1 day now
-            );
-            updateSettings(array('cleantalk_js_keys' => json_encode($js_keys)), false); 
-        }        
+        }             
+    } else {
+        $keys = array($key => time());
     }
-                           
+
+    if (md5(json_encode($keys)) != $keys_checksum) {
+        $js_keys = array(
+            'keys' => $keys, // Keys to do JavaScript antispam test 
+            'js_keys_amount' => 24, // JavaScript keys store days - 8 days now
+            'js_key_lifetime' => 86400, // JavaScript key life time in seconds - 1 day now
+        );
+        updateSettings(array('cleantalk_js_keys' => json_encode($js_keys)), false); 
+    }                            
     return $key;
 }
 
