@@ -1,3 +1,10 @@
+Version 2.35 August 25, 2021
+------------------------------
+- Fix: fixed error in cleantalk_is_valid_js
+- Fix: undefined index token.
+- Fix: set js_key if empty.
+- Fix: SpamFirewall check. PHP Notice.
+
 Version 2.34 May 28, 2021
 ------------------------------
 - Fix call npd on cron.
