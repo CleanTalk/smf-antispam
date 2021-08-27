@@ -630,12 +630,14 @@
 			- Fix: undefined index token.
 			- Fix: set js_key if empty.
 			- Fix: SpamFirewall check. PHP Notice.
+			- Fix: Added error.html
 		</readme>
 		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.34 до 2.35:
 			- Исправлена ошибка в cleantalk_is_valid_js
 			- Исправлена ошибка с неизвестным индексом токена
 			- Исправлена ошибка с пустым js_key
 			- Убрали notice в SFW
+			- Добавили error.html
 		</readme>
 
 		<!-- Cleaning up old data -->

@@ -4,6 +4,7 @@ Version 2.35 August 25, 2021
 - Fix: undefined index token.
 - Fix: set js_key if empty.
 - Fix: SpamFirewall check. PHP Notice.
+- Fix: Added error.html
 
 Version 2.34 May 28, 2021
 ------------------------------
