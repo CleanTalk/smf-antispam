@@ -84,8 +84,8 @@ function apbct_sfw_send_logs($access_key = '') {
 function cleantalk_sfw_check()
 {
     global $modSettings, $language, $user_info;
-    
-    if (isset($user_info['is_admin']) && $user_info['is_admin'])
+
+    if (isset($user_info) && $user_info['is_admin'])
         return;
 
     // Remote calls
@@ -850,7 +850,7 @@ function cleantalk_get_checkjs_code(){
         $keys = array($key => time());
     }
 
-    if (md5(json_encode($keys)) != $keys_checksum) {
+    if (!isset($keys_checksum) || md5(json_encode($keys)) != $keys_checksum) {
         $js_keys = array(
             'keys' => $keys, // Keys to do JavaScript antispam test 
             'js_keys_amount' => 24, // JavaScript keys store days - 8 days now
