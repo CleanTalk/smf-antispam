@@ -1318,15 +1318,12 @@ function cleantalk_buffer($buffer)
                                 
                                 // Mark spam users
                                 if($key === filter_var($key, FILTER_VALIDATE_IP)){
-                                    if($value['appears'] == 1){
-                                        $sql = 'UPDATE {db_prefix}members set ct_marked=1 where member_ip="'.$key.'"';
-                                        $sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-                                    }
+                                    $sql = 'UPDATE {db_prefix}members set ct_marked='.$value['appears'].' where member_ip="'.$key.'"';
+                                    $sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
                                 }else{
-                                    if($value['appears'] == 1){
-                                        $sql = 'UPDATE {db_prefix}members set ct_marked=1 where email_address="'.$key.'"';
-                                        $sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-                                    }
+                                    $sql = 'UPDATE {db_prefix}members set ct_marked='.$value['appears'].' where email_address="'.$key.'"';
+                                    $sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
+
                                 }
                             }
                             unset($key, $value);
