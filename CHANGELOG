@@ -1,3 +1,7 @@
+Version 2.36 December 14, 2021
+------------------------------
+- Fix: Fixed the method of executing queries in the database, added the ability to process data.
+
 Version 2.35 August 25, 2021
 ------------------------------
 - Fix: fixed error in cleantalk_is_valid_js
