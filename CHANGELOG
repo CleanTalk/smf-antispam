@@ -1,6 +1,11 @@
-Version 2.36 December 14, 2021
+Version 2.36 December 20, 2021
 ------------------------------
-- Fix: Fixed the method of executing queries in the database, added the ability to process data.
+- Fix: undefined keys_checksum.
+- Fix: is_admin sfw check.
+- Fix: error in diff_key.
+- Fix: update agent version.
+- Fix: spam_check_cms update users status.
+- Fix: Security fix.
 
 Version 2.35 August 25, 2021
 ------------------------------
