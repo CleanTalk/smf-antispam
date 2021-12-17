@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/CleanTalk/smf-antispam.svg)](https://travis-ci.org/CleanTalk/smf-antispam)
 
-* **Version:** 2.35
+* **Version:** 2.36
 * **License:** GNU General Public License  
 * **Compatible with:** SMF 2.0 and up  
 * **Languages:** English, Russian  
