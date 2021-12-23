@@ -1291,44 +1291,52 @@ function cleantalk_buffer($buffer)
                     // Getting users to check
                     // Making at least one DB query
                     do{
-                        
-                        $sql = "SELECT id_member, member_name, date_registered, last_login, email_address, member_ip FROM {db_prefix}members where passwd <> '' LIMIT $offset,$per_request";
-                        $result = $smcFunc['db_query']('', $sql, Array());
-                                                
+
+                        $sql_users = "SELECT id_member, member_name, date_registered, last_login, email_address, member_ip FROM {db_prefix}members where passwd <> '' LIMIT $offset,$per_request";
+                        $users = $smcFunc['db_query']('', $sql_users, Array());
+
                         // Break if result is empty.
-                        if($smcFunc['db_num_rows'] ($result) == 0)
+                        if($smcFunc['db_num_rows'] ($users) == 0) {
                             break;
-                        
+                        }
+
                         // Setting data
                         $data = array();
-                        while($row = $smcFunc['db_fetch_assoc'] ($result)){
+                        while($row = $smcFunc['db_fetch_assoc'] ($users)){
                             $data[] = $row['email_address'];
                             $data[] = $row['member_ip'];
                         }
-                        
+
                         // Request
                         $api_result = CleantalkAPI::method__spam_check_cms(cleantalk_get_api_key(), $data);
-                        
                         // Error handling
                         if(!empty($api_result['error'])){
                             break;
                         }else{
-                                
-                            foreach($api_result as $key => $value){
-                                
-                                // Mark spam users
-                                if($key === filter_var($key, FILTER_VALIDATE_IP)){
-                                    $sql = 'UPDATE {db_prefix}members set ct_marked='.$value['appears'].' where member_ip="'.$key.'"';
-                                    $sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-                                }else{
-                                    $sql = 'UPDATE {db_prefix}members set ct_marked='.$value['appears'].' where email_address="'.$key.'"';
-                                    $sub_result = $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
+                            $users = $smcFunc['db_query']('', $sql_users, Array());
+                            while( $user = $smcFunc['db_fetch_assoc'] ($users) ) {
 
+                                $uip = $user['member_ip'];
+                                $uim = $user['email_address'];
+
+                                if ( isset($api_result[$uip]) && $api_result[$uip]['appears'] == 1 ) {
+                                    $mark_spam_ip = true;
                                 }
+                                if ( isset($api_result[$uim]) && $api_result[$uim]['appears'] == 1 ) {
+                                    $mark_spam_email = true;
+                                }
+
+                                if ( $mark_spam_ip || $mark_spam_email ) {
+                                    // Mark spam user
+                                    $sql = 'UPDATE {db_prefix}members SET ct_marked=1 WHERE id_member=' . $user['id_member'];
+                                } else {
+                                    // Mark NOT spam user
+                                    $sql = 'UPDATE {db_prefix}members SET ct_marked=0 WHERE id_member=' . $user['id_member'];
+                                }
+                                $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
                             }
-                            unset($key, $value);
                         }
-                        
+
                         $offset += $per_request;
                         
                     } while( true );
