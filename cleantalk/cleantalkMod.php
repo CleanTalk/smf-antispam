@@ -1304,7 +1304,7 @@ function cleantalk_buffer($buffer)
                         $data = array();
                         while($row = $smcFunc['db_fetch_assoc'] ($users)){
                             $data[] = $row['email_address'];
-                            $data[] = $row['member_ip'];
+                            $data[] = function_exists('inet_dtop') ? inet_dtop($row['member_ip']) : $row['member_ip'];
                         }
 
                         // Request
@@ -1316,8 +1316,9 @@ function cleantalk_buffer($buffer)
                             $users = $smcFunc['db_query']('', $sql_users, Array());
                             while( $user = $smcFunc['db_fetch_assoc'] ($users) ) {
 
-                                $uip = $user['member_ip'];
+                                $uip = function_exists('inet_dtop') ? inet_dtop($user['member_ip']) : $user['member_ip'];
                                 $uim = $user['email_address'];
+                                $mark_spam_ip = $mark_spam_email = false;
 
                                 if ( isset($api_result[$uip]) && $api_result[$uip]['appears'] == 1 ) {
                                     $mark_spam_ip = true;
@@ -1340,9 +1341,6 @@ function cleantalk_buffer($buffer)
                         $offset += $per_request;
                         
                     } while( true );
-                    
-                    // Free result when it's all done
-                    $smcFunc['db_free_result']($result);
                     
                     // Error output
                     if(!empty($api_result['error']) && isset($api_result['error_string'])){
@@ -1404,18 +1402,18 @@ function cleantalk_buffer($buffer)
                             .'</tr>'
                             .'</thead>'
                             .'<tbody>';
-                            
-                        $found=false;
                         
                         while($row = $smcFunc['db_fetch_assoc'] ($result)){
 
-                            $found=true;
+                            $uip = function_exists('inet_dtop') ? inet_dtop($row['member_ip']) : $row['member_ip'];
+                            $uim = $row['email_address'];
+
                             $html.="<tr>
                             <td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
                             <td>{$row['member_name']}&nbsp;<sup><a href='index.php?action=profile;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_username_details']}</a></sup></td>
                             <td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
-                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['email_address']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['email_address']."</a></td>
-                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$row['member_ip']."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$row['member_ip']."</a></td>
+                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$uim."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$uim."</a></td>
+                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$uip."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$uip."</a></td>
                             <td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
                             <td style='text-align: center;'>{$row['posts']}&nbsp;<sup><a href='index.php?action=profile;area=showposts;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_posts_show']}</a></sup></td>
                             </tr>";
