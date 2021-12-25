@@ -5,7 +5,7 @@
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
 	<version>2.36</version>
-	<install for="2.0 - 2.1.99">
+	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
 		
@@ -25,15 +25,15 @@
 		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
 		
 		<!-- Database updates -->
-		<database>install.php</database>
+		<code>install.php</code>
 		
 		<!-- Redirect -->
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
-	<uninstall for="2.0 - 2.1.99">
-		<database>install.php</database>
+	<uninstall for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
+		<code>install.php</code>
 		<modification format="xml" type="file" reverse="true">modification.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/english.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/english-utf8.xml</modification>
@@ -638,6 +638,48 @@
 			- Исправлена ошибка с пустым js_key
 			- Убрали notice в SFW
 			- Добавили error.html
+		</readme>
+
+		<!-- Cleaning up old data -->
+		<remove-dir name="$sourcedir/cleantalk" />
+		<create-dir name="cleantalk" destination="$sourcedir"/>
+
+		<!-- Copying new source files -->
+		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
+
+		<!-- Translations -->
+		<modification format="xml" type="file">modification.xml</modification>
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+
+		<!-- Database updates -->
+		<database>install.php</database>
+
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</upgrade>
+	<upgrade from="2.35">
+		<readme type="inline" parsebbc="true">This upgrade for Antispam by Cleantalk from 2.35 to 2.36 version:
+			- Fix: undefined keys_checksum.
+			- Fix: is_admin sfw check.
+			- Fix: error in diff_key.
+			- Fix: update agent version.
+			- Fix: spam_check_cms update users status.
+			- Fix: Security fix.
+			- Fix: 2.1 SMF supporting fixed.
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.34 до 2.35:
+			- Исправлена ошибка в keys_checksum
+			- Исправлена проверка is_admin()
+			- Обновлена версия агента
+			- Обновлен статус пользователя в spam_check_cms
+			- Исправлена проблема с безопасностью
+			- Исправлена поддержка SMF 2.1
 		</readme>
 
 		<!-- Cleaning up old data -->
