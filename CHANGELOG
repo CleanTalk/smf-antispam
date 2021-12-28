@@ -6,6 +6,7 @@ Version 2.36 December 20, 2021
 - Fix: update agent version.
 - Fix: spam_check_cms update users status.
 - Fix: Security fix.
+- Fix: 2.1 SMF supporting fixed.
 
 Version 2.35 August 25, 2021
 ------------------------------
