@@ -33,7 +33,7 @@ if (!defined('SMF')) {
 }
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-234');
+define('CT_AGENT_VERSION', 'smf-236');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
