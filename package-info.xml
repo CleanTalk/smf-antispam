@@ -4,7 +4,7 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.36</version>
+	<version>2.37-dev</version>
 	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
