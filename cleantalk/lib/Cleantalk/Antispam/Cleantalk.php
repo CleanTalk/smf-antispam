@@ -269,7 +269,7 @@ class Cleantalk {
      * @param $msg
      * @return boolean|\CleantalkResponse
      */
-    private function sendRequest($data = null, $url, $server_timeout = 15) {
+    private function sendRequest($data, $url, $server_timeout = 15) {
         // Convert to array
         $data = (array)json_decode(json_encode($data), true);
         
