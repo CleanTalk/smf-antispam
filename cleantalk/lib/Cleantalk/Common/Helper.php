@@ -1347,7 +1347,7 @@ class Helper
 
         if( empty( $result__rc_check_website['error'] ) ){
 
-            if( preg_match( '@^.*?OK$@', $result__rc_check_website) ){
+            if( is_string($result__rc_check_website) && preg_match( '@^.*?OK$@', $result__rc_check_website) ){
 
                 static::http__request(
                     static::getSiteUrl(),
