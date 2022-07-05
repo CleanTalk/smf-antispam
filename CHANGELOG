@@ -1,3 +1,21 @@
+Version 2.36 December 20, 2021
+------------------------------
+- Fix: undefined keys_checksum.
+- Fix: is_admin sfw check.
+- Fix: error in diff_key.
+- Fix: update agent version.
+- Fix: spam_check_cms update users status.
+- Fix: Security fix.
+- Fix: 2.1 SMF supporting fixed.
+
+Version 2.35 August 25, 2021
+------------------------------
+- Fix: fixed error in cleantalk_is_valid_js
+- Fix: undefined index token.
+- Fix: set js_key if empty.
+- Fix: SpamFirewall check. PHP Notice.
+- Fix: Added error.html
+
 Version 2.34 May 28, 2021
 ------------------------------
 - Fix call npd on cron.

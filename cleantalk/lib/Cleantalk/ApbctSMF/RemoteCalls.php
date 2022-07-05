@@ -63,7 +63,8 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
         $default_rc = array('close_renew_banner' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_update' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_send_logs' => array('last_call' => 0, 'cooldown' => self::COOLDOWN), 'sfw_update__write_base' => array('last_call' => 0, 'cooldown' => 0));
         if (isset($modSettings['cleantalk_remote_calls'])) {
             $remote_calls = json_decode($modSettings['cleantalk_remote_calls'],true);
-            return empty(array_diff_key($remote_calls, $default_rc)) ? $remote_calls : $default_rc;
+            $diff_key = array_diff_key($remote_calls, $default_rc);
+            return empty($diff_key) ? $remote_calls : $default_rc;
         }
         return $default_rc;
     }

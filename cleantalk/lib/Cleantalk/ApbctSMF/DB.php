@@ -47,11 +47,17 @@ class DB extends \Cleantalk\Common\DB {
      *
      * @return bool|int Raw result
      */
-    public function execute( $query ) {
+    public function execute( $query, $data = array() ) {
         global $smcFunc;
 
-        $this->result = $smcFunc['db_query']('', $query, array('db_error_skip' => true));
-        
+        $data = array_merge($data, array('db_error_skip' => true));
+
+        $this->result = $smcFunc['db_query'](
+        	'',
+			$query,
+			$data
+		);
+
         return $this->result;
     }
 

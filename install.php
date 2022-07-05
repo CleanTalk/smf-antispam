@@ -9,7 +9,7 @@
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
-global $db_connection, $smcFunc, $modSettings;
+global $db_connection, $smcFunc, $modSettings, $context;
 
 $hooks = array(
     'integrate_pre_include'          => '$sourcedir/cleantalk/cleantalkMod.php',

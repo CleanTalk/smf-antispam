@@ -71,10 +71,11 @@ abstract class DB
      * Run any raw request
      *
      * @param $query
+	 * @param $data
      *
      * @return bool|int Raw result
      */
-    abstract public function execute( $query );
+    abstract public function execute( $query, $data = array() );
 
     /**
      * Fetchs first column from query.
