@@ -171,9 +171,23 @@ function cleantalk_general_mod_settings($return_config = false)
                         $fw_updater->update();
                     }
                 }else{
-                    // @ToDo have to handle errors!
-                    // return array('error' => 'KEY_IS_NOT_VALID');
-                    updateSettings(array('cleantalk_errors' => 'Key is not valid!'), false);                    
+					$settings_array = array(
+						'cleantalk_show_notice'   => isset($result['show_notice']) ? $result['show_notice'] : '0',
+						'cleantalk_renew'         => isset($result['renew']) ? $result['renew'] : '0',
+						'cleantalk_trial'         => isset($result['trial']) ? $result['trial'] : '0',
+						'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '',
+						'cleantalk_spam_count'    => isset($result['spam_count']) ? $result['spam_count'] : '0',
+						'cleantalk_moderate_ip'   => isset($result['moderate_ip']) ? $result['moderate_ip'] : '0',
+						'cleantalk_moderate'      => isset($result['moderate']) ? $result['moderate'] : '0',
+						'cleantalk_show_review'   => isset($result['show_review']) ? $result['show_review'] : '0',
+						'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
+						'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',
+						'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
+						'cleantalk_last_account_check' => time(),
+						'cleantalk_errors' => 'Key is not valid!',
+					);
+
+					updateSettings($settings_array, false);
                 }
 
             }else{
