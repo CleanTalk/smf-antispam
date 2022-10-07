@@ -65,6 +65,7 @@ function cleantalk_general_mod_settings($return_config = false)
 
     $context['page_title'] = $txt['cleantalk_settings'];
     $context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=cleantalk';
+    $context['sub_template'] = 'cleantalk_checking_users_for_spam_section';
 
     // Get a real name for the Newbie membergroup
     $request = $smcFunc['db_query']('', '
@@ -99,7 +100,6 @@ function cleantalk_general_mod_settings($return_config = false)
         array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']),
         array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']),
         array('desc', 'cleantalk_api_key_description'),
-        array('desc', 'cleantalk_check_users'),
     );
 
     if ($return_config) {
@@ -121,7 +121,7 @@ function cleantalk_general_mod_settings($return_config = false)
                 $save_key = $result['auth_key'];
                 
             } else {
-                updateSettings(array('cleantalk_errors' => $result['error_string']), false);                 
+                updateSettings(array('cleantalk_errors' => $result['error_string']), false);
             }
         }
         $save_key = $key_is_valid ? $save_key : Post::get( 'cleantalk_api_key' );
@@ -173,17 +173,17 @@ function cleantalk_general_mod_settings($return_config = false)
                 }else{
                     // @ToDo have to handle errors!
                     // return array('error' => 'KEY_IS_NOT_VALID');
-                    updateSettings(array('cleantalk_errors' => 'Key is not valid!'), false);                    
+                    updateSettings(array('cleantalk_errors' => 'Key is not valid!'), false);
                 }
 
             }else{
                 // @ToDo have to handle errors!
                 // return array('error' => $result);
-                updateSettings(array('cleantalk_errors' => $result['error_string']), false);          
+                updateSettings(array('cleantalk_errors' => $result['error_string']), false);
             }
         }
         $settings_array['cleantalk_api_key_is_ok'] = ($key_is_ok) ? '1' : '0';
-        updateSettings($settings_array, false);         
+        updateSettings($settings_array, false);
     }
     
     if (isset($_GET['save'])) {
