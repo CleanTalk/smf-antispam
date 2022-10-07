@@ -43,7 +43,6 @@ $txt['cleantalk_tell_others_postinput'] = 'Checking this box places a small link
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
 $txt['cleantalk_sfw'] = 'Enable SpamFireWall';
 $txt['cleantalk_sfw_postinput'] = 'This option allows to filter spam bots before they access website. Also reduces CPU usage on hosting server and accelerates pages load time.';
-$txt['cleantalk_check_users'] = '%CLEANTALK_CHECK_USERS%';
 $txt['cleantalk_check_users_button'] = 'Check users for spam';
 $txt['cleantalk_check_users_button_after'] = 'Anti-spam by CleanTalk will check all users against blacklists database and show you senders that have spam activity on other websites.';
 $txt['cleantalk_check_users_key_is_bad'] = 'Can not access cloud database. Access key is bad.';
