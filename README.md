@@ -85,3 +85,7 @@ Go to Dashboard to see the anti-spam status, add new websites or manage existing
 
 **Admin Settings**  
 Mod has admin settings on page Admin - Features and options - Configuration - Modification settings - Antispam by CleanTalk
+
+## Requirements
+
+* CleanTalk account https://cleantalk.org/register?product=anti-spam
