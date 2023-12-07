@@ -261,7 +261,7 @@ class Cleantalk {
                     $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.'; 
                 }
             }
-        
+        }
         return $request;
     }
     
