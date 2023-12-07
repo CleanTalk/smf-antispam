@@ -256,10 +256,11 @@ class Cleantalk {
         // Removing non UTF8 characters from request, because non UTF8 or malformed characters break json_encode().
         //
         foreach ($request as $param => $value) {
-            if (!preg_match('//u', $value)) {
-                $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.'; 
+            if ($value) {
+                if (is_string($value) && !preg_match('//u', $value)) {
+                    $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.'; 
+                }
             }
-        }
         
         return $request;
     }
