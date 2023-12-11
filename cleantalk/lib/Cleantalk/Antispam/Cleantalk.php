@@ -540,7 +540,7 @@ class Cleantalk {
                 
                 // -1 server is down, skips not reachable server
                 if ($ping != -1) {
-                    $r_temp[$ping + $i] = $server;
+                    $r_temp[(int)$ping + $i] = $server;
                 }
                 $i++;
                 
