@@ -1342,31 +1342,32 @@ class Helper
         $result__rc_check_website = static::http__request(
             static::getSiteUrl(),
             array_merge( $request_params__default, $request_params, array( 'test' => 'test' ) ),
-            array( 'get', )
+            array('dont_split_to_array',
+                'no_cache')
         );
 
-        if( empty( $result__rc_check_website['error'] ) ){
-
-            if( preg_match( '@^.*?OK$@', $result__rc_check_website) ){
-
-                static::http__request(
-                    static::getSiteUrl(),
-                    array_merge( $request_params__default, $request_params ),
-                    array_merge( array( 'get', ), $patterns )
-                );
-
-            }else
-                return array(
-                    'error' => 'WRONG_SITE_RESPONSE ACTION: ' . $rc_action . ' RESPONSE: ' . htmlspecialchars( substr(
-                            ! is_string( $result__rc_check_website )
-                                ? print_r( $result__rc_check_website, true )
-                                : $result__rc_check_website,
+        // Considering empty response as error
+        if ($result__rc_check_website === '') {
+            return array('error' => 'WRONG_SITE_RESPONSE TEST ACTION : ' . $rc_action . ' ERROR: EMPTY_RESPONSE');
+            // Wrap and pass error
+        } elseif ( ! empty($result__rc_check_website['error'])) {
+            return array('error' => 'WRONG_SITE_RESPONSE TEST ACTION: ' . $rc_action . ' ERROR: ' . $result__rc_check_website['error']);
+            // Expects 'OK' string as good response otherwise - error
+        } elseif ( ( is_string($result__rc_check_website) && ! preg_match('@^.*?OK$@', $result__rc_check_website) ) || ! is_string($result__rc_check_website) ) {
+            return array(
+                'error' => 'WRONG_SITE_RESPONSE ACTION: ' .
+                    $rc_action .
+                    ' RESPONSE: ' .
+                    '"' .
+                    htmlspecialchars(
+                        substr(
+                            ! is_string($result__rc_check_website) ? print_r($result__rc_check_website, true) : $result__rc_check_website,
                             0,
                             400
-                        ) )
-                );
-        }else
-            return array( 'error' => 'WRONG_SITE_RESPONSE TEST ACTION: ' . $rc_action . ' ERROR: ' . $result__rc_check_website['error'] );
+                        )
+                    ) . '"'
+            );
+        }
 
         return true;
     }
