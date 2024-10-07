@@ -27,7 +27,7 @@ $txt['cleantalk_first_post_checking'] = 'Включить проверку но�
 $txt['cleantalk_first_post_checking_postinput'] = 'Все сообщения от пользователей группы <a href="index.php?action=moderate;area=viewgroups;sa=members;group=4">%GROUP%</a> будут проверены на спам';
 $txt['cleantalk_automod'] = 'Включить автомодерацию сообщений';
 $txt['cleantalk_automod_postinput'] = 'Автоматически помещать подозрительные комментарии, которые могут не являться 100% спамом на ручную модерацию и блокировать очевидный спам. Убедитесь, что у вас включена опция <b>Пост модерации</b>';
-$txt['cleantalk_api_key_description'] = 'Домашняя страница расширения: <a target="_blank" href="https://cleantalk.org/">http://cleantalk.org</a>';
+$txt['cleantalk_api_key_description'] = 'Домашняя страница расширения: <a target="_blank" href="https://cleantalk.org/">https://cleantalk.org</a>';
 $txt['cleantalk_logging'] = 'Включить логирование ответов сервиса';
 $txt['cleantalk_logging_postinput'] = 'Все действия плагина будут записываться в лог форума (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Админка -> Логи ошибок</a>)';
 $txt['cleantalk_tell_others'] = 'Рассказать другим про CleanTalk';

@@ -5,7 +5,7 @@
  * @package Cleantalk
  * @subpackage SMF
  * @author CleanTalk (welcome@cleantalk.org)
- * @copyright (C) 2014 Сleantalk team (http://cleantalk.org)
+ * @copyright (C) 2014 Сleantalk team (https://cleantalk.org)
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 

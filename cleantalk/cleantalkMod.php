@@ -5,7 +5,7 @@
  * @package Cleantalk
  * @subpackage SMF
  * @author CleanTalk (welcome@cleantalk.org)
- * @copyright (C) 2014 Сleantalk team (http://cleantalk.org)
+ * @copyright (C) 2014 Сleantalk team (https://cleantalk.org)
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -1188,7 +1188,7 @@ function template_cleantalk_above()
                 echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
                     ."<h1>"
                         ."<img style='height: 20px; margin: 0 5px 0 0; position: relative; top: 5px;' src='{$source_dir}attention.png' />"
-                        .sprintf($txt['cleantalk_banner_renew_1'], "<a href='http://cleantalk.org/my/bill/recharge?cp_mode=antispam'><u>{$txt['cleantalk_banner_renew_2']}</u></a>")
+                        .sprintf($txt['cleantalk_banner_renew_1'], "<a href='https://cleantalk.org/my/bill/recharge?cp_mode=antispam'><u>{$txt['cleantalk_banner_renew_2']}</u></a>")
                     ."</h1>"
                 ."</div>";
             }
@@ -1198,7 +1198,7 @@ function template_cleantalk_above()
                 echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
                     ."<h1>"
                         ."<img style='height: 20px; margin: 0 5px 0 0; position: relative; top: 5px;' src='{$source_dir}attention.png' />"
-                        .sprintf($txt['cleantalk_banner_trial_1'], "<a href='http://cleantalk.org/my/bill/recharge?cp_mode=antispam' target=\"_blank\"><u>{$txt['cleantalk_banner_trial_2']}</u></a>")
+                        .sprintf($txt['cleantalk_banner_trial_1'], "<a href='https://cleantalk.org/my/bill/recharge?cp_mode=antispam' target=\"_blank\"><u>{$txt['cleantalk_banner_trial_2']}</u></a>")
                     ."</h1>"
                 ."</div>";
             }

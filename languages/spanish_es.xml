@@ -27,7 +27,7 @@ $txt['cleantalk_first_post_checking'] = 'Activar la prueba antispam solo para us
 $txt['cleantalk_first_post_checking_postinput'] = 'Se verificar� el spam de todos los mensajes de los usuarios reci�n registrados (<a href="index.php?action=moderate;area=viewgroups;sa=members;group=4">Solo el grupo %GROUP%</a>)';
 $txt['cleantalk_automod'] = 'Activar la automoderaci�n en los mensajes';
 $txt['cleantalk_automod_postinput'] = 'Al activar esta casilla, los comentarios sospechosos se pondr�n de forma autom�tica a la espera de aprobaci�n manual, aunque no haya un 100% de certeza, y se bloquear�n los comentarios que sean claramente spam. Aseg�rate de que la funci�n <b>Moderaci�n de mensajes</b> est� activada dentro del Centro de Administraci�n SMF .> Permisos -> Moderaci�n de mensajes ';
-$txt['cleantalk_api_key_description'] = 'P�gina web de este extensi�n de SMF: <a target="_blank" href="https://cleantalk.org/">http://cleantalk.org</a>';
+$txt['cleantalk_api_key_description'] = 'P�gina web de este extensi�n de SMF: <a target="_blank" href="https://cleantalk.org/">https://cleantalk.org</a>';
 $txt['cleantalk_logging'] = 'Activar registro';
 $txt['cleantalk_logging_postinput'] = 'Todas las acciones de esta modificaci�n se a�adir�n al registro del foro . (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Centro de Administraci�n SMF -> Registros </a>)';
 $txt['cleantalk_tell_others'] = '�Dile a tus visitantes que usas CleanTalk!';

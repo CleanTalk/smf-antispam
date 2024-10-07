@@ -8,7 +8,7 @@ namespace Cleantalk\Common\Templates;
  * @package CleanTalk
  * @Version 1.1.0
  * @author Cleantalk team (welcome@cleantalk.org)
- * @copyright (C) 2014 CleanTalk team (http://cleantalk.org)
+ * @copyright (C) 2014 CleanTalk team (https://cleantalk.org)
  * @license GNU/GPL: http://www.gnu.org/copyleft/gpl.html
  */
 

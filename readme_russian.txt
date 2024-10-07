@@ -11,7 +11,7 @@
 	[li]Анти-спам тест для только что зарегистрированных пользователей[/li]
 [/list]
 
-Мод является клиентским приложением для облачного анти-спам сервиса [url=http://cleantalk.org/]CleanTalk.org[/url], который ежедневно защищает более 215 тысяч вебсайтов.
+Мод является клиентским приложением для облачного анти-спам сервиса [url=https://cleantalk.org/]CleanTalk.org[/url], который ежедневно защищает более 215 тысяч вебсайтов.
 Также, вы можете использовать наше приложение для iPhone/Android для управления сервисом на вашем вебсайте или для управления регистраций, сообщений и т.д
 
 [b]Настройки[/b]
@@ -27,7 +27,7 @@ SMF 2.0 и выше
 Смотрите на [url=https://github.com/CleanTalk/smf-antispam/blob/master/CHANGELOG]Github[/url]
 
 
-[url=http://cleantalk.org/]CleanTalk сайт[/url]
+[url=https://cleantalk.org/]CleanTalk сайт[/url]
 
 [url=https://github.com/CleanTalk/smf-antispam]Github репозиторий[/url]
 
