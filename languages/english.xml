@@ -39,6 +39,8 @@ $txt['cleantalk_check_personal_messages'] = 'Enable antispam test for personal m
 $txt['cleantalk_check_personal_messages_postinput'] = 'Check all personal messages for spam';
 $txt['cleantalk_ccf_checking'] = 'Check custom forms';
 $txt['cleantalk_ccf_checking_postinput'] = 'May cause conflicts!';
+$txt['cleantalk_bot_detector'] = 'Use Anti-Spam by CleanTalk JavaScript library';
+$txt['cleantalk_bot_detector_postinput'] = 'This option includes external Anti-Spam by CleanTalk JavaScript library to getting visitors info data.';
 $txt['cleantalk_tell_others_postinput'] = 'Checking this box places a small link in the footer that lets others know what anti-spam tool protects your site.';
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">SMF spam</a> blocked by CleanTalk';
 $txt['cleantalk_sfw'] = 'Enable SpamFireWall';
