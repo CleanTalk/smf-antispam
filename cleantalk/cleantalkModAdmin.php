@@ -95,7 +95,6 @@ function cleantalk_general_mod_settings($return_config = false)
         array('check', 'cleantalk_logging', 'subtext' => sprintf($txt['cleantalk_logging_postinput'], $boardurl)),
         array('check', 'cleantalk_email_notifications', 'subtext' => $txt['cleantalk_email_notifications_postinput']),
         array('check', 'cleantalk_ccf_checking', 'subtext' => $txt['cleantalk_ccf_checking_postinput']),
-        array('check', 'cleantalk_bot_detector', 'subtext' => $txt['cleantalk_bot_detector_postinput']),
         array('check', 'cleantalk_check_search_form', 'subtext' => $txt['cleantalk_check_search_form_postinput']),
         array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']),
         array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']),

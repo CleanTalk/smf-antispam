@@ -50,7 +50,6 @@ if ($isInstalling) {
 	updateSettings(array('cleantalk_sfw'                 => isset($modSettings['cleantalk_sfw'])                 ? $modSettings['cleantalk_sfw']                 : '0'), false);
 	updateSettings(array('cleantalk_email_notifications' => isset($modSettings['cleantalk_email_notifications']) ? $modSettings['cleantalk_email_notifications'] : '0'), false);
 	updateSettings(array('cleantalk_ccf_checking' 		 => isset($modSettings['cleantalk_ccf_checking'])        ? $modSettings['cleantalk_ccf_checking']        : '0'), false);
-	updateSettings(array('cleantalk_bot_detector' 		 => isset($modSettings['cleantalk_bot_detector'])        ? $modSettings['cleantalk_bot_detector']        : '1'), false);
     updateSettings(array('cleantalk_check_search_form' 	 => isset($modSettings['cleantalk_check_search_form'])   ? $modSettings['cleantalk_check_search_form']        : '1'), false);
     updateSettings(array('cleantalk_errors'              => isset($modSettings['cleantalk_errors'])              ? $modSettings['cleantalk_errors']              : ''),  false);
 	
