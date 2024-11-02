@@ -191,7 +191,7 @@ function cleantalk_sfw_check()
 
                 $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
-                $event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
+                $ct_request->event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
 
                 $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'feedback_custom_contact_forms'));
                 $ct_request->sender_info = json_encode(
@@ -207,7 +207,6 @@ function cleantalk_sfw_check()
                         'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                         'cookies_enabled'        => cleantalk_cookies_test(),
                         'js_keys'                => cleantalk_get_js_keys($modSettings),
-                        'event_token'            => $event_token
                     )
                 );
                 $ct_result = $ct->isAllowMessage($ct_request);  
@@ -525,7 +524,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
 
         $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
-        $event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
+        $ct_request->event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
 
         $ct_request->sender_info = json_encode(
             array(
@@ -540,7 +539,6 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                 'cookies_enabled'        => cleantalk_cookies_test(),
                 'js_keys'                => cleantalk_get_js_keys($modSettings),
-                'event_token'            => $event_token
             )
         );
         $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'register'));
@@ -633,7 +631,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
 
         $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
-        $event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
+        $ct_request->event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
 
         $ct_request->sender_info = json_encode(
             array(
@@ -648,7 +646,6 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
                 'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                 'cookies_enabled'        => cleantalk_cookies_test(),
                 'js_keys'                => cleantalk_get_js_keys($modSettings),
-                'event_token'            => $event_token
             )
         );
         $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'personal_message'));      
@@ -717,7 +714,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
 
             $ct_request->js_on = cleantalk_is_valid_js() ? 1 : 0;
 
-            $event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
+            $ct_request->event_token = isset($_POST['ct_bot_detector_event_token']) ? $_POST['ct_bot_detector_event_token'] : '';
 
             $ct_request->sender_info = json_encode(
                 array(
@@ -732,7 +729,6 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
                     'REFFERRER_PREVIOUS'     => isset($_COOKIE['ct_prev_referer'])? $_COOKIE['ct_prev_referer']: null,
                     'cookies_enabled'        => cleantalk_cookies_test(),
                     'js_keys'                => cleantalk_get_js_keys($modSettings),
-                    'event_token'            => $event_token
                 )
             );
             $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'comment'));
