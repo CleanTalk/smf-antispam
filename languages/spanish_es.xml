@@ -37,6 +37,8 @@ $txt['cleantalk_check_personal_messages'] = 'Activar prueba de antispam para men
 $txt['cleantalk_check_personal_messages_postinput'] = 'Preparadas todos los mensajes personales para spam';
 $txt['cleantalk_ccf_checking'] = 'Comprobar formularios personalizados';
 $txt['cleantalk_ccf_checking_postinput'] = '�Esta opci�n puede provocar conflictos con otras secciones!';
+$txt['cleantalk_bot_detector'] = 'Usar la biblioteca Anti-Spam por CleanTalk JavaScript';
+$txt['cleantalk_bot_detector_postinput'] = 'Esta opción incluye una biblioteca externa Anti-Spam por CleanTalk JavaScript para obtener datos de visitantes.';
 $txt['cleantalk_tell_others_postinput'] = 'Al marcar esta casilla se a�adir� un enlace en el pie de tu foro indicando que usas CleanTalk para proteger a tu foro de spam.';
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">El spam de este foro</a> est� controlado por CleanTalk';
 $txt['cleantalk_sfw'] = 'Activar SpamFireWall';

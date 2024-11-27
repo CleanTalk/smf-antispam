@@ -94,6 +94,12 @@ class CleantalkRequest {
     public $sender_nickname = null;
 
     /**
+     * Event token
+     * @var string
+     */
+    public $event_token = null;
+
+    /**
      * Sender info JSON string
      * @var string
      */
