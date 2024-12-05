@@ -1386,10 +1386,10 @@ function template_cleantalk_checking_users_for_spam_section()
               $uim = $user['email_address'];
               $mark_spam_ip = $mark_spam_email = false;
 
-              if (isset($api_result[$uip]) && $api_result[$uip]['appears'] == 1) {
+              if (isset($api_result[$uip]['appears']) && $api_result[$uip]['appears'] == 1) {
                 $mark_spam_ip = true;
               }
-              if (isset($api_result[$uim]) && $api_result[$uim]['appears'] == 1) {
+              if (isset($api_result[$uim]['appears']) && $api_result[$uim]['appears'] == 1) {
                 $mark_spam_email = true;
               }
 
