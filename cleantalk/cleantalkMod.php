@@ -1255,7 +1255,7 @@ function cleantalk_buffer($buffer)
 
     if(isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
         
-        if(strpos($forum_version, 'SMF 2.0')===false){
+        if(!is_string($forum_version) || strpos($forum_version, 'SMF 2.0')===false){
             
             $html='';
             
