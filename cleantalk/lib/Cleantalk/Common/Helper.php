@@ -809,9 +809,7 @@ class Helper
 	*	returns (boolean)
 	*/
 	static public function key_is_correct($api_key = '') {
-
-		return preg_match('/^[a-z\d]{3,15}$|^$/', $api_key);
-
+		return preg_match('/^[a-z\d]{3,15}$/', $api_key);
 	}
 
 	/**
