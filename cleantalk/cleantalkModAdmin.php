@@ -101,6 +101,7 @@ function cleantalk_general_mod_settings($return_config = false)
         array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']),
         array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']),
         array('desc', 'cleantalk_api_key_description'),
+        array('desc', 'cleantalk_check_users'),
     );
 
     if ($return_config) {
@@ -109,18 +110,18 @@ function cleantalk_general_mod_settings($return_config = false)
     if (count($_POST) || !empty($_GET['ctgetautokey']))
     {
         $key_is_valid = false;
-        $key_is_ok = false;    
+        $key_is_ok = false;
         // Getting key automatically
         if(!empty($_GET['ctgetautokey'])){
-            
+
             $result = CleantalkAPI::method__get_api_key('antispam', $user_info['email'], $_SERVER['SERVER_NAME'], 'smf');
 
             if (empty($result['error'])){
-                            
+
                 // Doing noticePaidTill(), sfw update and sfw send logs via cron
                 $key_is_valid = true;
                 $save_key = $result['auth_key'];
-                
+
             } else {
                 updateSettings(array('cleantalk_errors' => $result['error_string']), false);
             }
@@ -134,11 +135,11 @@ function cleantalk_general_mod_settings($return_config = false)
         if ($key_is_valid)
         {
             $result = CleantalkAPI::method__notice_paid_till($save_key, preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
-            
+
             if (empty($result['error'])){
-                
+
                 if($result['valid']){
-                    
+
                     $key_is_ok = true;
                     $settings_array = array(
                         'cleantalk_api_key'       => ($save_key) ? $save_key : '',
@@ -156,7 +157,7 @@ function cleantalk_general_mod_settings($return_config = false)
                         'cleantalk_last_account_check' => time(),
                         'cleantalk_errors' => '',
                     );
-                    
+
                     if (Post::get( 'cleantalk_sfw' ) == 1){
                         $settings_array['cleantalk_sfw'] = '1';
                         $settings_array['cleantalk_sfw_last_update'] = time();
@@ -172,9 +173,23 @@ function cleantalk_general_mod_settings($return_config = false)
                         $fw_updater->update();
                     }
                 }else{
-                    // @ToDo have to handle errors!
-                    // return array('error' => 'KEY_IS_NOT_VALID');
-                    updateSettings(array('cleantalk_errors' => 'Key is not valid!'), false);
+					$settings_array = array(
+						'cleantalk_show_notice'   => isset($result['show_notice']) ? $result['show_notice'] : '0',
+						'cleantalk_renew'         => isset($result['renew']) ? $result['renew'] : '0',
+						'cleantalk_trial'         => isset($result['trial']) ? $result['trial'] : '0',
+						'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '',
+						'cleantalk_spam_count'    => isset($result['spam_count']) ? $result['spam_count'] : '0',
+						'cleantalk_moderate_ip'   => isset($result['moderate_ip']) ? $result['moderate_ip'] : '0',
+						'cleantalk_moderate'      => isset($result['moderate']) ? $result['moderate'] : '0',
+						'cleantalk_show_review'   => isset($result['show_review']) ? $result['show_review'] : '0',
+						'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
+						'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',
+						'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
+						'cleantalk_last_account_check' => time(),
+						'cleantalk_errors' => 'Key is not valid!',
+					);
+
+					updateSettings($settings_array, false);
                 }
 
             }else{
@@ -186,7 +201,7 @@ function cleantalk_general_mod_settings($return_config = false)
         $settings_array['cleantalk_api_key_is_ok'] = ($key_is_ok) ? '1' : '0';
         updateSettings($settings_array, false);
     }
-    
+
     if (isset($_GET['save'])) {
         checkSession();
         saveDBSettings($config_vars);

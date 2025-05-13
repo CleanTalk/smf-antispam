@@ -43,6 +43,7 @@ $txt['cleantalk_tell_others_postinput'] = 'При выставлении этого флажка добавляе
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">Защита SMF от спама</a> от CleanTalk';
 $txt['cleantalk_sfw'] = 'Включить Spam FireWall';
 $txt['cleantalk_sfw_postinput'] = 'Включение этой опции позволит Вам фильтровать ботов до того, как они зайдут на сайт. Также это снизит нагрузку на сервер.';
+$txt['cleantalk_check_users'] = '%CLEANTALK_CHECK_USERS%';
 $txt['cleantalk_check_users_button'] = 'Проверить пользователей на спам';
 $txt['cleantalk_check_users_button_after'] = 'Антиспам от CleanTalk проверит всех пользователей по черным спискам и покажет Вам отправителей, которые проявляли спам-активность на других сайтах.';
 $txt['cleantalk_check_users_key_is_bad'] = 'Нет доступа к облачной базе данных. Ключ доступа не действителен.';

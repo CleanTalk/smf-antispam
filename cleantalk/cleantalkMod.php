@@ -790,7 +790,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
             }
             if ($ct_result->allow == 0){
                 $msgOptions['cleantalk_check_message_result'] = $ct_result->comment;
-                if ($modSettings['cleantalk_automod']){
+                if ( !empty($modSettings['cleantalk_automod']) && $modSettings['cleantalk_automod'] ) {
                     if ($ct_result->stop_queue == 1){
                         cleantalk_log('spam message "' . $ct_result->comment . '"');
                         cleantalk_after_create_topic('Spam message blocked. Reason: ' . strip_tags($ct_result->comment).'. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email.'<br/>Message: '.$ct_request->message);
@@ -1234,7 +1234,7 @@ function template_cleantalk_above()
                 echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
                     ."<h1>"
                         ."<img style='height: 20px; margin: 0 5px 0 0; position: relative; top: 5px;' src='{$source_dir}attention.png' />"
-                        .sprintf($txt['cleantalk_banner_bad_key_1'], "<a href='index.php?action=admin;area=modsettings;'><u>{$txt['cleantalk_banner_bad_key_2']}</u></a>")
+                        .sprintf($txt['cleantalk_banner_bad_key_1'], "<a href='index.php?action=admin;area=modsettings;sa=cleantalk'><u>{$txt['cleantalk_banner_bad_key_2']}</u></a>")
                     ."</h1>"
                 ."</div>";
             }
