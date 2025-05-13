@@ -43,7 +43,6 @@ $txt['cleantalk_tell_others_postinput'] = 'Al marcar esta casilla se añadirá u
 $txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">El spam de este foro</a> está controlado por CleanTalk';
 $txt['cleantalk_sfw'] = 'Activar SpamFireWall';
 $txt['cleantalk_sfw_postinput'] = 'Esta opción permite filtrar bots de spam antes de que accedan al foro. Esta opción permite reducir el consumo de CPU del servidor y, por tanto, acelera la carga de páginas.';
-$txt['cleantalk_check_users'] = '%CLEANTALK_CHECK_USERS%';
 $txt['cleantalk_check_users_button'] = 'Buscar usuarios generadores de spam';
 $txt['cleantalk_check_users_button_after'] = 'Anti-spam por CleanTalk usará bases de datos con listas negras con todos los usuarios registrados en tu foro y te mostrará cuáles de ellos han generado actividades de spam en otras webs.';
 $txt['cleantalk_check_users_key_is_bad'] = 'No es posible acceder a las bases de datos en la nube por un problema con la clave de acceso.';

@@ -33,7 +33,7 @@ if (!defined('SMF')) {
 }
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-236');
+define('CT_AGENT_VERSION', 'smf-237');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
@@ -52,7 +52,7 @@ function apbct_sfw_update($access_key = '') {
         if (empty($access_key)) {
             return false;
         }
-    }     
+    }
     $firewall = new Firewall(
         $access_key,
         DB::getInstance(),
@@ -69,7 +69,7 @@ function apbct_sfw_send_logs($access_key = '') {
         if (empty($access_key)) {
             return false;
         }
-    } 
+    }
 
     $firewall = new Firewall( $access_key, DB::getInstance(), APBCT_TBL_FIREWALL_LOG );
     $firewall->setSpecificHelper( new CleantalkHelper() );
@@ -117,7 +117,7 @@ function cleantalk_sfw_check()
     {
         cleantalk_cookies_set();
         if(!empty($modSettings['cleantalk_sfw']) ){
-            
+
             $firewall = new Firewall(
                 cleantalk_get_api_key(),
                 DB::getInstance(),
@@ -157,16 +157,16 @@ function cleantalk_sfw_check()
                 && strpos($_SERVER['REQUEST_URI'], 'action=search') !== false
             )
         ){
-            
+
             $ct_temp_msg_data = cleantalkGetFields($_POST);
             $sender_email    = ($ct_temp_msg_data['email']    ? $ct_temp_msg_data['email']    : '');
             $sender_nickname = ($ct_temp_msg_data['nickname'] ? $ct_temp_msg_data['nickname'] : '');
             $subject         = ($ct_temp_msg_data['subject']  ? $ct_temp_msg_data['subject']  : '');
             $contact_form    = ($ct_temp_msg_data['contact']  ? $ct_temp_msg_data['contact']  : true);
-            $message         = ($ct_temp_msg_data['message']  ? $ct_temp_msg_data['message']  : array());   
+            $message         = ($ct_temp_msg_data['message']  ? $ct_temp_msg_data['message']  : array());
             if ($subject != '')
                 $message = array_merge(array('subject' => $subject), $message);
-            $message = implode("\n", $message);  
+            $message = implode("\n", $message);
             if ($message != '' || $sender_email != '')
             {
                 $ct = new Cleantalk();
@@ -197,7 +197,7 @@ function cleantalk_sfw_check()
                 $ct_request->sender_info = json_encode(
                     array(
                         'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
-                        'cms_lang'               => substr($language, 0, 2),                                            
+                        'cms_lang'               => substr($language, 0, 2),
                         'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
                         'ct_options'             => cleantalk_get_ct_options($modSettings),
                         'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
@@ -209,32 +209,32 @@ function cleantalk_sfw_check()
                         'js_keys'                => cleantalk_get_js_keys($modSettings),
                     )
                 );
-                $ct_result = $ct->isAllowMessage($ct_request);  
+                $ct_result = $ct->isAllowMessage($ct_request);
                 if ($ct_result->allow == 0)
                 {
                     $error_tpl=file_get_contents(dirname(__FILE__)."/error.html");
                     print str_replace('%ERROR_TEXT%',$ct_result->comment,$error_tpl);
-                    die();                      
-                }                             
-            }           
+                    die();
+                }
+            }
         }
     }
 }
 
 //Recursevely gets data from array
 function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = array('nick' => '', 'first' => '', 'last' => ''), $subject = null, $contact = true, $prev_name = ''){
-    
+
     //Skip request if fields exists
     $skip_params = array(
         'ipn_track_id',     // PayPal IPN #
         'txn_type',         // PayPal transaction type
         'payment_status',   // PayPal payment status
-        'ccbill_ipn',       // CCBill IPN 
+        'ccbill_ipn',       // CCBill IPN
         'ct_checkjs',       // skip ct_checkjs field
         'api_mode',         // DigiStore-API
         'loadLastCommentId' // Plugin: WP Discuz. ticket_id=5571
     );
-    
+
     // Fields to replace with ****
     $obfuscate_params = array(
         'password',
@@ -243,9 +243,9 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
         'pwd',
         'pswd'
     );
-    
+
     // Skip feilds with these strings and known service fields
-    $skip_fields_with_strings = array( 
+    $skip_fields_with_strings = array(
         // Common
         'ct_checkjs', //Do not send ct_checkjs
         'nonce', //nonce for strings such as 'rsvp_nonce_name'
@@ -276,7 +276,7 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
         'formData_id',
         'formData_settings',
         'formData_fields_\d+_id',
-        'formData_fields_\d+_files.*',      
+        'formData_fields_\d+_files.*',
         // E_signature
         'recipient_signature',
         'output_\d+_\w{0,2}',
@@ -296,17 +296,17 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
         'qty',
 
     );
-            
+
     foreach($skip_params as $value){
         if(array_key_exists($value,$_POST))
         {
             $contact = false;
         }
     } unset($value);
-        
+
     if(count($arr)){
         foreach($arr as $key => $value){
-            
+
             if(gettype($value)=='string'){
                 $decoded_json_value = json_decode($value, true);
                 if($decoded_json_value !== null)
@@ -314,19 +314,19 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
                     $value = $decoded_json_value;
                 }
             }
-            
+
             if(!is_array($value) && !is_object($value)){
-                
+
                 if (in_array($key, $skip_params, true) && $key != 0 && $key != '' || preg_match("/^ct_checkjs/", $key))
                 {
                     $contact = false;
                 }
-                
+
                 if($value === '')
                 {
                     continue;
                 }
-                
+
                 // Skipping fields names with strings from (array)skip_fields_with_strings
                 foreach($skip_fields_with_strings as $needle){
                     if (preg_match("/".$needle."/", $prev_name.$key) == 1){
@@ -339,7 +339,7 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
                         $value = obfuscate_param($value);
                     }
                 }unset($needle);
-                
+
 
                 // Removes whitespaces
                 $value = urldecode( trim( $value ) ); // Fully cleaned message
@@ -351,11 +351,11 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
 
                 // Names
                 }elseif (preg_match("/name/i", $key)){
-                    
+
                     preg_match("/(first.?name)?(name.?first)?(forename)?/", $key, $match_forename);
                     preg_match("/(last.?name)?(family.?name)?(second.?name)?(surname)?/", $key, $match_surname);
                     preg_match("/(nick.?name)?(user.?name)?(nick)?/", $key, $match_nickname);
-                    
+
                     if(count($match_forename) > 1)
                     {
                         $nickname['first'] = $value;
@@ -372,26 +372,26 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
                     {
                         $message[$prev_name.$key] = $value;
                     }
-                
+
                 // Subject
                 }elseif ($subject === null && preg_match("/subject/i", $key)){
                     $subject = $value;
-                
+
                 // Message
                 }else{
-                    $message[$prev_name.$key] = $value;                 
+                    $message[$prev_name.$key] = $value;
                 }
-                
+
             }elseif(!is_object($value)){
-                
+
                 $prev_name_original = $prev_name;
                 $prev_name = ($prev_name === '' ? $key.'_' : $prev_name.$key.'_');
-                
+
                 $temp = cleantalkGetFields($value, $message, $email, $nickname, $subject, $contact, $prev_name);
-                
+
                 $message    = $temp['message'];
                 $email      = ($temp['email']       ? $temp['email'] : null);
-                $nickname   = ($temp['nickname']    ? $temp['nickname'] : null);                
+                $nickname   = ($temp['nickname']    ? $temp['nickname'] : null);
                 $subject    = ($temp['subject']     ? $temp['subject'] : null);
                 if($contact === true)
                 {
@@ -401,7 +401,7 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
             }
         } unset($key, $value);
     }
-            
+
     //If top iteration, returns compiled name field. Example: "Nickname Firtsname Lastname".
     if($prev_name === ''){
         if(!empty($nickname)){
@@ -412,14 +412,14 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
         }
         $nickname = $nickname_str;
     }
-    
+
     $return_param = array(
         'email'     => $email,
         'nickname'  => $nickname,
         'subject'   => $subject,
         'contact'   => $contact,
         'message'   => $message
-    );  
+    );
     return $return_param;
 }
 /**
@@ -434,8 +434,8 @@ function obfuscate_param($value = null) {
     return $value;
 }
 /**
- * Cookie test 
- * @return 
+ * Cookie test
+ * @return
  */
 function cleantalk_cookies_set() {
     // Cookie names to validate
@@ -455,21 +455,21 @@ function cleantalk_cookies_set() {
     setcookie('ct_cookies_test', json_encode($cookie_test_value), 0, '/');
 }
 /**
- * Cookies test for sender 
+ * Cookies test for sender
  * Also checks for valid timestamp in $_COOKIE['ct_timestamp'] and other ct_ COOKIES
  * @return null|0|1;
  */
 function cleantalk_cookies_test()
-{   
+{
     if(isset($_COOKIE['ct_cookies_test'])){
-        
+
         $cookie_test = json_decode(stripslashes($_COOKIE['ct_cookies_test']), true);
-        
+
         $check_srting = cleantalk_get_api_key();
         foreach($cookie_test['cookies_names'] as $cookie_name){
             $check_srting .= isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
         } unset($cokie_name);
-        
+
         if($cookie_test['check_value'] == md5($check_srting)){
             return 1;
         }else{
@@ -486,7 +486,7 @@ function cleantalk_cookies_test()
  * @return void
  */
 function cleantalk_check_register(&$regOptions, $theme_vars){
-    
+
     global $language, $user_info, $modSettings;
     static $executed_check_register = true;
 
@@ -529,7 +529,7 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
         $ct_request->sender_info = json_encode(
             array(
                 'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
-                'cms_lang'               => substr($language, 0, 2),                                            
+                'cms_lang'               => substr($language, 0, 2),
                 'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
                 'ct_options'             => cleantalk_get_ct_options($modSettings),
                 'js_timezone'            => !empty($_COOKIE['ct_timezone'])      ? $_COOKIE['ct_timezone']      : null,
@@ -588,14 +588,14 @@ function cleantalk_check_register(&$regOptions, $theme_vars){
             // all ok, only logging
             cleantalk_log('allow regisration for "' . $regOptions['username'] . '"');
             cleantalk_after_create_topic('Allow registration. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
-        }        
+        }
     }
 
 }
 function cleantalk_check_personal_messages($recipients, $from, $subject, $message)
 {
     global $language, $user_info, $modSettings, $smcFunc;
-    
+
     if (SMF == 'SSI')
         return;
 
@@ -636,7 +636,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
         $ct_request->sender_info = json_encode(
             array(
                 'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
-                'cms_lang'               => substr($language, 0, 2),                                            
+                'cms_lang'               => substr($language, 0, 2),
                 'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
                 'ct_options'             => cleantalk_get_ct_options($modSettings),
                 'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
@@ -648,15 +648,15 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
                 'js_keys'                => cleantalk_get_js_keys($modSettings),
             )
         );
-        $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'personal_message'));      
-        $ct_result = $ct->isAllowMessage($ct_request); 
+        $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'personal_message'));
+        $ct_result = $ct->isAllowMessage($ct_request);
 
         if($ct_result->errno != 0 && !cleantalk_is_valid_js())
         {
             cleantalk_log('deny registration (errno !=0, invalid js test)' . strip_tags($ct_result->comment));
             fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
             return;
-        } 
+        }
 
         if ($ct_result->allow == 0){
             // this is bot, stop registration
@@ -667,7 +667,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
             // all ok, only logging
             cleantalk_log('allow personal message for "' . $from . '"');
             cleantalk_after_create_topic('Allow personal message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
-        }               
+        }
     }
 }
 /**
@@ -677,7 +677,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
  * @param array $posterOptions
  */
 function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
-    
+
     global $language, $user_info, $modSettings, $smcFunc, $db_connection;
     static $executed_check_message = true;
 
@@ -719,7 +719,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
             $ct_request->sender_info = json_encode(
                 array(
                     'REFFERRER'              => isset($_SERVER['HTTP_REFERER'])      ? $_SERVER['HTTP_REFERER']     : null,
-                    'cms_lang'               => substr($language, 0, 2),                                            
+                    'cms_lang'               => substr($language, 0, 2),
                     'USER_AGENT'             => isset($_SERVER['HTTP_USER_AGENT'])   ? $_SERVER['HTTP_USER_AGENT']  : null,
                     'ct_options'             => cleantalk_get_ct_options($modSettings),
                     'js_timezone'            => isset($_COOKIE['ct_timezone'])       ? $_COOKIE['ct_timezone']      : null,
@@ -733,12 +733,12 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
             );
             $ct_request->post_info = json_encode(array('post_url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', 'comment_type' => 'comment'));
             if (isset($topicOptions['id'])) {
-                
+
                 if(!isset($db_connection) || $db_connection === false)
                         loadDatabase();
-                    
+
                 if(isset($db_connection) && $db_connection != false){
-                    
+
                         // disable query check for UNION operator
                         $oldQueryCheck = isset($modSettings['disableQueryCheck']) ? $modSettings['disableQueryCheck'] : false;
                         $modSettings['disableQueryCheck'] = true;
@@ -813,7 +813,7 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
             }
         }
     }
-    
+
 }
 
 /**
@@ -821,9 +821,9 @@ function cleantalk_check_message(&$msgOptions, $topicOptions, $posterOptions){
  * @return string
  */
 function cleantalk_get_checkjs_code(){
-    
+
     global $modSettings;
-    
+
     $api_key = isset($modSettings['cleantalk_api_key']) ? $modSettings['cleantalk_api_key'] : null;
     $js_keys = isset($modSettings['cleantalk_js_keys']) ? json_decode($modSettings['cleantalk_js_keys'], true) : null;
 
@@ -852,20 +852,20 @@ function cleantalk_get_checkjs_code(){
             // Get new key if the latest key is too old
             if (time() - (int)$latest_key_time > $js_keys['js_key_lifetime']) {
                 $keys[$key] = time();
-            }           
-        }             
+            }
+        }
     } else {
         $keys = array($key => time());
     }
 
     if (!isset($keys_checksum) || md5(json_encode($keys)) != $keys_checksum) {
         $js_keys = array(
-            'keys' => $keys, // Keys to do JavaScript antispam test 
+            'keys' => $keys, // Keys to do JavaScript antispam test
             'js_keys_amount' => 24, // JavaScript keys store days - 8 days now
             'js_key_lifetime' => 86400, // JavaScript key life time in seconds - 1 day now
         );
-        updateSettings(array('cleantalk_js_keys' => json_encode($js_keys)), false); 
-    }                            
+        updateSettings(array('cleantalk_js_keys' => json_encode($js_keys)), false);
+    }
     return $key;
 }
 
@@ -874,7 +874,7 @@ function cleantalk_get_checkjs_code(){
  * @return string
  */
 function cleantalk_get_api_key(){
-    
+
     global $modSettings;
 
     return isset($modSettings['cleantalk_api_key']) ? $modSettings['cleantalk_api_key'] : null;
@@ -886,9 +886,9 @@ function cleantalk_get_api_key(){
 function cleantalk_print_js_input()
 {
     global $modSettings;
-    
+
     $value = cleantalk_get_checkjs_code();
-    
+
     $js = '<script type="text/javascript">
         var ct_date = new Date(), 
             ctTimeMs = new Date().getTime(),
@@ -1016,7 +1016,7 @@ function cleantalk_get_form_submit_time()
         if (isset($_SESSION['ct_form_start_time']))
             return time() - intval($_SESSION['ct_form_start_time']);
         elseif (isset($_COOKIE['ct_ps_timestamp']))
-            return time() - intval($_COOKIE['ct_ps_timestamp']);        
+            return time() - intval($_COOKIE['ct_ps_timestamp']);
     }
     return null;
 }
@@ -1028,7 +1028,7 @@ function cleantalk_get_form_submit_time()
 function cleantalk_log($message)
 {
     global $modSettings;
-    
+
     if (array_key_exists('cleantalk_logging', $modSettings) && $modSettings['cleantalk_logging']) {
         log_error('CleanTalk: ' . $message, 'user');
     }
@@ -1038,19 +1038,19 @@ function cleantalk_log($message)
  * @param string $message
  */
 function cleantalk_after_create_topic( $message ){
-    
+
     global $sourcedir, $modSettings;
-    
+
     if(
         array_key_exists( 'cleantalk_email_notifications', $modSettings ) &&
         $modSettings['cleantalk_email_notifications'] &&
         $message
     ){
         require_once($sourcedir . '/Subs-Admin.php');
-        
+
         if( is_array( $message ) )
             $message = CleantalkHelper::array_implode__recursive( "\n", $message );
-        
+
         emailAdmins(
             'send_email',
             array(
@@ -1066,11 +1066,11 @@ function cleantalk_after_create_topic( $message ){
 function cleantalk_load()
 {
     global $context, $user_info, $modSettings, $smcFunc, $db_connection;
-        
+
     if(SMF == 'SSI'){
         return;
     }
-    
+
     if (
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
@@ -1078,22 +1078,22 @@ function cleantalk_load()
         ($user_info['is_guest'] || $user_info['posts'] == 0) &&
         !$user_info['is_admin']//!cleantalk_is_valid_js()
     ) {
-        
+
         // Output JS for users
         $context ['html_headers'] .= cleantalk_print_js_input();
     }
-    
+
     // Only for admin
     if(!empty($user_info['is_admin'])){
-               
+
         // Deleting selected users
         if(Post::get('ct_del_user'))
         {
             checkSession('request');
-            
+
             if (!isset($db_connection) || $db_connection === false)
                 loadDatabase();
-            
+
             if (isset($db_connection) && $db_connection != false)
             {
                 foreach(Post::get('ct_del_user') as $key=>$value)
@@ -1104,15 +1104,15 @@ function cleantalk_load()
                 }
             }
         }
-        
+
         // Deleting all users
         if(Post::get('ct_delete_all'))
         {
             checkSession('request');
-            
+
             if (!isset($db_connection) || $db_connection === false)
                 loadDatabase();
-            
+
             if (isset($db_connection) && $db_connection != false)
             {
                 $result = $smcFunc['db_query']('', 'select * from {db_prefix}members where ct_marked=1',Array());
@@ -1125,32 +1125,32 @@ function cleantalk_load()
             }
         }
     }
-    
+
     /* Cron for account status */
     if(isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && isset($modSettings['cleantalk_last_account_check']) && $modSettings['cleantalk_last_account_check'] < time() - 86400){
-        
+
         $result = CleantalkAPI::method__notice_paid_till($modSettings['cleantalk_api_key'], preg_replace('/http[s]?:\/\//', '', $_SERVER['HTTP_HOST'], 1));
-        
+
         if(empty($result['error'])){
             $settings_array = array(
                 'cleantalk_show_notice'   => isset($result['show_notice']) ? $result['show_notice'] : '0',
                 'cleantalk_renew'         => isset($result['renew']) ? $result['renew'] : '0',
                 'cleantalk_trial'         => isset($result['trial']) ? $result['trial'] : '0',
-                'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '', 
+                'cleantalk_user_token'    => isset($result['user_token']) ? $result['user_token'] : '',
                 'cleantalk_spam_count'    => isset($result['spam_count']) ? $result['spam_count'] : '0',
                 'cleantalk_moderate_ip'   => isset($result['moderate_ip']) ? $result['moderate_ip'] : '0',
                 'cleantalk_moderate'      => isset($result['moderate']) ? $result['moderate'] : '0',
                 'cleantalk_show_review'   => isset($result['show_review']) ? $result['show_review'] : '0',
                 'cleantalk_service_id'    => isset($result['service_id']) ? $result['service_id'] : '0',
-                'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',  
+                'cleantalk_ip_license'    => isset($result['ip_license']) ? $result['ip_license'] : '0',
                 'cleantalk_account_name_ob' => isset($result['account_name_ob']) ? $result['account_name_ob'] : '',
                 'cleantalk_last_account_check' => time(),
-                'cleantalk_errors' => '', 
+                'cleantalk_errors' => '',
             );
             updateSettings($settings_array, false);
-        }        
+        }
     }
-    
+
     // Add "tell others" templates
     if (isset($context['template_layers'])
         && $context['template_layers'] === array('html', 'body')
@@ -1169,9 +1169,9 @@ function cleantalk_load()
 function cleantalk_is_valid_js()
 {
     if(isset($_COOKIE['ct_checkjs']) && $_COOKIE['ct_checkjs']){
-                
+
         global $modSettings;
-        
+
         $js_keys = isset($modSettings['cleantalk_js_keys']) ? json_decode($modSettings['cleantalk_js_keys'], true) : null;
         $keys = isset($js_keys['keys']) ? $js_keys['keys'] : false;
         if($keys && is_array($keys)){
@@ -1179,10 +1179,10 @@ function cleantalk_is_valid_js()
         }else{
             $result = false;
         }
-        
+
     }else
         $result = false;
-    
+
     return  $result;
 }
 /**
@@ -1191,13 +1191,13 @@ function cleantalk_is_valid_js()
 function template_cleantalk_above()
 {
     global $user_info, $modSettings, $txt, $boardurl;
-    
+
     if($user_info['is_admin'] && isset($_GET['action']) && $_GET['action'] == 'admin'){
-        
+
         $source_dir = $boardurl . '/Sources/cleantalk/';
-        
+
         echo "<div class='notice_wrapper'>";
-        
+
             // Renew banner
             if(!empty($modSettings['cleantalk_show_notice']) && !empty($modSettings['cleantalk_renew'])){
                 echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
@@ -1207,7 +1207,7 @@ function template_cleantalk_above()
                     ."</h1>"
                 ."</div>";
             }
-            
+
             // Trial banner
             if(!empty($modSettings['cleantalk_show_notice']) && !empty($modSettings['cleantalk_trial'])){
                 echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
@@ -1217,7 +1217,7 @@ function template_cleantalk_above()
                     ."</h1>"
                 ."</div>";
             }
-            
+
             // Review banner // INACTIVE
             // if(!empty($modSettings['cleantalk_show_notice']) && !empty($modSettings['cleantalk_show_review'])){
                 // echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
@@ -1227,18 +1227,18 @@ function template_cleantalk_above()
                     // ."</h1>"
                 // ."</div>";
             // }
-            
+
             // Bad key banner
             if(empty($modSettings['cleantalk_api_key_is_ok']) && (empty($_GET['area'])  || (isset($_GET['area']) && $_GET['area'] != 'modsettings'))){
-                
+
                 echo "<div style='margin-bottom: 1.2em; padding: 5px;'>"
                     ."<h1>"
                         ."<img style='height: 20px; margin: 0 5px 0 0; position: relative; top: 5px;' src='{$source_dir}attention.png' />"
                         .sprintf($txt['cleantalk_banner_bad_key_1'], "<a href='index.php?action=admin;area=modsettings;'><u>{$txt['cleantalk_banner_bad_key_2']}</u></a>")
                     ."</h1>"
                 ."</div>";
-            }   
-            
+            }
+
         echo "</div>";
     }
 }
@@ -1262,239 +1262,44 @@ function template_cleantalk_below()
 
 function cleantalk_buffer($buffer)
 {
-    
-    global $modSettings, $user_info, $smcFunc, $txt, $forum_version, $db_connection;
-    
+
+  global $modSettings, $user_info, $txt;
+
     if (SMF == 'SSI')
         return $buffer;
 
     if(isset($_GET['action'], $_GET['area']) && $_GET['action'] == 'admin' && $_GET['area'] == 'modsettings'){
-        
-        if(strpos($forum_version, 'SMF 2.0')===false){
-            
-            $html='';
-            
-        }else{
-            
-            $html='<span id="ct_anchor"></span><script>
-            document.getElementById("ct_anchor").parentElement.style.height="0px";
-            document.getElementById("ct_anchor").parentElement.style.padding="0px";
-            document.getElementById("ct_anchor").parentElement.style.border="0px";
-            </script>';
-            
-        }
 
-        if (!isset($db_connection) || $db_connection === false)
-            loadDatabase();
-        
-        if (isset($db_connection) && $db_connection != false){
-            
-            if(isset($_GET['ctcheckspam'])){
-                
-                if(isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1' && $modSettings['cleantalk_api_key'] != ''){
-                    
-                    db_extend('packages');
-                    
-                    // Unmark all users
-                    $sql = 'UPDATE {db_prefix}members SET ct_marked = {int:default_value}';
-                    $result = $smcFunc['db_query']('', $sql, array('default_value' => 0));
-                    
-                    // Cicle params
-                    $offset = 0;
-                    $per_request = 500;
-                    
-                    // Getting users to check
-                    // Making at least one DB query
-                    do{
-
-                        $sql_users = "SELECT id_member, member_name, date_registered, last_login, email_address, member_ip FROM {db_prefix}members where passwd <> '' LIMIT $offset,$per_request";
-                        $users = $smcFunc['db_query']('', $sql_users, Array());
-
-                        // Break if result is empty.
-                        if($smcFunc['db_num_rows'] ($users) == 0) {
-                            break;
-                        }
-
-                        // Setting data
-                        $data = array();
-                        while($row = $smcFunc['db_fetch_assoc'] ($users)){
-                            $data[] = $row['email_address'];
-                            $data[] = function_exists('inet_dtop') ? inet_dtop($row['member_ip']) : $row['member_ip'];
-                        }
-
-                        // Request
-                        $api_result = CleantalkAPI::method__spam_check_cms(cleantalk_get_api_key(), $data);
-                        // Error handling
-                        if(!empty($api_result['error'])){
-                            break;
-                        }else{
-                            $users = $smcFunc['db_query']('', $sql_users, Array());
-                            while( $user = $smcFunc['db_fetch_assoc'] ($users) ) {
-
-                                $uip = function_exists('inet_dtop') ? inet_dtop($user['member_ip']) : $user['member_ip'];
-                                $uim = $user['email_address'];
-                                $mark_spam_ip = $mark_spam_email = false;
-
-                                if ( isset($api_result[$uip]) && $api_result[$uip]['appears'] == 1 ) {
-                                    $mark_spam_ip = true;
-                                }
-                                if ( isset($api_result[$uim]) && $api_result[$uim]['appears'] == 1 ) {
-                                    $mark_spam_email = true;
-                                }
-
-                                if ( $mark_spam_ip || $mark_spam_email ) {
-                                    // Mark spam user
-                                    $sql = 'UPDATE {db_prefix}members SET ct_marked=1 WHERE id_member=' . $user['id_member'];
-                                } else {
-                                    // Mark NOT spam user
-                                    $sql = 'UPDATE {db_prefix}members SET ct_marked=0 WHERE id_member=' . $user['id_member'];
-                                }
-                                $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
-                            }
-                        }
-
-                        $offset += $per_request;
-                        
-                    } while( true );
-                    
-                    // Error output
-                    if(!empty($api_result['error']) && isset($api_result['error_string'])){
-                        $html.='<center>'
-                                .'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
-                                    .'<b>'.$api_result['error_string'].'</b>'
-                                .'</div>'
-                                .'<br>'
-                            .'</center>';
-                    }
-                    
-                    $sql = "SELECT * FROM {db_prefix}members WHERE ct_marked=1";
-                    $result = $smcFunc['db_query']('', $sql, Array());
-                    
-                    if($smcFunc['db_num_rows'] ($result) == 0 && isset($_GET['ctcheckspam'])){
-                        
-                        $html.='<center><div><b>'.$txt['cleantalk_check_users_nofound'].'</b></div><br><br></center>';
-                        
-                    }else if($smcFunc['db_num_rows'] ($result) > 0){
-                        
-                        if(isset($_GET['ctcheckspam'])){
-                            $html.='<center><h3>'.$txt['cleantalk_check_users_done'].'</h3><br /><br /></center>';
-                        }
-                        
-                        // Pagination           
-                        $on_page = 20;
-                        $pages = ceil(intval($smcFunc['db_num_rows'] ($result))/$on_page);
-                        $page = !empty($_GET['spam_page']) ? intval($_GET['spam_page']) : 1;
-                        $offset = ($page-1)*$on_page;
-                        
-                        $sql = "SELECT * FROM {db_prefix}members WHERE ct_marked=1 LIMIT $offset, $on_page";
-                        $result = $smcFunc['db_query']('', $sql, Array());
-                        
-                        if($pages > 1){
-                            $html.= "<div style='margin: 10px;'>"
-                                    ."<b>".$txt['cleantalk_check_users_pages'].":</b>"
-                                    ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
-                                        for($i = 1; $i <= $pages; $i++){
-                                            $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
-                                                    ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
-                                                        .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
-                                                    ."</a>"
-                                                ."</li>";
-                                        }
-                                $html.= "</ul>";
-                            $html.= "</div>";
-                        }
-                        
-                        $html.='<center><table style="border-color:#666666;" border=1 cellspacing=0 cellpadding=3>'
-                            .'<thead>'
-                            .'<tr>'
-                                .'<th>'.$txt['cleantalk_check_users_tbl_select'].'</th>'
-                                .'<th>'.$txt['cleantalk_check_users_tbl_username'].'</th>'
-                                .'<th>'.$txt['cleantalk_check_users_tbl_joined'].'</th>'
-                                .'<th>E-mail</th>'
-                                .'<th>IP</th>'
-                                .'<th>'.$txt['cleantalk_check_users_tbl_lastvisit'].'</th>'
-                                .'<th>'.$txt['cleantalk_check_users_tbl_posts'].'</th>'
-                            .'</tr>'
-                            .'</thead>'
-                            .'<tbody>';
-                        
-                        while($row = $smcFunc['db_fetch_assoc'] ($result)){
-
-                            $uip = function_exists('inet_dtop') ? inet_dtop($row['member_ip']) : $row['member_ip'];
-                            $uim = $row['email_address'];
-
-                            $html.="<tr>
-                            <td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
-                            <td>{$row['member_name']}&nbsp;<sup><a href='index.php?action=profile;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_username_details']}</a></sup></td>
-                            <td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
-                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$uim."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$uim."</a></td>
-                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$uip."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$uip."</a></td>
-                            <td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
-                            <td style='text-align: center;'>{$row['posts']}&nbsp;<sup><a href='index.php?action=profile;area=showposts;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_posts_show']}</a></sup></td>
-                            </tr>";
-                            
-                        }
-                        
-                        $html.="</tbody></table></center>";
-                        
-                        if($pages > 1){
-                            $html.= "<div style='margin: 10px;'>"
-                                    ."<b>".$txt['cleantalk_check_users_pages'].":</b>"
-                                    ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
-                                        for($i = 1; $i <= $pages; $i++){
-                                            $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
-                                                    ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
-                                                        .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
-                                                    ."</a>"
-                                                ."</li>";
-                                        }
-                                $html.= "</ul>";
-                            $html.= "</div>";
-                        }
-                        
-                        $html.="<br /><center><input type=submit name='ct_delete_checked' value='".$txt['cleantalk_check_users_tbl_delselect']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'> <input type=submit name='ct_delete_all' value='".$txt['cleantalk_check_users_tbl_delall']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'><br />".$txt['cleantalk_check_users_tbl_delnotice']."<br /><br /></center>";
-                    }
-                }else{
-                    $html.='<center><div><b>'.$txt['cleantalk_check_users_key_is_bad'].'</b></div><br><br></center>';
-                }
-            }
-        
-            $html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','').replace('&ctgetautokey=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br /><br />".$txt['cleantalk_check_users_button_after']."</center>";
-        }
-        $buffer = str_replace("%CLEANTALK_CHECK_USERS%", $html, $buffer);
-        
-    // Key auto getting, Key buttons, Control panel button 
-        
-        $cleantalk_api_key = isset( $modSettings['cleantalk_api_key'] ) ? $modSettings['cleantalk_api_key'] : '';
-        $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'" class="input_text">';
-        if (isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1')
-        {
-            $cleantalk_key_html .= "&nbsp<span style='color: green;'>".$txt['cleantalk_key_valid']."</span>";
-            if (isset($modSettings['cleantalk_account_name_ob']) && $modSettings['cleantalk_account_name_ob'] != '')
-                $cleantalk_key_html.= "<br><b>".$txt['cleantalk_account_name_ob']." ".$modSettings['cleantalk_account_name_ob']."</b>";
-            elseif (isset($modSettings['cleantalk_moderate_ip']) && $modSettings['cleantalk_moderate_ip'] == '1' && isset($modSettings['cleantalk_ip_license']) && $modSettings['cleantalk_ip_license'] != '')
-                $cleantalk_key_html.= "<br><b>".$txt['cleantalk_moderate_ip']." ".$modSettings['cleantalk_ip_license']."</b>";
-            if (isset($modSettings['cleantalk_user_token']) && !empty($modSettings['cleantalk_user_token'])) {
-                $cleantalk_key_html .= '<br><br><a target="_blank" href="https://cleantalk.org/my?user_token='.$modSettings['cleantalk_user_token'].'&cp_mode=antispam" style="display: inline-block;"><input type="button" value="'.$txt['cleantalk_get_statistics'].'"></a><br><br>';
-            }
-        }
-        else
-        {
-            $cleantalk_key_html .= "&nbsp<span style='color: red;'>".((isset($modSettings['cleantalk_errors']) && !empty($modSettings['cleantalk_errors'])) ? $modSettings['cleantalk_errors'] : $txt['cleantalk_key_not_valid'])."</span>";
-            $cleantalk_key_html .= "<br><br><a target='_blank' href='https://cleantalk.org/register?platform=smf&email=".urlencode($user_info['email'])."&website=".urlencode($_SERVER['SERVER_NAME'])."&product_name=antispam'>
+    // Key auto getting, Key buttons, Control panel button
+    $cleantalk_api_key = isset( $modSettings['cleantalk_api_key'] ) ? $modSettings['cleantalk_api_key'] : '';
+    $cleantalk_key_html = '<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'" class="input_text">';
+    if (isset($modSettings['cleantalk_api_key_is_ok']) && $modSettings['cleantalk_api_key_is_ok'] == '1')
+    {
+      $cleantalk_key_html .= "&nbsp<span style='color: green;'>".$txt['cleantalk_key_valid']."</span>";
+      if (isset($modSettings['cleantalk_account_name_ob']) && $modSettings['cleantalk_account_name_ob'] != '')
+        $cleantalk_key_html.= "<br><b>".$txt['cleantalk_account_name_ob']." ".$modSettings['cleantalk_account_name_ob']."</b>";
+      elseif (isset($modSettings['cleantalk_moderate_ip']) && $modSettings['cleantalk_moderate_ip'] == '1' && isset($modSettings['cleantalk_ip_license']) && $modSettings['cleantalk_ip_license'] != '')
+        $cleantalk_key_html.= "<br><b>".$txt['cleantalk_moderate_ip']." ".$modSettings['cleantalk_ip_license']."</b>";
+      if (isset($modSettings['cleantalk_user_token']) && !empty($modSettings['cleantalk_user_token'])) {
+        $cleantalk_key_html .= '<br><br><a target="_blank" href="https://cleantalk.org/my?user_token='.$modSettings['cleantalk_user_token'].'&cp_mode=antispam" style="display: inline-block;"><input type="button" value="'.$txt['cleantalk_get_statistics'].'"></a><br><br>';
+      }
+    }
+    else
+    {
+      $cleantalk_key_html .= "&nbsp<span style='color: red;'>".((isset($modSettings['cleantalk_errors']) && !empty($modSettings['cleantalk_errors'])) ? $modSettings['cleantalk_errors'] : $txt['cleantalk_key_not_valid'])."</span>";
+      $cleantalk_key_html .= "<br><br><a target='_blank' href='https://cleantalk.org/register?platform=smf&email=".urlencode($user_info['email'])."&website=".urlencode($_SERVER['SERVER_NAME'])."&product_name=antispam'>
                     <input type='button' value='".$txt['cleantalk_get_access_manually']."' />
                 </a> {$txt['cleantalk_get_access_key_or']} ";
-            $cleantalk_key_html .= '<input name="spbc_get_apikey_auto" type="submit" class="spbc_manual_link" value="'.$txt['cleantalk_get_access_automatically'].'" onclick="location.href=location.href.replace(\'&finishcheck=1\',\'\').replace(\'&ctcheckspam=1\',\'\').replace(\'&ctgetautokey=1\',\'\')+\'&ctgetautokey=1\';return false;"/>';
-            $cleantalk_key_html .= "<br/><br/>";
-            $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'>" . sprintf($txt['cleantalk_admin_email_will_be_used'], $user_info['email']) . "</div>";
-            $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";            
-        }
-        
-        $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'"\s?(class="input_text")?\s?\/?>/',$cleantalk_key_html, $buffer, 1);
-        
+      $cleantalk_key_html .= '<input name="spbc_get_apikey_auto" type="submit" class="spbc_manual_link" value="'.$txt['cleantalk_get_access_automatically'].'" onclick="location.href=location.href.replace(\'&finishcheck=1\',\'\').replace(\'&ctcheckspam=1\',\'\').replace(\'&ctgetautokey=1\',\'\')+\'&ctgetautokey=1\';return false;"/>';
+      $cleantalk_key_html .= "<br/><br/>";
+      $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'>" . sprintf($txt['cleantalk_admin_email_will_be_used'], $user_info['email']) . "</div>";
+      $cleantalk_key_html .= "<div style='font-size: 10pt; color: #666 !important'><a target='__blank' style='color:#BBB;' href='https://cleantalk.org/publicoffer'> ".$txt['cleantalk_license_agreement']." </a></div><br><br>";
     }
-    
-    return $buffer;
+
+    $buffer = preg_replace('/<input type="text" name="cleantalk_api_key" id="cleantalk_api_key" value="'.$cleantalk_api_key.'"\s?(class="input_text")?\s?\/?>/',$cleantalk_key_html, $buffer, 1);
+
+  }
+  return $buffer;
 }
 
 /**
@@ -1504,24 +1309,19 @@ function cleantalk_buffer($buffer)
  * @return array
  */
 function cleantalk_get_ct_options($mod_settings) {
-    $ct_options = array();
-
-    foreach ($mod_settings as $key => $value) {
-        if(strpos($key, 'cleantalk') !== false) {
-            $decoded = json_decode($value, true);
-
-            if($decoded != null) {
-                $ct_options[$key] = $decoded;
-                continue;
-            }
-
-            $ct_options[$key] = $value;
-        }
+  $ct_options = array();
+  foreach ($mod_settings as $key => $value) {
+    if(strpos($key, 'cleantalk') !== false) {
+      $decoded = json_decode($value, true);
+      if($decoded != null) {
+        $ct_options[$key] = $decoded;
+        continue;
+      }
+      $ct_options[$key] = $value;
     }
-
-    return $ct_options;
+  }
+  return $ct_options;
 }
-
 /**
  * Get js keys from plugin settings
  *
@@ -1529,12 +1329,197 @@ function cleantalk_get_ct_options($mod_settings) {
  * @return null|string
  */
 function cleantalk_get_js_keys($mod_settings) {
-    if(isset($mod_settings['cleantalk_js_keys'])) {
-        $js_keys = json_decode($mod_settings['cleantalk_js_keys'], true);
-        if(isset($js_keys['keys'])) {
-            return json_encode($js_keys['keys']);
+  if(isset($mod_settings['cleantalk_js_keys'])) {
+    $js_keys = json_decode($mod_settings['cleantalk_js_keys'], true);
+    if(isset($js_keys['keys'])) {
+      return json_encode($js_keys['keys']);
+    }
+  }
+  return null;
+}
+
+/**
+ * Section: Checking users for spam
+ */
+function template_cleantalk_checking_users_for_spam_section()
+{
+  global $modSettings, $smcFunc, $txt, $db_connection;
+
+  template_show_settings();
+
+  if (!isset($db_connection) || $db_connection === false) {
+    loadDatabase();
+  }
+
+  $html = '';
+
+  if (isset($db_connection) && $db_connection != false) {
+    if (isset($_GET['ctcheckspam'])) {
+      if (
+        isset($modSettings['cleantalk_api_key_is_ok'])
+        && $modSettings['cleantalk_api_key_is_ok'] == '1'
+        && $modSettings['cleantalk_api_key'] != ''
+      ) {
+        db_extend('packages');
+
+        // Unmark all users
+        $sql = 'UPDATE {db_prefix}members SET ct_marked = {int:default_value}';
+        $smcFunc['db_query']('', $sql, array('default_value' => 0));
+
+        // Loop params
+        $offset = 0;
+        $per_request = 500;
+
+        // Getting users to check
+        // Making at least one DB query
+        do {
+          $sql_users = "SELECT id_member, member_name, date_registered, last_login, email_address, member_ip FROM {db_prefix}members where passwd <> '' LIMIT $offset,$per_request";
+          $users = $smcFunc['db_query']('', $sql_users, Array());
+
+          // Break if result is empty.
+          if ($smcFunc['db_num_rows'] ($users) == 0) {
+            break;
+          }
+
+          // Setting data
+          $data = array();
+          while ($row = $smcFunc['db_fetch_assoc'] ($users)) {
+            $data[] = $row['email_address'];
+            $data[] = function_exists('inet_dtop') ? inet_dtop($row['member_ip']) : $row['member_ip'];
+          }
+
+          // Request
+          $api_result = CleantalkAPI::method__spam_check_cms(cleantalk_get_api_key(), $data);
+
+          // Error handling
+          if (!empty($api_result['error'])) {
+            break;
+          } else {
+            $users = $smcFunc['db_query']('', $sql_users, Array());
+            while ($user = $smcFunc['db_fetch_assoc'] ($users)) {
+              $uip = function_exists('inet_dtop') ? inet_dtop($user['member_ip']) : $user['member_ip'];
+              $uim = $user['email_address'];
+              $mark_spam_ip = $mark_spam_email = false;
+
+              if (isset($api_result[$uip]['appears']) && $api_result[$uip]['appears'] == 1) {
+                $mark_spam_ip = true;
+              }
+              if (isset($api_result[$uim]['appears']) && $api_result[$uim]['appears'] == 1) {
+                $mark_spam_email = true;
+              }
+
+              if ($mark_spam_ip || $mark_spam_email) {
+                // Mark spam user
+                $sql = 'UPDATE {db_prefix}members SET ct_marked=1 WHERE id_member=' . $user['id_member'];
+              } else {
+                // Mark NOT spam user
+                $sql = 'UPDATE {db_prefix}members SET ct_marked=0 WHERE id_member=' . $user['id_member'];
+              }
+              $smcFunc['db_query']('', $sql, Array('db_error_skip' => true));
+            }
+          }
+
+          $offset += $per_request;
+
+        } while(true);
+
+        // Error output
+        if (!empty($api_result['error']) && isset($api_result['error_string'])) {
+          $html.='<center>'
+            .'<div style="border:2px solid red;color:red;font-size:16px;width:300px;padding:5px;">'
+            .'<b>'.$api_result['error_string'].'</b>'
+            .'</div>'
+            .'<br>'
+            .'</center>';
         }
+
+        $sql = "SELECT * FROM {db_prefix}members WHERE ct_marked=1";
+        $result = $smcFunc['db_query']('', $sql, Array());
+
+        if ($smcFunc['db_num_rows'] ($result) == 0 && isset($_GET['ctcheckspam'])) {
+          $html.='<center><div><b>'.$txt['cleantalk_check_users_nofound'].'</b></div><br><br></center>';
+        } else if ($smcFunc['db_num_rows'] ($result) > 0) {
+          $html.='<center><h3>'.$txt['cleantalk_check_users_done'].'</h3><br /><br /></center>';
+
+          // Pagination
+          $on_page = 20;
+          $pages = ceil(intval($smcFunc['db_num_rows'] ($result))/$on_page);
+          $page = !empty($_GET['spam_page']) ? intval($_GET['spam_page']) : 1;
+          $offset = ($page-1)*$on_page;
+
+          $sql = "SELECT * FROM {db_prefix}members WHERE ct_marked=1 LIMIT $offset, $on_page";
+          $result = $smcFunc['db_query']('', $sql, Array());
+
+          if ($pages > 1) {
+            $html.= "<div style='margin: 10px;'>"
+              ."<b>".$txt['cleantalk_check_users_pages'].":</b>"
+              ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
+            for ($i = 1; $i <= $pages; $i++) {
+              $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
+                ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
+                .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
+                ."</a>"
+                ."</li>";
+            }
+            $html.= "</ul>";
+            $html.= "</div>";
+          }
+
+          $html.='<center><table style="border-color:#666666;" border=1 cellspacing=0 cellpadding=3>'
+            .'<thead>'
+            .'<tr>'
+            .'<th>'.$txt['cleantalk_check_users_tbl_select'].'</th>'
+            .'<th>'.$txt['cleantalk_check_users_tbl_username'].'</th>'
+            .'<th>'.$txt['cleantalk_check_users_tbl_joined'].'</th>'
+            .'<th>E-mail</th>'
+            .'<th>IP</th>'
+            .'<th>'.$txt['cleantalk_check_users_tbl_lastvisit'].'</th>'
+            .'<th>'.$txt['cleantalk_check_users_tbl_posts'].'</th>'
+            .'</tr>'
+            .'</thead>'
+            .'<tbody>';
+
+          while ($row = $smcFunc['db_fetch_assoc'] ($result)) {
+            $uip = function_exists('inet_dtop') ? inet_dtop($row['member_ip']) : $row['member_ip'];
+            $uim = $row['email_address'];
+
+            $html.="<tr>
+                            <td><input type='checkbox' name=ct_del_user[".$row['id_member']."] value='1' /></td>
+                            <td>{$row['member_name']}&nbsp;<sup><a href='index.php?action=profile;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_username_details']}</a></sup></td>
+                            <td>".date("Y-m-d H:i:s",$row['date_registered'])."</td>
+                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$uim."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$uim."</a></td>
+                            <td><a target='_blank' href='https://cleantalk.org/blacklists/".$uip."'><img src='https://cleantalk.org/images/icons/external_link.gif' border='0'/> ".$uip."</a></td>
+                            <td>".date("Y-m-d H:i:s",$row['last_login'])."</td>
+                            <td style='text-align: center;'>{$row['posts']}&nbsp;<sup><a href='index.php?action=profile;area=showposts;u={$row['id_member']}' target='_blank'>{$txt['cleantalk_check_users_tbl_posts_show']}</a></sup></td>
+                            </tr>";
+          }
+
+          $html.="</tbody></table></center>";
+
+          if ($pages > 1) {
+            $html.= "<div style='margin: 10px;'>"
+              ."<b>".$txt['cleantalk_check_users_pages'].":</b>"
+              ."<ul style='display: inline-block; margin: 0; padding: 0;'>";
+            for ($i = 1; $i <= $pages; $i++) {
+              $html.= "<li style='display: inline-block;  margin-left: 10px;'>"
+                ."<a href='".preg_replace('/(&spam_page=.*)/', '', $_SERVER['REQUEST_URI'])."&spam_page=$i&ctcheckspam=1'>"
+                .($i == $page ? "<span style='font-size: 1.1em; font-weight: 600;'>$i</span>" : $i)
+                ."</a>"
+                ."</li>";
+            }
+            $html.= "</ul>";
+            $html.= "</div>";
+          }
+
+          $html.="<br /><center><input type=submit name='ct_delete_checked' value='".$txt['cleantalk_check_users_tbl_delselect']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'> <input type=submit name='ct_delete_all' value='".$txt['cleantalk_check_users_tbl_delall']."' onclick='return confirm(\"".$txt['cleantalk_check_users_confirm']."\")'><br />".$txt['cleantalk_check_users_tbl_delnotice']."<br /><br /></center>";
+        }
+      }else{
+        $html.='<center><div><b>'.$txt['cleantalk_check_users_key_is_bad'].'</b></div><br><br></center>';
+      }
     }
 
-    return null;
+    $html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','').replace('&ctgetautokey=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br /><br />".$txt['cleantalk_check_users_button_after']."</center>";
+  }
+
+  echo $html;
 }
