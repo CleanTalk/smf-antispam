@@ -1,5 +1,5 @@
 [b]MOD Anti Spam by CleanTalk[/b]
-Version: 2.36
+Version: 2.37
 
 Anti-Spam by CleanTalk mod with protection against spambots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.

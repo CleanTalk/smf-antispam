@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="www.simplemachines.org/xml/modification">
 	<id>cleantalk:antispam</id>
-	<version>2.37-dev</version>
+	<version>2.37</version>
     <file name="$sourcedir/Post.php">
         <operation error="fatal">
             <search position="after"><![CDATA[createPost($msgOptions, $topicOptions, $posterOptions);]]></search>
@@ -15,5 +15,5 @@
             <search position="after"><![CDATA[// Increase the number of posts and topics on the board.]]></search>
             <add><![CDATA[cleantalk_after_create_topic($msgOptions, $topicOptions, $posterOptions);]]></add>
         </operation>
-    </file>    
+    </file>
 </modification>

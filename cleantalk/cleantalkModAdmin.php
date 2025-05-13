@@ -114,7 +114,6 @@ function cleantalk_general_mod_settings($return_config = false)
         array('check', 'cleantalk_tell_others', 'subtext' => $txt['cleantalk_tell_others_postinput']),
         array('check', 'cleantalk_sfw', 'subtext' => $txt['cleantalk_sfw_postinput']),
         array('desc', 'cleantalk_api_key_description'),
-        array('desc', 'cleantalk_check_users'),
     );
 
     if ( $return_config ) {

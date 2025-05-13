@@ -4,17 +4,17 @@
 	<id>cleantalk:antispam</id>
 	<name>Anti-spam by CleanTalk</name>
 	<type>modification</type>
-	<version>2.37-dev</version>
+	<version>2.37</version>
 	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
-		
+
 		<!-- Create source dir -->
 		<create-dir name="cleantalk" destination="$sourcedir"/>
 
 		<!-- Copying new source files -->
 		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
-		
+
 		<!-- Translations -->
 		<modification format="xml" type="file">modification.xml</modification>
 		<modification format="xml" type="file">languages/english.xml</modification>
@@ -23,10 +23,10 @@
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
-		
+
 		<!-- Database updates -->
 		<code>install.php</code>
-		
+
 		<!-- Redirect -->
 		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
 			you are being redirected to this mod configuration settings.
@@ -67,6 +67,48 @@
 			- Исправлена поддержка SMF 2.1
 		</readme>
 
+		<!-- Copying new source files -->
+		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
+
+		<!-- Translations -->
+		<modification format="xml" type="file">modification.xml</modification>
+		<modification format="xml" type="file">languages/english.xml</modification>
+		<modification format="xml" type="file">languages/english-utf8.xml</modification>
+		<modification format="xml" type="file">languages/russian.xml</modification>
+		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es.xml</modification>
+		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+
+		<!-- Database updates -->
+		<database>install.php</database>
+
+		<redirect url="$boardurl/index.php?action=admin;area=modsettings;sa=cleantalk" type="inline">Please stand by while
+			you are being redirected to this mod configuration settings.
+		</redirect>
+	</upgrade>
+	<upgrade from="2.36 - 2.37">
+		<readme type="inline" parsebbc="true">
+			- New: bot detector JS library added
+			- Fix: cleantalk.org domain updated
+			- Fix: deprecations on PHP 8.3
+			- Fix: notices on users checker
+			- Fix: SFW update remote call fix
+			- Fix: sub template fix
+			- Fix: link on plugin settings fixed
+			- Fix: plugin update process fixed
+			- Fix: automatic key getting fixed
+		</readme>
+		<readme type="inline" parsebbc="true" lang="russian-utf8">Обновление Анти-спама от Cleantalk с версии 2.36 до 2.37:
+			- Новое: добавлена JS библиотека Bot detector
+			- Исправление: обновлен домен cleantalk.org
+			- Исправление: deprecations на версии на PHP 8.3
+			- Исправление: уведомления о проверке пользователей
+			- Исправление: исправлен удаленный вызов обновления SFW
+			- Исправление: исправление sub template
+			- Исправление: исправлена ссылка на настройки плагина
+			- Исправление: исправлен процесс обновления плагина
+			- Исправление: исправлено автоматическое получение ключа
+		</readme>
 		<!-- Copying new source files -->
 		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
 
