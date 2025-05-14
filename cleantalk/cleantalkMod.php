@@ -1352,13 +1352,11 @@ function template_cleantalk_checking_users_for_spam_section()
 {
   global $modSettings, $smcFunc, $txt, $db_connection;
 
-  template_show_settings();
-
   if (!isset($db_connection) || $db_connection === false) {
     loadDatabase();
   }
 
-  $html = '';
+  $html = '<br>';
 
   if (isset($db_connection) && $db_connection != false) {
     if (isset($_GET['ctcheckspam'])) {
@@ -1528,5 +1526,12 @@ function template_cleantalk_checking_users_for_spam_section()
     $html.="<center><button style=\"width:20%;\" id=\"check_spam\" onclick=\"location.href=location.href.replace('&finishcheck=1','').replace('&ctcheckspam=1','').replace('&ctgetautokey=1','')+'&ctcheckspam=1';return false;\">".$txt['cleantalk_check_users_button']."</button><br /><br />".$txt['cleantalk_check_users_button_after']."</center>";
   }
 
-  echo $html;
+   // intercept buffer to modify settings page
+   ob_start();
+   template_show_settings();
+   $content = ob_get_contents();
+   // add users checker html
+   $content = str_replace('</form>', $html . '</form>', $content);
+   ob_end_clean();
+   echo $content;
 }
