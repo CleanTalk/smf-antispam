@@ -601,9 +601,16 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
 
     if(!$user_info['is_admin'] && (isset($modSettings['cleantalk_check_personal_messages']) && $modSettings['cleantalk_check_personal_messages']) && isset($user_info['groups'][1]) && $user_info['groups'][1] === 4)
     {
-        if (isset($from))
-        {
-            $sql = "SELECT email_address FROM {db_prefix}members WHERE member_name='".$from."'";
+        $filtered_from = null;
+        if (!is_string($from)) {
+            if (is_array($from) && isset($from['username']) && is_string($from['username'])) {
+                $filtered_from = $from['username'];
+            }
+        } else {
+            $filtered_from = $from;
+        }
+        if ($filtered_from) {
+            $sql = "SELECT email_address FROM {db_prefix}members WHERE member_name='".$filtered_from."'";
             $result = $smcFunc['db_query']('', $sql, Array());
             while ($email_address = $smcFunc['db_fetch_assoc']($result))
                 $sender_email = $email_address['email_address'];
