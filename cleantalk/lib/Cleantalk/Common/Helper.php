@@ -1337,11 +1337,15 @@ class Helper
             'plugin_name'             => 'apbct',
         );
 
+        $patterns = !empty($patterns) ? $patterns : array(
+            'dont_split_to_array',
+            'no_cache'
+        );
+
         $result__rc_check_website = static::http__request(
             static::getSiteUrl(),
-            array_merge( $request_params__default, $request_params, array( 'test' => 'test' ) ),
-            array('dont_split_to_array',
-                'no_cache')
+            array_merge( $request_params__default, $request_params ),
+            $patterns
         );
 
         // Considering empty response as error

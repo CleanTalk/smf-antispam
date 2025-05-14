@@ -37,7 +37,7 @@ abstract class RemoteCalls
             'cooldown' => 0,
         ],
     ];
-    
+
     /**
      * @var array
      */

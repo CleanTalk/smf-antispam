@@ -90,7 +90,7 @@ class FirewallUpdater
             ! Get::get('firewall_updating_id') &&
             $fw_stats['firewall_updating_id'] &&
             time() - $fw_stats['firewall_updating_last_start'] < 60 ){
-            return true;
+            return array( 'error' => 'FIREWALL_UPDATE_TOO_EARLY' );
         }
 
         // Check if the update performs right now. Blocks remote calls with different ID
@@ -103,7 +103,7 @@ class FirewallUpdater
 
         // No updating without api key
         if( empty( $this->api_key ) ){
-            return true;
+            return array( 'error' => 'NO API KEY' );
         }
 
         // Set new update ID
