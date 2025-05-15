@@ -21,7 +21,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
         );
         $firewall->setSpecificHelper( new CleantalkHelper() );
         $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
-        return $fw_updater->update();        
+        return $fw_updater->update();
     }
 
     /**
@@ -49,7 +49,7 @@ class RemoteCalls extends \Cleantalk\Common\RemoteCalls {
         );
         $firewall->setSpecificHelper( new CleantalkHelper() );
         $fw_updater = $firewall->getUpdater( APBCT_TBL_FIREWALL_DATA );
-        return $fw_updater->update(); 
+        return $fw_updater->update();
     }
     /**
      * Get available remote calls from the storage.

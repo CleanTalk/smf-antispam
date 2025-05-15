@@ -256,11 +256,12 @@ class Cleantalk {
         // Removing non UTF8 characters from request, because non UTF8 or malformed characters break json_encode().
         //
         foreach ($request as $param => $value) {
-            if (!preg_match('//u', $value)) {
-                $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.'; 
+            if ($value) {
+                if (is_string($value) && !preg_match('//u', $value)) {
+                    $request->{$param} = 'Nulled. Not UTF8 encoded or malformed.'; 
+                }
             }
         }
-        
         return $request;
     }
     
@@ -269,7 +270,7 @@ class Cleantalk {
      * @param $msg
      * @return boolean|\CleantalkResponse
      */
-    private function sendRequest($data = null, $url, $server_timeout = 15) {
+    private function sendRequest($data, $url, $server_timeout = 15) {
         // Convert to array
         $data = (array)json_decode(json_encode($data), true);
         
@@ -539,7 +540,7 @@ class Cleantalk {
                 
                 // -1 server is down, skips not reachable server
                 if ($ping != -1) {
-                    $r_temp[$ping + $i] = $server;
+                    $r_temp[(int)$ping + $i] = $server;
                 }
                 $i++;
                 

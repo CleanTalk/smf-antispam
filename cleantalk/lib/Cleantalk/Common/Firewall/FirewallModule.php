@@ -216,9 +216,9 @@ abstract class FirewallModule {
      */
     public function __( $string, $text_domain )
     {
-        if( function_exists( '__' ) ) {
-            return __( $string, $text_domain );
-        }
+//        if( function_exists( '__' ) ) {
+//            return __( $string, $text_domain );
+//        }
         return $string;
     }
 

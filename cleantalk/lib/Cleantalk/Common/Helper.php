@@ -22,7 +22,7 @@ class Helper
 	 * Default user agent for HTTP requests
 	 */
 	const AGENT = 'Cleantalk-Helper/3.4';
-	
+
 	/**
 	 * @var array Set of private networks IPv4 and IPv6
 	 */
@@ -39,7 +39,7 @@ class Helper
 			'0:0:0:0:0:0:a:1/128', // ::ffff:127.0.0.1
 		),
 	);
-	
+
 	/**
 	 * @var array Set of CleanTalk servers
 	 */
@@ -269,7 +269,7 @@ class Helper
             return $out;
         }
     }
-	
+
 	/**
 	 * Checks if the IP is in private range
 	 *
@@ -282,7 +282,7 @@ class Helper
 	{
 		return self::ip__mask_match($ip, self::$private_networks[$ip_type], $ip_type);
 	}
-	
+
 	/**
 	 * Check if the IP belong to mask.  Recursive.
 	 * Octet by octet for IPv4
@@ -311,30 +311,30 @@ class Helper
         if( ! self::ip__validate( $ip ) || ! self::cidr__validate( $cidr ) ){
             return false;
         }
-		
+
 		$xtet_base = ($ip_type == 'v4') ? 8 : 16;
-		
+
 		// Calculate mask
 		$exploded = explode('/', $cidr);
 		$net_ip = $exploded[0];
 		$mask = $exploded[1];
-		
+
 		// Exit condition
 		$xtet_end = ceil($mask / $xtet_base);
 		if($xtet_count == $xtet_end)
 			return true;
-		
+
 		// Lenght of bits for comparsion
 		$mask = $mask - $xtet_base * $xtet_count >= $xtet_base ? $xtet_base : $mask - $xtet_base * $xtet_count;
-		
+
 		// Explode by octets/hextets from IP and Net
 		$net_ip_xtets = explode($ip_type == 'v4' ? '.' : ':', $net_ip);
 		$ip_xtets = explode($ip_type == 'v4' ? '.' : ':', $ip);
-		
+
 		// Standartizing. Getting current octets/hextets. Adding leading zeros.
 		$net_xtet = str_pad(decbin($ip_type == 'v4' ? $net_ip_xtets[$xtet_count] : @hexdec($net_ip_xtets[$xtet_count])), $xtet_base, 0, STR_PAD_LEFT);
 		$ip_xtet = str_pad(decbin($ip_type == 'v4' ? $ip_xtets[$xtet_count] : @hexdec($ip_xtets[$xtet_count])), $xtet_base, 0, STR_PAD_LEFT);
-		
+
 		// Comparing bit by bit
 		for($i = 0, $result = true; $mask != 0; $mask--, $i++){
 			if($ip_xtet[$i] != $net_xtet[$i]){
@@ -342,15 +342,15 @@ class Helper
 				break;
 			}
 		}
-		
+
 		// Recursing. Moving to next octet/hextet.
 		if($result)
 			$result = self::ip__mask_match($ip, $cidr, $ip_type, $xtet_count + 1);
-		
+
 		return $result;
-		
+
 	}
-	
+
 	/**
 	 * Converts long mask like 4294967295 to number like 32
 	 *
@@ -363,7 +363,7 @@ class Helper
 		$num_mask = strpos((string)decbin($long_mask), '0');
 		return $num_mask === false ? 32 : $num_mask;
 	}
-	
+
 	/**
 	 * Validating IPv4, IPv6
 	 *
@@ -390,7 +390,7 @@ class Helper
         $cidr = explode( '/', $cidr );
         return isset( $cidr[0], $cidr[1] ) && self::ip__validate( $cidr[0] ) && preg_match( '@\d{1,2}@', $cidr[1] );
     }
-	
+
 	/**
 	 * Expand IPv6
 	 *
@@ -418,7 +418,7 @@ class Helper
 		}
 		return $ip;
 	}
-	
+
 	/**
 	 * Reduce IPv6
 	 *
@@ -435,7 +435,7 @@ class Helper
 		}
 		return $ip;
 	}
-	
+
 	/**
 	 * Get URL form IP. Check if it's belong to cleantalk.
 	 *
@@ -453,7 +453,7 @@ class Helper
 		}else
 			return false;
 	}
-	
+
 	/**
 	 * Get URL form IP. Check if it's belong to cleantalk.
 	 *
@@ -471,7 +471,7 @@ class Helper
 		}else
 			return $ip;
 	}
-	
+
 	/**
 	 * Get URL form IP
 	 *
@@ -488,7 +488,7 @@ class Helper
 		}
 		return $ip;
 	}
-	
+
 	/**
 	 * Resolve DNS to IP
 	 *
@@ -499,7 +499,7 @@ class Helper
 	 */
 	static public function dns__resolve($host, $out = false)
 	{
-		
+
 		// Get DNS records about URL
 		if(function_exists('dns_get_record')){
 			$records = dns_get_record($host, DNS_A);
@@ -507,7 +507,7 @@ class Helper
 				$out = $records[0]['ip'];
 			}
 		}
-		
+
 		// Another try if first failed
 		if(!$out && function_exists('gethostbynamel')){
 			$records = gethostbynamel($host);
@@ -515,9 +515,9 @@ class Helper
 				$out = $records[0];
 			}
 		}
-		
+
 		return $out;
-		
+
 	}
 
 	/*
@@ -645,8 +645,8 @@ class Helper
 					          $fields_exclusion = str_replace( array( '[', ']' ), array( '_', '' ), $fields_exclusion );
 					        }
 					      }
-					      $skip_fields_with_strings = array_merge($skip_fields_with_strings, $fields_exclusions);	      	
-				      }        
+					      $skip_fields_with_strings = array_merge($skip_fields_with_strings, $fields_exclusions);
+				      }
 				    }
 					if (in_array($key, $skip_params, true) && $key != 0 && $key != '' || preg_match("/^ct_checkjs/", $key))
 						$contact = false;
@@ -783,7 +783,7 @@ class Helper
 		}
 
 		return $value;
-	}	
+	}
 
 	/**
 	 * Print html form for external forms()
@@ -809,9 +809,7 @@ class Helper
 	*	returns (boolean)
 	*/
 	static public function key_is_correct($api_key = '') {
-
-		return preg_match('/^[a-z\d]{3,15}$|^$/', $api_key);
-
+		return preg_match('/^[a-z\d]{3,15}$/', $api_key);
 	}
 
 	/**
@@ -834,16 +832,16 @@ class Helper
 	static public function http__request($url, $data = array(), $presets = null, $opts = array())
 	{
 		if(function_exists('curl_init')){
-			
+
 			$ch = curl_init();
-			
+
 			if(!empty($data)){
 				// If $data scalar converting it to array
 				$data = is_string($data) || is_int($data) ? array($data => 1) : $data;
 				// Build query
 				$opts[CURLOPT_POSTFIELDS] = $data;
 			}
-			
+
 			// Merging OBLIGATORY options with GIVEN options
 			$opts = self::array_merge__save_numeric_keys(
 				array(
@@ -861,65 +859,65 @@ class Helper
 				),
 				$opts
 			);
-			
+
 			// Use presets
 			$presets = is_array($presets) ? $presets : explode(' ', $presets);
 			foreach($presets as $preset){
-				
+
 				switch($preset){
-					
+
 					// Do not follow redirects
 					case 'dont_follow_redirects':
 						$opts[CURLOPT_FOLLOWLOCATION] = false;
 						$opts[CURLOPT_MAXREDIRS] = 0;
 						break;
-					
+
 					// Get headers only
 					case 'get_code':
 						$opts[CURLOPT_HEADER] = true;
 						$opts[CURLOPT_NOBODY] = true;
 						break;
-					
+
 					// Make a request, don't wait for an answer
 					case 'async':
 						$opts[CURLOPT_CONNECTTIMEOUT_MS] = 1000;
 						$opts[CURLOPT_TIMEOUT_MS] = 1000;
 						break;
-					
+
 					case 'get':
 						$opts[CURLOPT_URL] .= $data ? '?' . str_replace("&amp;", "&", http_build_query($data)) : '';
 						$opts[CURLOPT_CUSTOMREQUEST] = 'GET';
 						$opts[CURLOPT_POST] = false;
 						$opts[CURLOPT_POSTFIELDS] = null;
 						break;
-					
+
 					case 'ssl':
 						$opts[CURLOPT_SSL_VERIFYPEER] = true;
 						$opts[CURLOPT_SSL_VERIFYHOST] = 2;
 						if(defined('CLEANTALK_CASERT_PATH') && CLEANTALK_CASERT_PATH)
 							$opts[CURLOPT_CAINFO] = CLEANTALK_CASERT_PATH;
 						break;
-					
+
 					default:
-						
+
 						break;
 				}
-				
+
 			}
 			unset($preset);
-			
+
 			curl_setopt_array($ch, $opts);
 			$result = curl_exec($ch);
-			
+
 			// RETURN if async request
 			if(in_array('async', $presets))
 				return true;
-			
+
 			if($result){
-				
+
 				if(strpos($result, PHP_EOL) !== false && !in_array('dont_split_to_array', $presets))
 					$result = explode(PHP_EOL, $result);
-				
+
 				// Get code crossPHP method
 				if(in_array('get_code', $presets)){
 					$curl_info = curl_getinfo($ch);
@@ -931,7 +929,7 @@ class Helper
 				$out = array('error' => curl_error($ch));
 		}else
 			$out = array('error' => 'CURL_NOT_INSTALLED');
-		
+
 		/**
 		 * Getting HTTP-response code without cURL
 		 */
@@ -941,10 +939,10 @@ class Helper
 			$headers = get_headers($url);
 			$out = (int)preg_replace('/.*(\d{3}).*/', '$1', $headers[0]);
 		}
-		
+
 		return $out;
 	}
-	
+
 	/**
 	 * Merging arrays without reseting numeric keys
 	 *
@@ -960,7 +958,7 @@ class Helper
 		}
 		return $arr1;
 	}
-	
+
 	/**
 	 * Merging arrays without reseting numeric keys recursive
 	 *
@@ -972,21 +970,21 @@ class Helper
 	public static function array_merge__save_numeric_keys__recursive($arr1, $arr2)
 	{
 		foreach($arr2 as $key => $val){
-			
+
 			// Array | array => array
 			if(isset($arr1[$key]) && is_array($arr1[$key]) && is_array($val)){
 				$arr1[$key] = self::array_merge__save_numeric_keys__recursive($arr1[$key], $val);
-				
+
 			// Scalar | array => array
 			}elseif(isset($arr1[$key]) && !is_array($arr1[$key]) && is_array($val)){
 				$tmp = $arr1[$key] =
 				$arr1[$key] = $val;
 				$arr1[$key][] = $tmp;
-				
+
 			// array  | scalar => array
 			}elseif(isset($arr1[$key]) && is_array($arr1[$key]) && !is_array($val)){
 				$arr1[$key][] = $val;
-				
+
 			// scalar | scalar => scalar
 			}else{
 				$arr1[$key] = $val;
@@ -994,7 +992,7 @@ class Helper
 		}
 		return $arr1;
 	}
-	
+
 	/**
 	 * Function removing non UTF8 characters from array|string|object
 	 *
@@ -1010,7 +1008,7 @@ class Helper
 				$val = self::removeNonUTF8($val);
 			}
 			unset($key, $val);
-			
+
 			//String
 		}else{
 			if(!preg_match('//u', $data))
@@ -1018,7 +1016,7 @@ class Helper
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Function convert anything to UTF8 and removes non UTF8 characters
 	 *
@@ -1035,7 +1033,7 @@ class Helper
 				$val = self::toUTF8($val, $data_codepage);
 			}
 			unset($key, $val);
-			
+
 			//String
 		}else{
 			if(!preg_match('//u', $obj) && function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding')){
@@ -1047,7 +1045,7 @@ class Helper
 		}
 		return $obj;
 	}
-	
+
 	/**
 	 * Function convert from UTF8
 	 *
@@ -1064,7 +1062,7 @@ class Helper
 				$val = self::fromUTF8($val, $data_codepage);
 			}
 			unset($key, $val);
-			
+
 			//String
 		}else{
 			if(preg_match('u', $obj) && function_exists('mb_convert_encoding') && $data_codepage !== null)
@@ -1072,7 +1070,7 @@ class Helper
 		}
 		return $obj;
 	}
-	
+
 	/**
 	 * Checks if the string is JSON type
 	 *
@@ -1123,11 +1121,11 @@ class Helper
         }
 
     }
-	
+
 	public static function time__get_interval_start( $interval = 300 ){
 		return time() - ( ( time() - strtotime( date( 'd F Y' ) ) ) % $interval );
 	}
-	
+
 	/**
 	 * Get mime type from file or data
 	 *
@@ -1148,7 +1146,7 @@ class Helper
 		}
 		return $type;
 	}
-	
+
 	static function buffer__trim_and_clear_from_empty_lines( $buffer ){
 		$buffer = (array) $buffer;
 		foreach( $buffer as $indx => &$line ){
@@ -1158,7 +1156,7 @@ class Helper
 		}
 		return $buffer;
 	}
-	
+
 	static function buffer__parse__csv( $buffer ){
 		$buffer = explode( "\n", $buffer );
 		$buffer = self::buffer__trim_and_clear_from_empty_lines( $buffer );
@@ -1167,7 +1165,7 @@ class Helper
 		}
 		return $buffer;
 	}
-	
+
 	/**
 	 * Pops line from buffer without formatting
 	 *
@@ -1181,7 +1179,7 @@ class Helper
 		$csv  = substr_replace( $csv, '', 0, $pos + 1 );
 		return $line;
 	}
-	
+
 	/**
 	 * Pops line from the csv buffer and fromat it by map to array
 	 *
@@ -1194,7 +1192,7 @@ class Helper
 		$line = static::buffer__csv__pop_line( $csv );
 		return explode( ',', $line );
 	}
-	
+
 	/**
 	 * Pops line from the csv buffer and fromat it by map to array
 	 *
@@ -1301,25 +1299,25 @@ class Helper
 	 * @return string
 	 */
 	public static function array_implode__recursive( $glue, $array ){
-		
+
 		$out = '';
-		
+
 		foreach( $array as $item ){
-			
+
 			if( is_array( $item ) || is_object( $item ) )
 				$out .= self::array_implode__recursive( $glue, $item );
-			
+
 			else{
-				
+
 				// Skip empty strings
 				if( ! (string) $item )
 					continue;
 				else
 					$out .= (string) $item;
-				
+
 			}
 		}
-		
+
 		return $out;
 	}
 
@@ -1339,34 +1337,39 @@ class Helper
             'plugin_name'             => 'apbct',
         );
 
-        $result__rc_check_website = static::http__request(
-            static::getSiteUrl(),
-            array_merge( $request_params__default, $request_params, array( 'test' => 'test' ) ),
-            array( 'get', )
+        $patterns = !empty($patterns) ? $patterns : array(
+            'dont_split_to_array',
+            'no_cache'
         );
 
-        if( empty( $result__rc_check_website['error'] ) ){
+        $result__rc_check_website = static::http__request(
+            static::getSiteUrl(),
+            array_merge( $request_params__default, $request_params ),
+            $patterns
+        );
 
-            if( preg_match( '@^.*?OK$@', $result__rc_check_website) ){
-
-                static::http__request(
-                    static::getSiteUrl(),
-                    array_merge( $request_params__default, $request_params ),
-                    array_merge( array( 'get', ), $patterns )
-                );
-
-            }else
-                return array(
-                    'error' => 'WRONG_SITE_RESPONSE ACTION: ' . $rc_action . ' RESPONSE: ' . htmlspecialchars( substr(
-                            ! is_string( $result__rc_check_website )
-                                ? print_r( $result__rc_check_website, true )
-                                : $result__rc_check_website,
+        // Considering empty response as error
+        if ($result__rc_check_website === '') {
+            return array('error' => 'WRONG_SITE_RESPONSE TEST ACTION : ' . $rc_action . ' ERROR: EMPTY_RESPONSE');
+            // Wrap and pass error
+        } elseif ( ! empty($result__rc_check_website['error'])) {
+            return array('error' => 'WRONG_SITE_RESPONSE TEST ACTION: ' . $rc_action . ' ERROR: ' . $result__rc_check_website['error']);
+            // Expects 'OK' string as good response otherwise - error
+        } elseif ( ( is_string($result__rc_check_website) && ! preg_match('@^.*?OK$@', $result__rc_check_website) ) || ! is_string($result__rc_check_website) ) {
+            return array(
+                'error' => 'WRONG_SITE_RESPONSE ACTION: ' .
+                    $rc_action .
+                    ' RESPONSE: ' .
+                    '"' .
+                    htmlspecialchars(
+                        substr(
+                            ! is_string($result__rc_check_website) ? print_r($result__rc_check_website, true) : $result__rc_check_website,
                             0,
                             400
-                        ) )
-                );
-        }else
-            return array( 'error' => 'WRONG_SITE_RESPONSE TEST ACTION: ' . $rc_action . ' ERROR: ' . $result__rc_check_website['error'] );
+                        )
+                    ) . '"'
+            );
+        }
 
         return true;
     }
