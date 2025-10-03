@@ -88,6 +88,10 @@ function cleantalk_sfw_check()
     if (isset($user_info['is_admin']) && $user_info['is_admin'])
         return;
 
+    if (defined('SYSTEM_CRON') && SYSTEM_CRON === true) {
+        return;
+    }
+
     // Remote calls
     if( RemoteCalls::check() ) {
         $rc = new RemoteCalls( cleantalk_get_api_key());
