@@ -985,7 +985,7 @@ function cleantalk_print_js_input()
     </script>';
 
     if (isset($modSettings['cleantalk_bot_detector']) && $modSettings['cleantalk_bot_detector'] == '1') {
-        $js .= '<script src="https://moderate.cleantalk.org/ct-bot-detector-wrapper.js"></script>';
+        $js .= '<script src="https://fd.cleantalk.org/ct-bot-detector-wrapper.js"></script>';
     }
 
     return $js;
