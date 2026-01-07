@@ -6,7 +6,7 @@
 * **Version:** 2.37
 * **License:** GNU General Public License  
 * **Compatible with:** SMF 2.0 and up  
-* **Languages:** English, Russian  
+* **Languages:** English, Russian, Romanian  
 * **Mod page:** http://custom.simplemachines.org/mods/index.php?mod=3851
 * **Github repository:** https://github.com/CleanTalk/smf-antispam  
 * **Changelog:** https://github.com/CleanTalk/smf-antispam/blob/master/CHANGELOG  
