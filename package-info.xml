@@ -8,6 +8,7 @@
 	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
+		<readme type="file" parsebbc="true" lang="romanian-utf8">readme_romanian.txt</readme>
 
 		<!-- Create source dir -->
 		<create-dir name="cleantalk" destination="$sourcedir"/>
@@ -23,6 +24,7 @@
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+		<modification format="xml" type="file">languages/romanian.xml</modification>
 
 		<!-- Database updates -->
 		<code>install.php</code>
@@ -41,11 +43,15 @@
 		<modification format="xml" type="file" reverse="true">languages/russian-utf8.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/spanish_es.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/spanish_es-utf8.xml</modification>
+		<modification format="xml" type="file" reverse="true">languages/romanian.xml</modification>
 		<remove-dir name="$sourcedir/cleantalk/"/>
 	</uninstall>
 	<upgrade from="1.80 - 2.11">
 		<readme type="inline" parsebbc="true">
 			<![CDATA[[size=14pt][color=red]Please uninstall old version cleantalk mod when installing newer version![/color][/size]]]>
+		</readme>
+		<readme type="inline" parsebbc="true" lang="romanian-utf8">
+			<![CDATA[[size=14pt][color=red]Te rugăm să dezinstalezi versiunea veche Cleantalk când instalezi o versiune mai nouă![/color][/size]]]>
 		</readme>
 	</upgrade>
 	<upgrade from="2.12 - 2.35">
@@ -66,6 +72,15 @@
 			- Исправлена проблема с безопасностью
 			- Исправлена поддержка SMF 2.1
 		</readme>
+		<readme type="inline" parsebbc="true" lang="romanian-utf8">Actualizare Antispam by CleanTalk de la versiunea 2.35 la 2.36:
+			- Remediere: chei nedefinite keys_checksum.
+			- Remediere: is_admin sfv verificare.
+			- Remediere: eroare în diff_key.
+			- Remediere: actualizare versiune agent.
+			- Remediere: spam_check_cms actualizare utilizatori status.
+			- Remediere: problemă de securitate.
+			- Remediere: suport SMF 2.1 corectat.
+		</readme>
 
 		<!-- Copying new source files -->
 		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
@@ -78,6 +93,7 @@
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+		<modification format="xml" type="file">languages/romanian.xml</modification>
 
 		<!-- Database updates -->
 		<database>install.php</database>
@@ -109,6 +125,17 @@
 			- Исправление: исправлен процесс обновления плагина
 			- Исправление: исправлено автоматическое получение ключа
 		</readme>
+		<readme type="inline" parsebbc="true" lang="romanian-utf8">Actualizare AntiSpam by CleanTalk de la versiunea 2.36 la 2.37:
+			- Nou: a fost adăugată biblioteca JS Bot Detector.
+			- Remediere: domeniul cleantalk.org a fost actualizat.
+			- Remediere: probleme de depreciere pentru PHP 8.3.
+			- Remediere: notificări privind verificarea utilizatorilor.
+			- Remediere: apelul de actualizare SFW la distanță a fost corectat.
+			- Remediere: sub-template corectat.
+			- Remediere: link-ul către setările pluginului a fost corectat.
+			- Remediere: procesul de actualizare al pluginului a fost corectat.
+			- Remediere: obținerea automată a cheii a fost corectată.
+		</readme>
 		<!-- Copying new source files -->
 		<require-dir name="cleantalk" destination="$sourcedir">Copying extension files</require-dir>
 
@@ -120,6 +147,7 @@
 		<modification format="xml" type="file">languages/russian-utf8.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es.xml</modification>
 		<modification format="xml" type="file">languages/spanish_es-utf8.xml</modification>
+		<modification format="xml" type="file">languages/romanian.xml</modification>
 
 		<!-- Database updates -->
 		<database>install.php</database>
