@@ -57,17 +57,17 @@ abstract class RemoteCalls
 	 */
 	public static function check()
     {
-		return
-			Get::get( 'spbc_remote_call_token' )
-			? self::checkWithToken()
+        if (Get::get('spbc_remote_call_action')) {
+            Get::get( 'spbc_remote_call_token' )
+            ? self::checkWithToken()
             : self::checkWithoutToken();
+        }
+        return false;
 	}
 
     public static function checkWithToken()
     {
-        return Get::get('spbc_remote_call_token') &&
-               Get::get('spbc_remote_call_action') &&
-               in_array(Get::get('plugin_name'), array('antispam', 'anti-spam', 'apbct'));
+        return in_array(Get::get('plugin_name'), array('antispam', 'anti-spam', 'apbct'));
     }
 
     public static function checkWithoutToken()
