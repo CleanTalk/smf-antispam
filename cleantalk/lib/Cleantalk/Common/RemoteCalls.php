@@ -60,7 +60,7 @@ abstract class RemoteCalls
         if (Get::get('spbc_remote_call_action')) {
             Get::get( 'spbc_remote_call_token' )
             ? self::checkWithToken()
-            : self::checkWithoutToken();
+            : false;
         }
         return false;
 	}
@@ -68,30 +68,6 @@ abstract class RemoteCalls
     public static function checkWithToken()
     {
         return in_array(Get::get('plugin_name'), array('antispam', 'anti-spam', 'apbct'));
-    }
-
-    public static function checkWithoutToken()
-    {
-        global $apbct;
-
-        $rc_servers = [
-            'netserv3.cleantalk.org',
-            'netserv4.cleantalk.org',
-        ];
-        // Resolve IP of the client making the request and verify hostname from it to be in the list of RC servers hostnames
-        $client_ip = Helper::ip__get('remote_addr');
-        $verified_hostname = $client_ip ? Helper::ip__resolve($client_ip) : false;
-        $is_noc_request = ! $apbct->key_is_ok &&
-            Get::get('spbc_remote_call_action') &&
-            in_array(Get::get('plugin_name'), array('antispam', 'anti-spam', 'apbct')) &&
-            $verified_hostname !== false &&
-            in_array($verified_hostname, $rc_servers, true);
-
-        // no token needs for this action, at least for now
-
-        $is_wp_nonce_request = $apbct->key_is_ok && Get::get('spbc_remote_call_action') === 'get_fresh_wpnonce';
-
-        return $is_wp_nonce_request || $is_noc_request;
     }
 
     /**
