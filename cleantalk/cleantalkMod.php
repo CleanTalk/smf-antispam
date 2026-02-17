@@ -672,7 +672,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
             fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
         } else {
             // all ok, only logging
-            cleantalk_log('allow personal message for "' . $from . '"');
+            cleantalk_log('allow personal message for "' . $filtered_from . '"');
             cleantalk_after_create_topic('Allow personal message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
         }
     }
