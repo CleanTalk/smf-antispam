@@ -1,8 +1,6 @@
 # SMF Antispam mod
 ================
 
-[![Build Status](https://travis-ci.org/CleanTalk/smf-antispam.svg)](https://travis-ci.org/CleanTalk/smf-antispam)
-
 * **Version:** 2.37
 * **License:** GNU General Public License  
 * **Compatible with:** SMF 2.0 and up  
@@ -89,3 +87,7 @@ Mod has admin settings on page Admin - Features and options - Configuration - Mo
 ## Requirements
 
 * CleanTalk account https://cleantalk.org/register?product=anti-spam
+
+### Websites that trust CleanTalk!
+
+![CleanTalk Anti-Spam Rating](https://cleantalk.org/webpack/img/cleantalk_rating.png)
