@@ -13,6 +13,8 @@
 Anti-Spam by CleanTalk mod with protection against spam bots and manual spam.
 No Captcha, no questions, no counting animals, no puzzles, no math.
 
+If you find this project useful, please consider starring ⭐ it on GitHub — it helps us grow and support development!
+
 **Extension info**  
 We have developed an anti-spam extension for SMF that would provide maximum protection from spam. You can provide for your visitors a simple and convenient form of posts/registrations without annoying CAPTCHAs and puzzles. Our invisible protection blocks up to 100% of spam bots.
 
