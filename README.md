@@ -67,7 +67,6 @@ The CleanTalk is premium anti-spam for SMF, please look at the  pricing. We try 
 * 24/7 technical support
 * Clear statistics
 * No captcha, puzzles, etc.
-* Free mobile app
 
 Also, you can use CleanTalk app for iPhone/iPad to control anti-spam service on web-site or control comments, signups, contacts, and orders.
 
