@@ -1,8 +1,7 @@
 [b]MOD Anti Spam by CleanTalk[/b]
 Version: 2.37
 
-Anti-Spam by CleanTalk mod with protection against spambots and manual spam.
-No Captcha, no questions, no counting animals, no puzzles, no math.
+AntiSpam by CleanTalk mod with protection against spambots and manual spam. No Captcha, no questions, no counting animals, no puzzles, no math.
 
 [b]Extension info[/b]
 We have developed our anti-spam extension for SMF that gives maximum protection from spam. You can provide for your visitors a simple and convenient form of posts/registrations without annoying CAPTCHAs and puzzles. Our invisible protection blocks up to 100% of spambots.
