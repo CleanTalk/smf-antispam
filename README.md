@@ -1,4 +1,4 @@
-# SMF Antispam mod
+# Simple Machines Forum (SMF) Antispam mod
 ================
 
 * **Version:** 2.37
