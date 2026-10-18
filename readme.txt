@@ -66,7 +66,7 @@ It allows you to add individual IP addresses and subnets to SpamFireWall. It blo
 
 The CleanTalk is premium anti-spam for SMF, please look at the  [url="https://cleantalk.org/price"]pricing[/url]. We try to provide the service at the highest level and we can not afford to offer a free version of our service, as this will immediately affect the quality of providing anti-spam protection. Paying for a year of service, you save a lot more and get:
 [list]
-[li]100% protection against spambots[/li]
+[li]99.99% protection against spambots[/li]
 [li]Time and resources saving[/li]
 [li]More registrations/comments/visitors[/li]
 [li]Protect several websites at once at different CMS[/li]
@@ -74,11 +74,13 @@ The CleanTalk is premium anti-spam for SMF, please look at the  [url="https://c
 [li]Traffic acquisition and user loyalty[/li]
 [li]24/7 technical support[/li]
 [li]Clear statistics[/li]
-[li]No captcha, puzzles, etc.[/li]
-[li]Free mobile app[/li]
+[li]No captcha, reCAPTCHA, puzzles, etc.[/li]
+
 [/list]
 
-Also, you can use CleanTalk app for iPhone/iPad to control anti-spam service on website or control comments, signups, contacts, and orders.
+CleanTalk can help replace Google reCAPTCHA on websites where user experience, conversion rate, accessibility, and privacy are important. It works silently for real visitors while blocking spam bots before they reach contact forms, comments, sign-ups, checkout pages, or moderation queues.
+
+This makes CleanTalk a practical [url="https://cleantalk.org/recaptcha-alternative"]alternative to reCAPTCHA[/url] for teams that want invisible anti-spam protection without adding CAPTCHA friction to the user journey.
 
 [b]How to install the CleanTalk anti-spam MOD[/b]
 
