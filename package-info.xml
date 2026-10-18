@@ -2,10 +2,10 @@
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>cleantalk:antispam</id>
-	<name>Anti-Spam by CleanTalk (no CAPTHA, reCAPTCHA)</name>
+	<name>Anti-Spam by CleanTalk (no CAPTCHA, reCAPTCHA)</name>
 	<type>modification</type>
 	<version>2.37</version>
-	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
+	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4, 2.1.8">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
 
@@ -32,7 +32,7 @@
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
-	<uninstall for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4">
+	<uninstall for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4, 2.1.8">
 		<code>install.php</code>
 		<modification format="xml" type="file" reverse="true">modification.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/english.xml</modification>
