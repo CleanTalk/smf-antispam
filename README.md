@@ -68,7 +68,7 @@ The CleanTalk is premium anti-spam for SMF, please look at the  pricing. We try 
 * Clear statistics
 * No captcha, puzzles, etc.
 
-CleanTalk can help replace Google reCAPTCHA on websites where user experience, conversion rate, accessibility, and privacy are important. It works silently for real visitors while blocking spam bots before they reach contact forms, comments, sign-ups, checkout pages, or moderation queues. This makes CleanTalk a practical [url="https://cleantalk.org/recaptcha-alternative"]alternative to reCAPTCHA[/url] for teams that want invisible anti-spam protection without adding CAPTCHA friction to the user journey.
+CleanTalk can help replace Google reCAPTCHA on websites where user experience, conversion rate, accessibility, and privacy are important. It works silently for real visitors while blocking spam bots before they reach contact forms, comments, sign-ups, checkout pages, or moderation queues. This makes CleanTalk a practical [alternative to reCAPTCHA](https://cleantalk.org/recaptcha-alternative) for teams that want invisible anti-spam protection without adding CAPTCHA friction to the user journey.
 
 **How to install the CleanTalk anti-spam MOD**
 
