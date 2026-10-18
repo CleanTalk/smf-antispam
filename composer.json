@@ -1,4 +1,5 @@
 {
+    "description": "Anti-Spam, spam protection MOD. CAPTCHA & reCAPTCHA free. Includes Spam FireWall and cloud filtering.",
     "require": {
         "codegyre/robo": "^0.5.4"
     }
