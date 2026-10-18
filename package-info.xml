@@ -5,7 +5,7 @@
 	<name>Anti-Spam by CleanTalk</name>
 	<type>modification</type>
 	<version>2.37</version>
-	<install for="2.0.x, 2.1 RC3, 2.1 RC4, 2.1.8, 2.x">
+	<install for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4, 2.1.8, 2.0.x">
 		<readme type="file" parsebbc="true">readme.txt</readme>
 		<readme type="file" parsebbc="true" lang="russian-utf8">readme_russian.txt</readme>
 
@@ -32,7 +32,7 @@
 			you are being redirected to this mod configuration settings.
 		</redirect>
 	</install>
-	<uninstall for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4, 2.1.8">
+	<uninstall for="2.0 - 2.1.99, 2.1 RC3, 2.1 RC4, 2.1.8, 2.0.x">
 		<code>install.php</code>
 		<modification format="xml" type="file" reverse="true">modification.xml</modification>
 		<modification format="xml" type="file" reverse="true">languages/english.xml</modification>
