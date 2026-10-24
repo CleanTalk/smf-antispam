@@ -820,9 +820,9 @@ class Helper
 		//If top iteration, returns compiled name field. Example: "Nickname Firtsname Lastname".
 		if ($prev_name === '')
 		{
+			$nickname_str = '';
 			if (!empty($nickname))
 			{
-				$nickname_str = '';
 				foreach ($nickname as $value)
 				{
 					$nickname_str .= ($value ? $value . " " : "");

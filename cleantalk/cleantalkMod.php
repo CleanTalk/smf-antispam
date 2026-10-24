@@ -404,8 +404,8 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
 
     //If top iteration, returns compiled name field. Example: "Nickname Firtsname Lastname".
     if($prev_name === ''){
+        $nickname_str = '';
         if(!empty($nickname)){
-            $nickname_str = '';
             foreach($nickname as $value){
                 $nickname_str .= ($value ? $value." " : "");
             }unset($value);
@@ -468,7 +468,7 @@ function cleantalk_cookies_test()
         $check_srting = cleantalk_get_api_key();
         foreach($cookie_test['cookies_names'] as $cookie_name){
             $check_srting .= isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
-        } unset($cokie_name);
+        } unset($cookie_name);
 
         if($cookie_test['check_value'] == md5($check_srting)){
             return 1;
