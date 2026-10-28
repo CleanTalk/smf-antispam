@@ -1138,7 +1138,7 @@ class Helper
 
 			//String
 		}else{
-			if(preg_match('u', $obj) && function_exists('mb_convert_encoding') && $data_codepage !== null)
+			if(preg_match('//u', $obj) && function_exists('mb_convert_encoding') && $data_codepage !== null)
 				$obj = mb_convert_encoding($obj, $data_codepage, 'UTF-8');
 		}
 		return $obj;
