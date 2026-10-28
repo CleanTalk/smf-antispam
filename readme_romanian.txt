@@ -1,5 +1,5 @@
 [b]MOD Anti Spam by CleanTalk[/b]
-Versiune: 2.37
+Versiune: 2.38
 
 Modul Anti-Spam by CleanTalk oferă protecție împotriva roboților de spam și a spamului manual.
 Fără Captcha, fără întrebări, fără numărat animale, fără puzzle-uri, fără calcule matematice.

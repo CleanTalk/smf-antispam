@@ -1,9 +1,7 @@
 # SMF Antispam mod
 ================
 
-[![Build Status](https://travis-ci.org/CleanTalk/smf-antispam.svg)](https://travis-ci.org/CleanTalk/smf-antispam)
-
-* **Version:** 2.37
+* **Version:** 2.38
 * **License:** GNU General Public License  
 * **Compatible with:** SMF 2.0 and up  
 * **Languages:** English, Russian, Romanian  
