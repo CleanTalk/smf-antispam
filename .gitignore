@@ -1,1 +1,16 @@
 .idea
+/*
+!/cleantalk/
+!/languages/
+!/tests/
+!/upgrades/
+!/.gitignore
+!/CHANGELOG
+!/composer.json
+!/install.php
+!/LICENSE.txt
+!/README.md
+!/modification.xml
+!/package-info.xml
+!/readme*
+!/RoboFile.php
