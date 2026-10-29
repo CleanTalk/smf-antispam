@@ -58,7 +58,7 @@ abstract class RemoteCalls
 	public static function check()
     {
         if (Get::get('spbc_remote_call_action')) {
-            Get::get( 'spbc_remote_call_token' )
+            return Get::get( 'spbc_remote_call_token' )
             ? self::checkWithToken()
             : false;
         }

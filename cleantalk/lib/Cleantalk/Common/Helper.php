@@ -983,8 +983,9 @@ class Helper
 			$result = curl_exec($ch);
 
 			// RETURN if async request
-			if(in_array('async', $presets))
-				return true;
+			if(in_array('async', $presets)) {
+                return true;
+            }
 
 			if($result){
 
