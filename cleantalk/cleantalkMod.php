@@ -1082,7 +1082,7 @@ function cleantalk_load()
         isset($context['template_layers']) &&
         is_array($context['template_layers']) &&
         in_array('body', $context['template_layers']) &&
-        ($user_info['is_guest'] || $user_info['posts'] == 0) &&
+        $user_info['is_guest'] &&
         !$user_info['is_admin']//!cleantalk_is_valid_js()
     ) {
 
