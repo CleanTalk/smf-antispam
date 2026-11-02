@@ -1,3 +1,15 @@
+Version 2.38 Oct 29, 2026
+------------------------------
+- Upd. BotDetecor. Changing the link to get ct-bot-detector-wrapper.js
+- New. Code. Romanian translation added (#53).
+- Fix. Code. Sync common lib
+- Fix. Code. Check RC action
+- Fix. Code. Left the option to work only with a token
+- Fix. Personal messages. Fixed username gathering for allowed message.
+- Fix. Code. Possibly undefined variables in field parsing. (#57)
+- Fix. Cleantalk. Strip CleanTalk cookies from all_headers. (#56)
+- Fix. Helper. Invalid regex pattern in fromUTF8() (#55)
+
 Version 2.37 May 13, 2025
 ------------------------------
 - New: bot detector JS library added

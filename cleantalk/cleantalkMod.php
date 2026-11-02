@@ -33,7 +33,7 @@ if (!defined('SMF')) {
 }
 
 // Common CleanTalk options
-define('CT_AGENT_VERSION', 'smf-237');
+define('CT_AGENT_VERSION', 'smf-238');
 define('CT_SERVER_URL', 'http://moderate.cleantalk.org');
 define('CT_DEBUG', false);
 define('CT_REMOTE_CALL_SLEEP', 10);
@@ -404,8 +404,8 @@ function cleantalkGetFields($arr, $message=array(), $email = null, $nickname = a
 
     //If top iteration, returns compiled name field. Example: "Nickname Firtsname Lastname".
     if($prev_name === ''){
+        $nickname_str = '';
         if(!empty($nickname)){
-            $nickname_str = '';
             foreach($nickname as $value){
                 $nickname_str .= ($value ? $value." " : "");
             }unset($value);
@@ -468,7 +468,7 @@ function cleantalk_cookies_test()
         $check_srting = cleantalk_get_api_key();
         foreach($cookie_test['cookies_names'] as $cookie_name){
             $check_srting .= isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
-        } unset($cokie_name);
+        } unset($cookie_name);
 
         if($cookie_test['check_value'] == md5($check_srting)){
             return 1;
@@ -672,7 +672,7 @@ function cleantalk_check_personal_messages($recipients, $from, $subject, $messag
             fatal_error('CleanTalk: ' . strip_tags($ct_result->comment,"<p><a>"), false);
         } else {
             // all ok, only logging
-            cleantalk_log('allow personal message for "' . $from . '"');
+            cleantalk_log('allow personal message for "' . $filtered_from . '"');
             cleantalk_after_create_topic('Allow personal message. <br/>Username: '. $ct_request->sender_nickname.'<br/>E-mail'.$ct_request->sender_email);
         }
     }
@@ -985,7 +985,7 @@ function cleantalk_print_js_input()
     </script>';
 
     if (isset($modSettings['cleantalk_bot_detector']) && $modSettings['cleantalk_bot_detector'] == '1') {
-        $js .= '<script src="https://moderate.cleantalk.org/ct-bot-detector-wrapper.js"></script>';
+        $js .= '<script src="https://fd.cleantalk.org/ct-bot-detector-wrapper.js"></script>';
     }
 
     return $js;

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>cleantalk:antispam</id>
+	<name>Anti-spam by CleanTalk</name>
+	<version>1.02</version>
+	<file name="$languagedir/Modifications.romanian.php" error="skip">
+		<operation>
+			<search position="end"/>
+			<add><![CDATA[
+// CleanTalk messages begin
+$txt['cleantalk_name'] = 'Antispam de la CleanTalk';
+$txt['cleantalk_settings'] = 'Setări modul Antispam CleanTalk';
+$txt['cleantalk_api_key'] = 'Cheie de acces';
+$txt['cleantalk_check_registrations'] = 'Activează verificarea spam la înregistrare';
+$txt['cleantalk_get_access_manually'] = 'Obține cheia de acces manual';
+$txt['cleantalk_get_access_key_or'] = 'sau';
+$txt['cleantalk_get_access_automatically'] = 'Obține cheia de acces automat';
+$txt['cleantalk_license_agreement'] = 'Acord de licență';
+$txt['cleantalk_key_valid'] = 'Cheia de acces este validă';
+$txt['cleantalk_account_name_ob'] = 'Cont la cleantalk.org';
+$txt['cleantalk_moderate_ip'] = 'Serviciul antispam este plătit de furnizorul tău de hosting. Licența #';
+$txt['cleantalk_key_not_valid'] = 'Cheia de acces nu este validă!';
+$txt['cleantalk_get_statistics'] = 'Apasă aici pentru a obține statistici antispam';
+$txt['cleantalk_admin_email_will_be_used'] = 'Emailul administratorului (%s) va fi folosit pentru înregistrare';
+$txt['cleantalk_first_post_checking'] = 'Activează verificarea antispam pentru utilizatorii nou înregistrați';
+$txt['cleantalk_first_post_checking_postinput'] = 'Toate mesajele de la membrii nou înregistrați (doar grupul <a href="index.php?action=moderate;area=viewgroups;sa=members;group=4">%GROUP%</a>) vor fi verificate pentru spam';
+$txt['cleantalk_automod'] = 'Activează auto-moderarea mesajelor';
+$txt['cleantalk_automod_postinput'] = 'Pune automat în aprobare manuală comentariile suspecte și blochează evidentele comentarii spam. Asigură-te că funcția <b>Post moderation</b> este activată în Centrul de administrare -> Funcții de bază';
+$txt['cleantalk_api_key_description'] = 'Pagina extensiei: <a target="_blank" href="https://cleantalk.org/">https://cleantalk.org</a>';
+$txt['cleantalk_logging'] = 'Activează logarea';
+$txt['cleantalk_logging_postinput'] = 'Toate acțiunile pluginului vor fi adăugate în jurnalul forumului. (<a target="_blank" href="%s/index.php?action=admin;area=logs;sa=errorlog;desc">Admin -> Jurnal erori</a>)';
+$txt['cleantalk_check_search_form'] = 'Testează formularul de căutare pentru spam';
+$txt['cleantalk_check_search_form_postinput'] = 'Protecție spam pentru căutare. Citește mai multe despre <a href="https://blog.cleantalk.org/how-to-protect-website-search-from-spambots/" target="_blank">protecția formularului de căutare</a> pe blogul nostru. Eticheta ?noindex? va fi plasată în meta pe pagina de căutare.';
+$txt['cleantalk_tell_others'] = 'Spune altora despre CleanTalk';
+$txt['cleantalk_email_notifications'] = 'Activează notificările pe email pentru admin';
+$txt['cleantalk_email_notifications_postinput'] = 'Trimite notificări adminului pentru rezultatele permise/blocate';
+$txt['cleantalk_check_personal_messages'] = 'Activează testul antispam pentru mesajele private';
+$txt['cleantalk_check_personal_messages_postinput'] = 'Verifică toate mesajele private pentru spam';
+$txt['cleantalk_ccf_checking'] = 'Verifică formularele personalizate';
+$txt['cleantalk_ccf_checking_postinput'] = 'Poate cauza conflicte!';
+$txt['cleantalk_bot_detector'] = 'Folosește biblioteca JavaScript Anti-Spam de la CleanTalk';
+$txt['cleantalk_bot_detector_postinput'] = 'Această opțiune include o bibliotecă externă Anti-Spam de la CleanTalk JavaScript pentru obținerea de date cu informații despre vizitatori.';
+$txt['cleantalk_tell_others_postinput'] = 'Bifarea acestei opțiuni adaugă un link mic în subsol, arătând ce instrument antispam protejează site-ul tău.';
+$txt['cleantalk_tell_others_footer_message'] = '<a href="https://cleantalk.org/smf-anti-spam-mod">Spam SMF</a> blocat de CleanTalk';
+$txt['cleantalk_sfw'] = 'Activează SpamFireWall';
+$txt['cleantalk_sfw_postinput'] = 'Această opțiune permite filtrarea roboților spam înainte ca ei să acceseze site-ul. Reduce încărcarea serverului și accelerează încărcarea paginilor.';
+$txt['cleantalk_check_users_button'] = 'Verifică utilizatorii pentru spam';
+$txt['cleantalk_check_users_button_after'] = 'CleanTalk va verifica toți utilizatorii în baza de date a listelor negre și îți va arăta pe cei cu activitate spam pe alte site-uri.';
+$txt['cleantalk_check_users_key_is_bad'] = 'Nu se poate accesa baza de date cloud. Cheia de acces este invalidă.';
+$txt['cleantalk_check_users_nofound'] = 'Nu au fost găsiți utilizatori spam';
+$txt['cleantalk_check_users_tbl_select'] = 'Selectează';
+$txt['cleantalk_check_users_tbl_username'] = 'Nume utilizator';
+$txt['cleantalk_check_users_tbl_username_details'] = 'Detalii';
+$txt['cleantalk_check_users_tbl_joined'] = 'Înregistrat';
+$txt['cleantalk_check_users_tbl_lastvisit'] = 'Ultima vizită';
+$txt['cleantalk_check_users_tbl_posts'] = 'Postări';
+$txt['cleantalk_check_users_tbl_posts_show'] = 'Afișează';
+$txt['cleantalk_check_users_pages'] = 'Pagini';
+$txt['cleantalk_check_users_done'] = 'Gata. Toți utilizatorii au fost verificați în baza listelor negre, vezi rezultatul mai jos.';
+$txt['cleantalk_check_users_tbl_delselect'] = 'Șterge selectate';
+$txt['cleantalk_check_users_tbl_delall'] = 'Șterge tot';
+$txt['cleantalk_check_users_tbl_delnotice'] = 'Toate subiectele și mesajele utilizatorilor selectați vor fi șterse.';
+$txt['cleantalk_check_users_confirm'] = 'Ștergi conturile împreună cu mesajele și subiectele aferente?';
+$txt['cleantalk_sfw_die_notice_ip'] = 'SpamFireWall este activat pentru IP-ul tău ';
+$txt['cleantalk_sfw_die_make_sure_js_enabled'] = 'Pentru a continua, asigură-te că JavaScript este activat.';
+$txt['cleantalk_sfw_die_click_to_pass'] = 'Apasă mai jos pentru a trece protecția,';
+$txt['cleantalk_sfw_die_you_will_be_redirected'] = 'sau vei fi redirecționat automat la pagina cerută în 3 secunde.';
+$txt['cleantalk_sfw_die_no_file'] = 'IP-ul tău pare a fi de spammer';
+$txt['cleantalk_banner_renew_1'] = 'Te rugăm să reînnoiești licența antispam pentru %s.';
+$txt['cleantalk_banner_renew_2'] = 'anul următor';
+$txt['cleantalk_banner_trial_1'] = 'Perioada de test a serviciului CleanTalk se încheie, te rugăm să treci la %s!';
+$txt['cleantalk_banner_trial_2'] = 'Versiunea Premium';
+$txt['cleantalk_banner_bad_key_1'] = 'Introdu cheia de acces în setările %s pentru a activa protecția antispam!';
+$txt['cleantalk_banner_bad_key_2'] = 'Modul CleanTalk';
+// CleanTalk messages end
+]]></add>
+		</operation>
+	</file>
+	<file name="$languagedir/EmailTemplates.romanian.php" error="skip">
+		<operation>
+			<search position="replace"><![CDATA[{APPROVALLINK}]]></search>
+			<add><![CDATA[
+{APPROVALLINK}
+{USER.cleantalkmessage}
+]]></add>
+		</operation>
+	</file>
+</modification>
