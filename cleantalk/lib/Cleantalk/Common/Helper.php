@@ -404,7 +404,7 @@ class Helper
 		// Searching for ::ffff:xx.xx.xx.xx patterns and turn it to IPv6
 		if(preg_match('/^::ffff:([0-9]{1,3}\.?){4}$/', $ip)){
 			$ip = dechex(sprintf("%u", ip2long(substr($ip, 7))));
-			$ip = '0:0:0:0:0:0:' . (strlen($ip) > 4 ? substr('abcde', 0, -4) : '0') . ':' . substr($ip, -4, 4);
+			$ip = '0:0:0:0:0:0:' . (strlen($ip) > 4 ? substr($ip, 0, -4) : '0') . ':' . substr($ip, -4, 4);
 			// Normalizing hextets number
 		}elseif(strpos($ip, '::') !== false){
 			$ip = str_replace('::', str_repeat(':0', 8 - substr_count($ip, ':')) . ':', $ip);
@@ -520,9 +520,9 @@ class Helper
 
         // Check if the original IP is in the list of IPs the hostname resolves to
         if ($ip_version === 'v6') {
-            $normalized_ip = self::ipV6Normalize($ip);
+            $normalized_ip = self::ip__v6_normalize($ip);
             foreach ($forward_ips as $forward_ip) {
-                if (self::ipV6Normalize($forward_ip) === $normalized_ip) {
+                if (self::ip__v6_normalize($forward_ip) === $normalized_ip) {
                     return $hostname;
                 }
             }
@@ -532,35 +532,6 @@ class Helper
 
         return false;
 	}
-
-	/**
-     * Expand IPv6
-     *
-     * @param string $ip
-     *
-     * @return string IPv6
-     */
-    public static function ipV6Normalize($ip)
-    {
-        $ip = trim($ip);
-        // Searching for ::ffff:xx.xx.xx.xx patterns and turn it to IPv6
-        if ( preg_match('/^::ffff:([0-9]{1,3}\.?){4}$/', $ip) ) {
-            $ip = dechex((int)sprintf("%u", ip2long(substr($ip, 7))));
-            $ip = '0:0:0:0:0:0:' . (strlen($ip) > 4 ? substr($ip, 0, -4) : '0') . ':' . substr($ip, -4, 4);
-            // Normalizing hextets number
-        } elseif ( strpos($ip, '::') !== false ) {
-            $ip = str_replace('::', str_repeat(':0', 8 - substr_count($ip, ':')) . ':', $ip);
-            $ip = strpos($ip, ':') === 0 ? '0' . $ip : $ip;
-            $ip = strpos(strrev($ip), ':') === 0 ? $ip . '0' : $ip;
-        }
-        // Simplifyng hextets
-        if ( preg_match('/:0(?=[a-z0-9]+)/', $ip) ) {
-            $ip = preg_replace('/:0(?=[a-z0-9]+)/', ':', strtolower($ip));
-            $ip = self::ipV6Normalize($ip);
-        }
-
-        return $ip;
-    }
 
 	/**
 	 * Resolve DNS to IP
